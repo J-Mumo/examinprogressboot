@@ -1,0 +1,73 @@
+================================================================================
+RELEASE: 1.0
+================================================================================
+
+This document is instructions for DB for Release 1.0 for Production
+
+================================================================================
+Author Details
+================================================================================
+
+AUTHOR:  Joel Mumo
+CREATED: 26/05/2020
+
+================================================================================
+Create Database and Database User
+================================================================================
+
+Before running release.sh you should run the following on the server where the
+prod db is hosted:
+
+     createuser -U postgres -A -d -P -E enigma
+
+     createdb --username=examinprogress examinprogressProdDB
+
+================================================================================
+Backup database
+================================================================================
+
+As this is the first version there is no need to back up the production database.
+
+If you did back it up you would have run:
+
+    ./backup_prod_db.sh
+
+================================================================================
+Run Release
+================================================================================
+
+Change Permissions:
+
+    chmod u+rwx release.sh
+    chmod u+rwx release_rollback.sh
+    
+Run:
+
+    ./release.sh
+
+================================================================================
+In event of Rollback
+================================================================================
+
+As this is the first version there is no need to do a rollback.
+
+First of all try:
+
+    ./release_rollback.sh
+    
+If that fails:
+
+    Restart db:
+
+        pg_ctl stop -D /Library/PostgreSQL/9.4/data
+        pg_ctl start -D /Library/PostgreSQL/9.4/data
+
+    RUN:
+    
+        ./restore_db.sh
+    
+Note that after running restore_db.sh, the old production database will
+have automatically been renamed so you do not lose it.
+
+
+
