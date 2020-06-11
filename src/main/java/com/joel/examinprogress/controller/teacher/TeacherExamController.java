@@ -27,9 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
 import com.joel.examinprogress.service.teacher.exam.ExamRequest;
 import com.joel.examinprogress.service.teacher.exam.ExamService;
+import com.joel.examinprogress.service.teacher.section.SectionRequest;
+import com.joel.examinprogress.service.teacher.section.SectionService;
 
 /**
  * @author Joel Mumo
@@ -41,6 +44,9 @@ public class TeacherExamController {
 
     @Autowired
     ExamService examService;
+
+    @Autowired
+    SectionService sectionService;
 
     /**
      * 
@@ -57,4 +63,18 @@ public class TeacherExamController {
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
+
+    /**
+     * 
+     * @param sectionRequest
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping( value = "section/save", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> save( @RequestBody SectionRequest sectionRequest )
+            throws IOException {
+
+        SaveResponse response = sectionService.save( sectionRequest );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
 }
