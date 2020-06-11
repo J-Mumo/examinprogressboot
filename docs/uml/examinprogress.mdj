@@ -5482,30 +5482,13 @@
 											"height": 13,
 											"text": "+name: string 50 M",
 											"horizontalAlignment": 0
-										},
-										{
-											"_type": "UMLAttributeView",
-											"_id": "AAAAAAFymCrCARZ5+VQ=",
-											"_parent": {
-												"$ref": "AAAAAAFymCk+Dw+x7pg="
-											},
-											"model": {
-												"$ref": "AAAAAAFymCrBtBZSFK4="
-											},
-											"font": "Arial;13;0",
-											"left": 965,
-											"top": 717,
-											"width": 111.63623046875,
-											"height": 13,
-											"text": "+Attribute1",
-											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 960,
 									"top": 697,
 									"width": 121.63623046875,
-									"height": 38
+									"height": 23
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -5518,7 +5501,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 960,
-									"top": 735,
+									"top": 720,
 									"width": 121.63623046875,
 									"height": 10
 								},
@@ -5560,7 +5543,7 @@
 							"left": 960,
 							"top": 672,
 							"width": 121.63623046875,
-							"height": 73,
+							"height": 58,
 							"nameCompartment": {
 								"$ref": "AAAAAAFymCk+DQ+sv1c="
 							},
@@ -5858,7 +5841,7 @@
 							"fillColor": "#d8f2ff",
 							"font": "Arial;13;0",
 							"left": 1144,
-							"top": 688,
+							"top": 672,
 							"width": 100.208984375,
 							"height": 40,
 							"text": "ExamResult\nSectionResult"
@@ -5877,7 +5860,7 @@
 								"$ref": "AAAAAAFymCqCHxU9U1o="
 							},
 							"lineStyle": 1,
-							"points": "1143:707;1082:708"
+							"points": "1143:694;1082:697"
 						},
 						{
 							"_type": "UMLAssociationView",
@@ -6872,15 +6855,6 @@
 							},
 							"name": "name",
 							"type": "string 50 M"
-						},
-						{
-							"_type": "UMLAttribute",
-							"_id": "AAAAAAFymCrBtBZSFK4=",
-							"_parent": {
-								"$ref": "AAAAAAFymCk+DA+puL0="
-							},
-							"name": "Attribute1",
-							"type": ""
 						}
 					]
 				},
