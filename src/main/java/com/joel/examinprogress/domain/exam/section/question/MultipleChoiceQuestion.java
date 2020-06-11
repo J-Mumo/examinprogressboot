@@ -17,19 +17,15 @@
 */
 package com.joel.examinprogress.domain.exam.section.question;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
 import com.joel.examinprogress.domain.exam.section.Section;
-import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 
 /**
  * @author Joel Mumo
@@ -91,20 +87,4 @@ public class MultipleChoiceQuestion extends AbstractPersistentEntity {
 
         this.section = section;
     }
-
-
-    public Set<Answer> getAnswers() {
-
-        return answers;
-    }
-
-
-    public void setAnswers( Set<Answer> answers ) {
-
-        this.answers = answers;
-    }
-
-    @OneToMany( mappedBy = "multiple_choice_question" )
-    private Set<Answer> answers;
-
 }

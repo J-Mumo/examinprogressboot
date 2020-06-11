@@ -60,4 +60,51 @@ public class Answer extends AbstractPersistentEntity {
             nullable = false )
     private Student student;
 
+    public String getQuestionText() {
+
+        return questionText;
+    }
+
+
+    public void setQuestionText( String questionText ) {
+
+        this.questionText = questionText;
+    }
+
+
+    public Boolean getCorrect() {
+
+        return correct;
+    }
+
+
+    public void setCorrect( Boolean correct ) {
+
+        this.correct = correct;
+    }
+
+
+    public MultipleChoiceQuestion getMultipleChoiceQuestion() {
+
+        return multipleChoiceQuestion;
+    }
+
+
+    public void setMultipleChoiceQuestion( MultipleChoiceQuestion multipleChoiceQuestion ) {
+
+        this.multipleChoiceQuestion = multipleChoiceQuestion;
+    }
+
+
+    public Student getStudent() {
+
+        return student;
+    }
+
+
+    public void setStudent( Student student ) {
+
+        this.student = student;
+    }
+
 }

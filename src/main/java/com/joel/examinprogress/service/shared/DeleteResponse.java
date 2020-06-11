@@ -15,39 +15,49 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.domain.exam.results;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-import com.joel.examinprogress.domain.AbstractPersistentEntity;
+package com.joel.examinprogress.service.shared;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   11th June, 2020
  */
-@Entity
-@Table( name = "result_type" )
-public class ResultType extends AbstractPersistentEntity {
+public class DeleteResponse {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2066452578951518357L;
+    private boolean deleted;
+    private String error;
 
-    @Column( name = "name", nullable = false, unique = false,
-            length = 50 )
-    private String name;
+    public DeleteResponse() {
 
-    public String getName() {
-
-        return name;
     }
 
 
-    public void setName( String name ) {
+    public DeleteResponse( boolean deleted, String error ) {
 
-        this.name = name;
+        this.deleted = deleted;
+        this.error = error;
+    }
+
+
+    public String getError() {
+
+        return error;
+    }
+
+
+    public void setError( String error ) {
+
+        this.error = error;
+    }
+
+
+    public boolean isDeleted() {
+
+        return deleted;
+    }
+
+
+    public void setDeleted( boolean deleted ) {
+
+        this.deleted = deleted;
     }
 }

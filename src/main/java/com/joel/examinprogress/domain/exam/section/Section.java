@@ -17,20 +17,15 @@
 */
 package com.joel.examinprogress.domain.exam.section;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
 import com.joel.examinprogress.domain.exam.Exam;
-import com.joel.examinprogress.domain.exam.results.Results;
-import com.joel.examinprogress.domain.exam.section.question.MultipleChoiceQuestion;
 
 /**
  * @author Joel Mumo
@@ -55,12 +50,6 @@ public class Section extends AbstractPersistentEntity {
             nullable = false )
     private Exam exam;
 
-    @OneToMany( mappedBy = "section" )
-    private Set<MultipleChoiceQuestion> multipleChoiceQuestions;
-
-    @OneToMany( mappedBy = "results" )
-    private Set<Results> results;
-
     public String getName() {
 
         return name;
@@ -82,29 +71,5 @@ public class Section extends AbstractPersistentEntity {
     public void setExam( Exam exam ) {
 
         this.exam = exam;
-    }
-
-
-    public Set<MultipleChoiceQuestion> getMultipleChoiceQuestions() {
-
-        return multipleChoiceQuestions;
-    }
-
-
-    public void setMultipleChoiceQuestions( Set<MultipleChoiceQuestion> multipleChoiceQuestions ) {
-
-        this.multipleChoiceQuestions = multipleChoiceQuestions;
-    }
-
-
-    public Set<Results> getResults() {
-
-        return results;
-    }
-
-
-    public void setResults( Set<Results> results ) {
-
-        this.results = results;
     }
 }
