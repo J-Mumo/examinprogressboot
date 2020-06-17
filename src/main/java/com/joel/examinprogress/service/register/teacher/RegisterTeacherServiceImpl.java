@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.register;
+package com.joel.examinprogress.service.register.teacher;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -27,11 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.organisation.DomainOrganisation;
+import com.joel.examinprogress.domain.teacher.Teacher;
 import com.joel.examinprogress.domain.user.Role;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.email.EmailSentResponse;
 import com.joel.examinprogress.helper.hash.HashHelper;
 import com.joel.examinprogress.repository.organisation.OrganisationRepository;
+import com.joel.examinprogress.repository.teacher.TeacherRepository;
 import com.joel.examinprogress.repository.user.RoleRepository;
 import com.joel.examinprogress.repository.user.UserRepository;
 import com.joel.examinprogress.service.email.EmailService;
@@ -42,13 +44,16 @@ import com.joel.examinprogress.service.shared.SaveResponse;
  * @date   28 May, 2020
  */
 @Service
-public class RegisterServiceImpl implements RegisterService {
+public class RegisterTeacherServiceImpl implements RegisterTeacherService {
 
     @Autowired
     OrganisationRepository organisationRepository;
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TeacherRepository teacherRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -84,7 +89,17 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
 
-    private User register( RegisterRequest request,
+    @Transactional
+    private void registerTeacher( User user ) {
+
+        Teacher teacher = new Teacher();
+        teacher.setUser( user );
+        teacherRepository.save( teacher );
+    }
+
+
+    @Transactional
+    private User register( RegisterTeacherRequest request,
             DomainOrganisation domainOrganisation, String email )
             throws IOException {
 
@@ -110,7 +125,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     @Transactional
-    public SaveResponse save( RegisterRequest request, String domain,
+    public SaveResponse save( RegisterTeacherRequest request, String domain,
             int serverPort, String protocol ) throws IOException {
 
         DomainOrganisation organisation = organisationRepository.findByDomain( domain );
@@ -126,6 +141,7 @@ public class RegisterServiceImpl implements RegisterService {
 
             User user = register( request, organisation,
                     email );
+            registerTeacher( user );
             Locale locale = new Locale( "en" );
 
             EmailSentResponse emailSentResponse =

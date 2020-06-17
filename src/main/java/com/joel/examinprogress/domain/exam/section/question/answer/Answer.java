@@ -43,7 +43,7 @@ public class Answer extends AbstractPersistentEntity {
 
     @Column( name = "answerText", nullable = false, unique = false,
             length = 1024 )
-    private String questionText;
+    private String answerText;
 
     @Column( name = "correct", columnDefinition = "boolean default false", nullable = false )
     private Boolean correct;
@@ -57,18 +57,18 @@ public class Answer extends AbstractPersistentEntity {
     @ManyToOne( )
     @JoinColumn( name = "fk_student",
             foreignKey = @ForeignKey( name = "answer_fk_student" ),
-            nullable = false )
+            nullable = true )
     private Student student;
 
-    public String getQuestionText() {
+    public String getAnswerText() {
 
-        return questionText;
+        return answerText;
     }
 
 
-    public void setQuestionText( String questionText ) {
+    public void setAnswerText( String answerText ) {
 
-        this.questionText = questionText;
+        this.answerText = answerText;
     }
 
 
@@ -106,5 +106,4 @@ public class Answer extends AbstractPersistentEntity {
 
         this.student = student;
     }
-
 }

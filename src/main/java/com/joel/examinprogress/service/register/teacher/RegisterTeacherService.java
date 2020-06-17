@@ -15,21 +15,21 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
+package com.joel.examinprogress.service.register.teacher;
 
-import java.util.Set;
+import java.io.IOException;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   28 May, 2020
  */
-@Repository
-public interface ExamRepository extends JpaRepository<Exam, Long> {
+public interface RegisterTeacherService {
 
-    Set<Exam> findByTeacherId( Long teacherId );
+    String EMAIL_ERROR_RBKEY = "boot/register/error/email/email_exists_already";
+
+    SaveResponse save( RegisterTeacherRequest request, String domain, int serverPort, String protocol )
+            throws IOException;
+
 }

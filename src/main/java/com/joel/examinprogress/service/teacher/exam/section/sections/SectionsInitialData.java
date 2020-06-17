@@ -15,21 +15,33 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
+package com.joel.examinprogress.service.teacher.exam.section.sections;
 
-import java.util.Set;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.service.teacher.exam.section.shared.SectionTransfer;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   16th June, 2020
  */
-@Repository
-public interface ExamRepository extends JpaRepository<Exam, Long> {
+public class SectionsInitialData {
 
-    Set<Exam> findByTeacherId( Long teacherId );
+    private SectionTransfer[] sectionTransfers;
+
+    public SectionsInitialData( SectionTransfer[] sectionTransfers ) {
+
+        super();
+        this.sectionTransfers = sectionTransfers;
+    }
+
+
+    public SectionTransfer[] getSectionTransfers() {
+
+        return sectionTransfers;
+    }
+
+
+    public void setSectionTransfers( SectionTransfer[] sectionTransfers ) {
+
+        this.sectionTransfers = sectionTransfers;
+    }
 }

@@ -15,12 +15,31 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.section;
+package com.joel.examinprogress.service.teacher.exam.exams;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   16th June, 2020
  */
-public class SectionInitialData {
+public class ExamsInitialData {
 
+    private ExamTransfer[] examTransfers;
+
+    public ExamsInitialData( ExamTransfer[] examTransfers ) {
+
+        super();
+        this.examTransfers = examTransfers;
+    }
+
+
+    public ExamTransfer[] getExamTransfers() {
+
+        return examTransfers;
+    }
+
+
+    public void setExamTransfers( ExamTransfer[] examTransfers ) {
+
+        this.examTransfers = examTransfers;
+    }
 }

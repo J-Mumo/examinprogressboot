@@ -44,6 +44,10 @@ public class Section extends AbstractPersistentEntity {
             length = 100 )
     private String name;
 
+    @Column( name = "description", nullable = true, unique = false,
+            length = 1024 )
+    private String description;
+
     @ManyToOne( )
     @JoinColumn( name = "fk_exam",
             foreignKey = @ForeignKey( name = "section_fk_exam" ),
@@ -59,6 +63,18 @@ public class Section extends AbstractPersistentEntity {
     public void setName( String name ) {
 
         this.name = name;
+    }
+
+
+    public String getDescription() {
+
+        return description;
+    }
+
+
+    public void setDescription( String description ) {
+
+        this.description = description;
     }
 
 

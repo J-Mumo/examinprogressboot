@@ -43,8 +43,8 @@ import com.joel.examinprogress.service.forgottenpassword.reset.ResetUserForgotte
 import com.joel.examinprogress.service.forgottenpassword.reset.UserResetForgottenPasswordRequest;
 import com.joel.examinprogress.service.forgottenpassword.reset.UserVerifyForgottenPasswordCodeRequest;
 import com.joel.examinprogress.service.forgottenpassword.reset.VerificationResponse;
-import com.joel.examinprogress.service.register.RegisterRequest;
-import com.joel.examinprogress.service.register.RegisterService;
+import com.joel.examinprogress.service.register.teacher.RegisterTeacherRequest;
+import com.joel.examinprogress.service.register.teacher.RegisterTeacherService;
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.loggedindetails.LoggedInUserDetails;
 import com.joel.examinprogress.service.shared.loggedindetails.LoggedInUserDetailsService;
@@ -61,7 +61,7 @@ public class UserController {
     private EmailService emailService;
 
     @Autowired
-    private RegisterService registerService;
+    private RegisterTeacherService registerService;
 
     @Autowired
     private ResetUserForgottenPasswordService resetUserForgottenPasswordService;
@@ -83,7 +83,7 @@ public class UserController {
      */
     @RequestMapping( value = "register/save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponse> save(
-            @RequestBody RegisterRequest registerRequest )
+            @RequestBody RegisterTeacherRequest registerRequest )
             throws IOException {
 
         String domain = ThreadLocals.domainThreadLocal.get();

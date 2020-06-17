@@ -15,13 +15,11 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam;
+package com.joel.examinprogress.service.teacher.exam.exams;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import javax.transaction.Transactional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,43 +30,58 @@ import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
 import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.teacher.TeacherRepository;
-import com.joel.examinprogress.service.shared.SaveResponseWithId;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   16th June, 2020
  */
 @Service
-public class ExamServiceImpl implements ExamService {
+public class ExamsServiceImpl implements ExamsService {
 
     @Autowired
-    ExamRepository examRepository;
+    private ExamRepository examRepository;
 
     @Autowired
-    TeacherRepository teacherRepository;
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private ExamTransferComparator examTransferComparator;
 
     @Autowired
     private LoggedInCredentialsHelper loggedInCredentialsHelper;
 
-    @Transactional
-    @Override
-    public SaveResponseWithId save( ExamRequest request ) {
+    private ExamTransfer createExamTransfer( Exam exam ) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm" );
-        LocalDateTime examStartTime = LocalDateTime.parse( request.getStartTime(), formatter );
-        Duration examTime = Duration.parse( request.getDuration() );
+        ExamTransfer transfer = new ExamTransfer( exam.getId(), exam.getName(), exam
+                .getDescription() );
+
+        return transfer;
+    }
+
+
+    private ExamTransfer[] createExamTransfers( Set<Exam> exams ) {
+
+        SortedSet<ExamTransfer> examTransfers =
+                new TreeSet<>( examTransferComparator );
+
+        for ( Exam exam : exams ) {
+
+            examTransfers.add( createExamTransfer( exam ) );
+        }
+
+        return examTransfers.toArray( new ExamTransfer[examTransfers.size()] );
+    }
+
+
+    @Override
+    public ExamsInitialData getInitialData() {
+
         User user = loggedInCredentialsHelper.getLoggedInUser();
         Teacher teacher = teacherRepository.findByUser( user );
-
-        Exam exam = new Exam();
-        exam.setName( request.getName() );
-        exam.setDescription( request.getDescription() );
-        exam.setStartTime( examStartTime );
-        exam.setDuration( examTime );
-        exam.setComplete( Boolean.FALSE );
-        exam.setTeacher( teacher );
-        examRepository.save( exam );
-        return new SaveResponseWithId( true, null, exam.getId() );
+        Set<Exam> exams = examRepository.findByTeacherId( teacher.getId() );
+        ExamTransfer[] examTransfers = createExamTransfers( exams );
+        ExamsInitialData initialData = new ExamsInitialData( examTransfers );
+        return initialData;
     }
 
 }

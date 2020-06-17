@@ -15,45 +15,15 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.section;
+package com.joel.examinprogress.service.teacher.exam.section;
+
+import com.joel.examinprogress.service.shared.SaveResponseWithId;
 
 /**
  * @author Joel Mumo
  * @date   11th June, 2020
  */
-public class SectionRequest {
+public interface SectionService {
 
-    private Long examId;
-    private String name;
-
-    public SectionRequest( Long examId, String name ) {
-
-        super();
-        this.examId = examId;
-        this.name = name;
-    }
-
-
-    public Long getExamId() {
-
-        return examId;
-    }
-
-
-    public void setExamId( Long examId ) {
-
-        this.examId = examId;
-    }
-
-
-    public String getName() {
-
-        return name;
-    }
-
-
-    public void setName( String name ) {
-
-        this.name = name;
-    }
+    SaveResponseWithId save( SectionRequest request );
 }

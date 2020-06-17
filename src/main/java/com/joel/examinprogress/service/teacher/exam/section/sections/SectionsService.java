@@ -15,21 +15,13 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
-
-import java.util.Set;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.Exam;
+package com.joel.examinprogress.service.teacher.exam.section.sections;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   16th June, 2020
  */
-@Repository
-public interface ExamRepository extends JpaRepository<Exam, Long> {
+public interface SectionsService {
 
-    Set<Exam> findByTeacherId( Long teacherId );
+    SectionsInitialData getInitialData( Long examId );
 }

@@ -15,21 +15,13 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.register;
-
-import java.io.IOException;
-
-import com.joel.examinprogress.service.shared.SaveResponse;
+package com.joel.examinprogress.service.teacher.exam.exams;
 
 /**
  * @author Joel Mumo
- * @date   28 May, 2020
+ * @date   16th June, 2020
  */
-public interface RegisterService {
+public interface ExamsService {
 
-    String EMAIL_ERROR_RBKEY = "boot/register/error/email/email_exists_already";
-
-    SaveResponse save( RegisterRequest request, String domain, int serverPort, String protocol )
-            throws IOException;
-
+    ExamsInitialData getInitialData();
 }

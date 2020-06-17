@@ -15,20 +15,20 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.register;
+package com.joel.examinprogress.service.register.teacher;
 
 /**
  * @author Joel Mumo
  * @date   28 May, 2020
  */
-public class RegisterRequest {
+public class RegisterTeacherRequest {
 
     private String firstName;
     private String lastName;
     private String email;
     private String password;
 
-    public RegisterRequest( String firstName, String lastName, String email, String password ) {
+    public RegisterTeacherRequest( String firstName, String lastName, String email, String password ) {
 
         super();
         this.firstName = firstName;

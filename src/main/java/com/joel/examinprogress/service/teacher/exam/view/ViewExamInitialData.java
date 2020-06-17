@@ -15,56 +15,42 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.domain.exam;
+package com.joel.examinprogress.service.teacher.exam.view;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import com.joel.examinprogress.domain.AbstractPersistentEntity;
-import com.joel.examinprogress.domain.teacher.Teacher;
+import com.joel.examinprogress.service.teacher.exam.section.shared.SectionTransfer;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   16th June, 2020
  */
-@Entity
-@Table( name = "exam" )
-public class Exam extends AbstractPersistentEntity {
+public class ViewExamInitialData {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4104392890396559528L;
-
-    @Column( name = "name", nullable = false, unique = false,
-            length = 100 )
     private String name;
-
-    @Column( name = "description", nullable = false, unique = false,
-            length = 1024 )
     private String description;
-
-    @Column( name = "start_time", nullable = false, unique = false )
     private LocalDateTime startTime;
-
-    @Column( name = "duration", nullable = false, unique = false )
-    private Duration duration;
-
-    @Column( name = "complete", columnDefinition = "boolean default false", nullable = false )
+    private String duration;
     private boolean complete;
+    private SectionTransfer[] sectionTransfers;
 
-    @ManyToOne( )
-    @JoinColumn( name = "fk_teacher",
-            foreignKey = @ForeignKey( name = "exam_fk_teacher" ),
-            nullable = false )
-    private Teacher teacher;
+    public ViewExamInitialData(
+            String name,
+            String description,
+            LocalDateTime startTime,
+            String duration,
+            boolean complete,
+            SectionTransfer[] sectionTransfers ) {
+
+        super();
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.complete = complete;
+        this.sectionTransfers = sectionTransfers;
+    }
+
 
     public String getName() {
 
@@ -102,13 +88,13 @@ public class Exam extends AbstractPersistentEntity {
     }
 
 
-    public Duration getDuration() {
+    public String getDuration() {
 
         return duration;
     }
 
 
-    public void setDuration( Duration duration ) {
+    public void setDuration( String duration ) {
 
         this.duration = duration;
     }
@@ -126,14 +112,14 @@ public class Exam extends AbstractPersistentEntity {
     }
 
 
-    public Teacher getTeacher() {
+    public SectionTransfer[] getSectionTransfers() {
 
-        return teacher;
+        return sectionTransfers;
     }
 
 
-    public void setTeacher( Teacher teacher ) {
+    public void setSectionTransfers( SectionTransfer[] sectionTransfers ) {
 
-        this.teacher = teacher;
+        this.sectionTransfers = sectionTransfers;
     }
 }

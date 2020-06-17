@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.section;
+package com.joel.examinprogress.service.teacher.exam.section;
 
 import javax.transaction.Transactional;
 
@@ -26,7 +26,7 @@ import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
-import com.joel.examinprogress.service.shared.SaveResponse;
+import com.joel.examinprogress.service.shared.SaveResponseWithId;
 
 /**
  * @author Joel Mumo
@@ -43,14 +43,15 @@ public class SectionServiceImpl implements SectionService {
 
     @Transactional
     @Override
-    public SaveResponse save( SectionRequest request ) {
+    public SaveResponseWithId save( SectionRequest request ) {
 
         Exam exam = examRepository.findById( request.getExamId() ).get();
         Section section = new Section();
         section.setName( request.getName() );
+        section.setDescription( request.getDescription() );
         section.setExam( exam );
         sectionRepository.save( section );
-        return new SaveResponse( true, null );
+        return new SaveResponseWithId( true, null, section.getId() );
     }
 
 }

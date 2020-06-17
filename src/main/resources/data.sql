@@ -993,6 +993,10 @@ VALUES (3, 'Student', 'Student', 'student@gmail.com', true,
 '$2a$10$Z65pHQUCOGWXBDjDNu/Xf.Db06XuACBO1S5FjeXfqDAHw2oDU5D/C', 'active', 1, 
 current_timestamp, current_timestamp );
 
+-- teacher ---------------------------------------------------------------------------------------
+INSERT INTO teacher (id, fk_user, created_at, updated_at) 
+VALUES (1, 2, current_timestamp, current_timestamp );
+
 -- user_role ---------------------------------------------------------------------------------------
 INSERT INTO user_role (user_id, role_id) 
 VALUES (1, 1 );

@@ -15,21 +15,15 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
+package com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.add;
 
-import java.util.Set;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   15th June, 2020
  */
-@Repository
-public interface ExamRepository extends JpaRepository<Exam, Long> {
+public interface AddMultipleChoiceQuestionService {
 
-    Set<Exam> findByTeacherId( Long teacherId );
+    SaveResponse save( AddMultipleChoiceQuestionRequest request );
 }
