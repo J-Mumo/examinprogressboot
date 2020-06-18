@@ -15,15 +15,23 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section;
+package com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared;
 
-import com.joel.examinprogress.service.shared.SaveResponseWithId;
+import java.util.Comparator;
+
+import org.springframework.stereotype.Component;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   17th June, 2020
  */
-public interface SectionService {
+@Component
+public class MultipleChoiceAnswerTransferComparator implements Comparator<
+        MultipleChoiceAnswerTransfer> {
 
-    SaveResponseWithId save( SectionRequest request );
+    @Override
+    public int compare( MultipleChoiceAnswerTransfer o1, MultipleChoiceAnswerTransfer o2 ) {
+
+        return -1 * o1.getAnswerId().compareTo( o2.getAnswerId() );
+    }
 }

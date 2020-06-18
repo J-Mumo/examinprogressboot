@@ -33,12 +33,17 @@ import com.joel.examinprogress.service.teacher.exam.ExamRequest;
 import com.joel.examinprogress.service.teacher.exam.ExamService;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsService;
-import com.joel.examinprogress.service.teacher.exam.section.SectionRequest;
-import com.joel.examinprogress.service.teacher.exam.section.SectionService;
+import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionRequest;
+import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionService;
+import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionInitialData;
+import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionRequest;
+import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionService;
 import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.add.AddMultipleChoiceQuestionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.add.AddMultipleChoiceQuestionService;
 import com.joel.examinprogress.service.teacher.exam.section.sections.SectionsInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.sections.SectionsService;
+import com.joel.examinprogress.service.teacher.exam.section.view.ViewSectionInitialData;
+import com.joel.examinprogress.service.teacher.exam.section.view.ViewSectionService;
 import com.joel.examinprogress.service.teacher.exam.view.ViewExamInitialData;
 import com.joel.examinprogress.service.teacher.exam.view.ViewExamService;
 
@@ -60,7 +65,13 @@ public class TeacherExamController {
     ViewExamService viewExamService;
 
     @Autowired
-    SectionService sectionService;
+    CreateSectionService createSectionService;
+
+    @Autowired
+    EditSectionService editSectionService;
+
+    @Autowired
+    ViewSectionService viewSectionService;
 
     @Autowired
     SectionsService sectionsService;
@@ -96,11 +107,42 @@ public class TeacherExamController {
     }
 
 
-    @RequestMapping( value = "section/save", method = RequestMethod.POST )
-    public ResponseEntity<SaveResponseWithId> save( @RequestBody SectionRequest sectionRequest )
+    @RequestMapping( value = "section/view/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<ViewSectionInitialData> getViewSectionInitialData(
+            @RequestBody Long sectionId )
             throws IOException {
 
-        SaveResponseWithId response = sectionService.save( sectionRequest );
+        ViewSectionInitialData initialData = viewSectionService.getInitialData( sectionId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "section/create/save", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponseWithId> save(
+            @RequestBody CreateSectionRequest sectionRequest )
+            throws IOException {
+
+        SaveResponseWithId response = createSectionService.save( sectionRequest );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "section/edit/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<EditSectionInitialData> getSectionInitialData(
+            @RequestBody Long sectionId )
+            throws IOException {
+
+        EditSectionInitialData initialData = editSectionService.getInitialData( sectionId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "section/edit/save", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> save(
+            @RequestBody EditSectionRequest request )
+            throws IOException {
+
+        SaveResponse response = editSectionService.save( request );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 

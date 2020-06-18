@@ -15,22 +15,23 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam.section.question.answer;
+package com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared;
 
-import java.util.Set;
+import java.util.Comparator;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.section.question.MultipleChoiceQuestion;
-import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   16th June, 2020
  */
-@Repository
-public interface AnswerRepository extends JpaRepository<Answer, Long> {
+@Component
+public class MultipleChoiceQuestionTransferComparator implements Comparator<
+        MultipleChoiceQuestionTransfer> {
 
-    Set<Answer> findByMultipleChoiceQuestion( MultipleChoiceQuestion multipleChoiceQuestion );
+    @Override
+    public int compare( MultipleChoiceQuestionTransfer o1, MultipleChoiceQuestionTransfer o2 ) {
+
+        return -1 * o1.getQuestionId().compareTo( o2.getQuestionId() );
+    }
 }

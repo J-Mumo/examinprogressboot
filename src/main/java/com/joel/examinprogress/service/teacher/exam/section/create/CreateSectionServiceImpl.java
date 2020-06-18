@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section;
+package com.joel.examinprogress.service.teacher.exam.section.create;
 
 import javax.transaction.Transactional;
 
@@ -33,7 +33,7 @@ import com.joel.examinprogress.service.shared.SaveResponseWithId;
  * @date   11th June, 2020
  */
 @Service
-public class SectionServiceImpl implements SectionService {
+public class CreateSectionServiceImpl implements CreateSectionService {
 
     @Autowired
     ExamRepository examRepository;
@@ -43,7 +43,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Transactional
     @Override
-    public SaveResponseWithId save( SectionRequest request ) {
+    public SaveResponseWithId save( CreateSectionRequest request ) {
 
         Exam exam = examRepository.findById( request.getExamId() ).get();
         Section section = new Section();
@@ -53,5 +53,4 @@ public class SectionServiceImpl implements SectionService {
         sectionRepository.save( section );
         return new SaveResponseWithId( true, null, section.getId() );
     }
-
 }

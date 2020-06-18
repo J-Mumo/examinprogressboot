@@ -15,36 +15,29 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section;
+package com.joel.examinprogress.service.teacher.exam.section.view;
+
+import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared.MultipleChoiceQuestionTransfer;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   17th June, 2020
  */
-public class SectionRequest {
+public class ViewSectionInitialData {
 
-    private Long examId;
     private String name;
     private String description;
+    private MultipleChoiceQuestionTransfer[] multipleChoiceQuestionTransfers;
 
-    public SectionRequest( Long examId, String name, String description ) {
+    public ViewSectionInitialData(
+            String name,
+            String description,
+            MultipleChoiceQuestionTransfer[] multipleChoiceQuestionTransfers ) {
 
         super();
-        this.examId = examId;
         this.name = name;
         this.description = description;
-    }
-
-
-    public Long getExamId() {
-
-        return examId;
-    }
-
-
-    public void setExamId( Long examId ) {
-
-        this.examId = examId;
+        this.multipleChoiceQuestionTransfers = multipleChoiceQuestionTransfers;
     }
 
 
@@ -69,5 +62,18 @@ public class SectionRequest {
     public void setDescription( String description ) {
 
         this.description = description;
+    }
+
+
+    public MultipleChoiceQuestionTransfer[] getMultipleChoiceQuestionTransfers() {
+
+        return multipleChoiceQuestionTransfers;
+    }
+
+
+    public void setMultipleChoiceQuestionTransfers(
+            MultipleChoiceQuestionTransfer[] multipleChoiceQuestionTransfers ) {
+
+        this.multipleChoiceQuestionTransfers = multipleChoiceQuestionTransfers;
     }
 }

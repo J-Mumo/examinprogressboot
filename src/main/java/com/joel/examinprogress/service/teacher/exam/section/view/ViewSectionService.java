@@ -15,12 +15,13 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section;
+package com.joel.examinprogress.service.teacher.exam.section.view;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   17th June, 2020
  */
-public class SectionInitialData {
+public interface ViewSectionService {
 
+    ViewSectionInitialData getInitialData( Long sectionId );
 }
