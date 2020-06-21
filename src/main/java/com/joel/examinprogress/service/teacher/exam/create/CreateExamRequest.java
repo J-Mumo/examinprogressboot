@@ -15,33 +15,35 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam;
+package com.joel.examinprogress.service.teacher.exam.create;
 
-import java.time.Duration;
-import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Joel Mumo
  * @date   11th June, 2020
  */
-public class ExamInitialData {
+public class CreateExamRequest {
 
     private String name;
     private String description;
-    private Calendar startTime;
-    private Duration duration;
+    private Date startDate;
+    private String startTime;
+    private String duration;
     private boolean complete;
 
-    public ExamInitialData(
+    public CreateExamRequest(
             String name,
             String description,
-            Calendar startTime,
-            Duration duration,
+            Date startDate,
+            String startTime,
+            String duration,
             boolean complete ) {
 
         super();
         this.name = name;
         this.description = description;
+        this.startDate = startDate;
         this.startTime = startTime;
         this.duration = duration;
         this.complete = complete;
@@ -72,25 +74,37 @@ public class ExamInitialData {
     }
 
 
-    public Calendar getStartTime() {
+    public Date getStartDate() {
+
+        return startDate;
+    }
+
+
+    public void setStartDate( Date startDate ) {
+
+        this.startDate = startDate;
+    }
+
+
+    public String getStartTime() {
 
         return startTime;
     }
 
 
-    public void setStartTime( Calendar startTime ) {
+    public void setStartTime( String startTime ) {
 
         this.startTime = startTime;
     }
 
 
-    public Duration getDuration() {
+    public String getDuration() {
 
         return duration;
     }
 
 
-    public void setDuration( Duration duration ) {
+    public void setDuration( String duration ) {
 
         this.duration = duration;
     }

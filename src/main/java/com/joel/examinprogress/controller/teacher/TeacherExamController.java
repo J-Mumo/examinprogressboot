@@ -29,8 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
-import com.joel.examinprogress.service.teacher.exam.ExamRequest;
-import com.joel.examinprogress.service.teacher.exam.ExamService;
+import com.joel.examinprogress.service.teacher.exam.create.CreateExamRequest;
+import com.joel.examinprogress.service.teacher.exam.create.CreateExamService;
+import com.joel.examinprogress.service.teacher.exam.edit.EditExamInitialData;
+import com.joel.examinprogress.service.teacher.exam.edit.EditExamService;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsService;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionRequest;
@@ -59,7 +61,10 @@ public class TeacherExamController {
     ExamsService examsService;
 
     @Autowired
-    ExamService examService;
+    CreateExamService examService;
+
+    @Autowired
+    EditExamService editExamService;
 
     @Autowired
     ViewExamService viewExamService;
@@ -88,6 +93,15 @@ public class TeacherExamController {
     }
 
 
+    @RequestMapping( value = "edit/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<EditExamInitialData> getEditExamInitialData( @RequestBody Long examId )
+            throws IOException {
+
+        EditExamInitialData initialData = editExamService.getInitialData( examId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
     @RequestMapping( value = "view/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ViewExamInitialData> getInitial( @RequestBody Long examId )
             throws IOException {
@@ -99,7 +113,7 @@ public class TeacherExamController {
 
     @RequestMapping( value = "save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponseWithId> save(
-            @RequestBody ExamRequest examRequest )
+            @RequestBody CreateExamRequest examRequest )
             throws IOException {
 
         SaveResponseWithId response = examService.save( examRequest );

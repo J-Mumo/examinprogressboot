@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam;
+package com.joel.examinprogress.service.teacher.exam.create;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -39,7 +39,7 @@ import com.joel.examinprogress.service.shared.SaveResponseWithId;
  * @date   11th June, 2020
  */
 @Service
-public class ExamServiceImpl implements ExamService {
+public class CreateExamServiceImpl implements CreateExamService {
 
     @Autowired
     ExamRepository examRepository;
@@ -52,7 +52,7 @@ public class ExamServiceImpl implements ExamService {
 
     @Transactional
     @Override
-    public SaveResponseWithId save( ExamRequest request ) {
+    public SaveResponseWithId save( CreateExamRequest request ) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm" );
         LocalDateTime examStartTime = LocalDateTime.parse( request.getStartTime(), formatter );

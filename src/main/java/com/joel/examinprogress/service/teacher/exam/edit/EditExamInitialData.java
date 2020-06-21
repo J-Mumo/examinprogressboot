@@ -15,35 +15,32 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam;
+package com.joel.examinprogress.service.teacher.exam.edit;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   21st June, 2020
  */
-public class ExamRequest {
+public class EditExamInitialData {
 
     private String name;
     private String description;
-    private Date startDate;
-    private String startTime;
+    private LocalDateTime startTime;
     private String duration;
     private boolean complete;
 
-    public ExamRequest(
+    public EditExamInitialData(
             String name,
             String description,
-            Date startDate,
-            String startTime,
+            LocalDateTime startTime,
             String duration,
             boolean complete ) {
 
         super();
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
         this.startTime = startTime;
         this.duration = duration;
         this.complete = complete;
@@ -74,25 +71,13 @@ public class ExamRequest {
     }
 
 
-    public Date getStartDate() {
-
-        return startDate;
-    }
-
-
-    public void setStartDate( Date startDate ) {
-
-        this.startDate = startDate;
-    }
-
-
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
 
         return startTime;
     }
 
 
-    public void setStartTime( String startTime ) {
+    public void setStartTime( LocalDateTime startTime ) {
 
         this.startTime = startTime;
     }
