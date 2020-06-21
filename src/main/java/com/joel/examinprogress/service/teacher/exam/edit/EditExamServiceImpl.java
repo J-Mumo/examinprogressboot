@@ -20,6 +20,7 @@ package com.joel.examinprogress.service.teacher.exam.edit;
 import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.repository.exam.ExamRepository;
@@ -28,6 +29,7 @@ import com.joel.examinprogress.repository.exam.ExamRepository;
  * @author Joel Mumo
  * @date   21st June, 2020
  */
+@Service
 public class EditExamServiceImpl implements EditExamService {
 
     @Autowired
