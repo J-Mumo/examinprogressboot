@@ -17,8 +17,6 @@
 */
 package com.joel.examinprogress.service.teacher.exam.create;
 
-import java.util.Date;
-
 /**
  * @author Joel Mumo
  * @date   11th June, 2020
@@ -27,26 +25,20 @@ public class CreateExamRequest {
 
     private String name;
     private String description;
-    private Date startDate;
-    private String startTime;
     private String duration;
-    private boolean complete;
+    private Long examTimerTypeId;
 
     public CreateExamRequest(
             String name,
             String description,
-            Date startDate,
-            String startTime,
             String duration,
-            boolean complete ) {
+            Long examTimerTypeId ) {
 
         super();
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.startTime = startTime;
         this.duration = duration;
-        this.complete = complete;
+        this.examTimerTypeId = examTimerTypeId;
     }
 
 
@@ -74,30 +66,6 @@ public class CreateExamRequest {
     }
 
 
-    public Date getStartDate() {
-
-        return startDate;
-    }
-
-
-    public void setStartDate( Date startDate ) {
-
-        this.startDate = startDate;
-    }
-
-
-    public String getStartTime() {
-
-        return startTime;
-    }
-
-
-    public void setStartTime( String startTime ) {
-
-        this.startTime = startTime;
-    }
-
-
     public String getDuration() {
 
         return duration;
@@ -110,14 +78,14 @@ public class CreateExamRequest {
     }
 
 
-    public boolean isComplete() {
+    public Long getExamTimerTypeId() {
 
-        return complete;
+        return examTimerTypeId;
     }
 
 
-    public void setComplete( boolean complete ) {
+    public void setExamTimerTypeId( Long examTimerTypeId ) {
 
-        this.complete = complete;
+        this.examTimerTypeId = examTimerTypeId;
     }
 }

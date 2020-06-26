@@ -17,8 +17,6 @@
 */
 package com.joel.examinprogress.service.teacher.exam.edit;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Joel Mumo
  * @date   21st June, 2020
@@ -27,23 +25,17 @@ public class EditExamInitialData {
 
     private String name;
     private String description;
-    private LocalDateTime startTime;
     private String duration;
-    private boolean complete;
 
     public EditExamInitialData(
             String name,
             String description,
-            LocalDateTime startTime,
-            String duration,
-            boolean complete ) {
+            String duration ) {
 
         super();
         this.name = name;
         this.description = description;
-        this.startTime = startTime;
         this.duration = duration;
-        this.complete = complete;
     }
 
 
@@ -71,18 +63,6 @@ public class EditExamInitialData {
     }
 
 
-    public LocalDateTime getStartTime() {
-
-        return startTime;
-    }
-
-
-    public void setStartTime( LocalDateTime startTime ) {
-
-        this.startTime = startTime;
-    }
-
-
     public String getDuration() {
 
         return duration;
@@ -92,17 +72,5 @@ public class EditExamInitialData {
     public void setDuration( String duration ) {
 
         this.duration = duration;
-    }
-
-
-    public boolean isComplete() {
-
-        return complete;
-    }
-
-
-    public void setComplete( boolean complete ) {
-
-        this.complete = complete;
     }
 }

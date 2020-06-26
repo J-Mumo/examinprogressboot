@@ -25,5 +25,8 @@ import com.joel.examinprogress.service.shared.SaveResponseWithId;
  */
 public interface CreateExamService {
 
+    CreateExamInitialData getInitialData();
+
+
     SaveResponseWithId save( CreateExamRequest request );
 }

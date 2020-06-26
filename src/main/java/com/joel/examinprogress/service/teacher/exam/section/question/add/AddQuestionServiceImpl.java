@@ -15,7 +15,10 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.add;
+package com.joel.examinprogress.service.teacher.exam.section.question.add;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -23,11 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.Section;
-import com.joel.examinprogress.domain.exam.section.question.MultipleChoiceQuestion;
-import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
+import com.joel.examinprogress.domain.exam.section.question.Question;
+import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
-import com.joel.examinprogress.repository.exam.section.question.MultipleChoiceQuestionRepository;
-import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
+import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
+import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
@@ -35,34 +38,37 @@ import com.joel.examinprogress.service.shared.SaveResponse;
  * @date   15th June, 2020
  */
 @Service
-public class AddMultipleChoiceQuestionServiceImpl implements AddMultipleChoiceQuestionService {
+public class AddQuestionServiceImpl implements AddQuestionService {
 
     @Autowired
     SectionRepository sectionRepository;
 
     @Autowired
-    AnswerRepository answerRepository;
+    MultipleChoiceAnswerRepository answerRepository;
 
     @Autowired
-    MultipleChoiceQuestionRepository multipleChoiceQuestionRepository;
+    QuestionRepository questionRepository;
 
     @Transactional
     @Override
-    public SaveResponse save( AddMultipleChoiceQuestionRequest request ) {
+    public SaveResponse save( AddQuestionRequest request ) {
 
         Section section = sectionRepository.findById( request.getSectionId() ).get();
-        MultipleChoiceQuestion multipleChoiceQuestion = new MultipleChoiceQuestion();
-        multipleChoiceQuestion.setQuestionText( request.getQuestionText() );
-        multipleChoiceQuestion.setScore( request.getScore() );
-        multipleChoiceQuestion.setSection( section );
-        multipleChoiceQuestionRepository.save( multipleChoiceQuestion );
+        Question question = new Question();
+        question.setQuestionText( request.getQuestionText() );
+        question.setScore( request.getScore() );
+        questionRepository.save( question );
+
+        Set<Question> questions = new HashSet<Question>();
+        questions.add( question );
+        section.setQuestions( questions );
+        sectionRepository.save( section );
 
         for ( AddMultipleChoiceQuestionAnswerRequest answerRequest : request
                 .getAddMultipleChoiceQuestionAnswerRequests() ) {
-            Answer answer = new Answer();
+            MultipleChoiceAnswer answer = new MultipleChoiceAnswer();
             answer.setAnswerText( answerRequest.getAnswerText() );
-            answer.setCorrect( answerRequest.isCorrect() );
-            answer.setMultipleChoiceQuestion( multipleChoiceQuestion );
+            answer.setQuestion( question );
             answerRepository.save( answer );
         }
 

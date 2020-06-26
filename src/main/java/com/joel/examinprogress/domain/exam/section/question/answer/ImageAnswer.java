@@ -15,60 +15,61 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.domain.exam;
+package com.joel.examinprogress.domain.exam.section.question.answer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
+import com.joel.examinprogress.domain.exam.section.question.Question;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   25th June, 2020
  */
 @Entity
-@Table( name = "exam_token" )
-public class ExamToken extends AbstractPersistentEntity {
+@Table( name = "image_answer" )
+public class ImageAnswer extends AbstractPersistentEntity {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 3910693378116108040L;
+    private static final long serialVersionUID = -6816947449326529070L;
 
-    @Column( name = "token", nullable = false, unique = false,
-            length = 128 )
-    private String token;
+    @Column( name = "answerText", nullable = false, unique = false )
+    private String answerText;
 
-    @ManyToOne( )
-    @JoinColumn( name = "fk_invite",
-            foreignKey = @ForeignKey( name = "exam_token_fk_invite" ),
+    @OneToOne( )
+    @JoinColumn( name = "fk_question",
+            foreignKey = @ForeignKey( name = "multiple_choice_answer_fk_question" ),
             nullable = false )
-    private Invite invite;
+    private Question question;
 
-    public String getToken() {
+    public String getAnswerText() {
 
-        return token;
+        return answerText;
     }
 
 
-    public void setToken( String token ) {
+    public void setAnswerText( String answerText ) {
 
-        this.token = token;
+        this.answerText = answerText;
     }
 
 
-    public Invite getInvite() {
+    public Question getQuestion() {
 
-        return invite;
+        return question;
     }
 
 
-    public void setInvite( Invite invite ) {
+    public void setQuestion( Question question ) {
 
-        this.invite = invite;
+        this.question = question;
     }
+
 }

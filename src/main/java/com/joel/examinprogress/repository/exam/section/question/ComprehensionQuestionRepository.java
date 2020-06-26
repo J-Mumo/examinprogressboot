@@ -15,18 +15,19 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.edit;
+package com.joel.examinprogress.repository.exam.section.question;
 
-import com.joel.examinprogress.service.shared.SaveResponse;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.joel.examinprogress.domain.exam.section.question.ComprehensionQuestion;
 
 /**
  * @author Joel Mumo
- * @date   21st June, 2020
+ * @date   26th June, 2020
  */
-public interface EditExamService {
+@Repository
+public interface ComprehensionQuestionRepository extends JpaRepository<ComprehensionQuestion,
+        Long> {
 
-    EditExamInitialData getInitialData( Long examId );
-
-
-    SaveResponse save( EditExamRequest request );
 }

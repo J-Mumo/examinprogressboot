@@ -29,8 +29,8 @@ import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
-import com.joel.examinprogress.service.teacher.exam.section.shared.SectionTransfer;
-import com.joel.examinprogress.service.teacher.exam.section.shared.SectionTransferComparator;
+import com.joel.examinprogress.service.teacher.exam.shared.SectionTransfer;
+import com.joel.examinprogress.service.teacher.exam.shared.SectionTransferComparator;
 
 /**
  * @author Joel Mumo
@@ -84,8 +84,7 @@ public class ViewExamServiceImpl implements ViewExamService {
                 ( examDuration.getSeconds() % 3600 ) / 60, ( examDuration.getSeconds() % 60 ) );
 
         ViewExamInitialData initialData = new ViewExamInitialData(
-                exam.getName(), exam.getDescription(), exam.getStartTime(),
-                duration, exam.isComplete(), sectionTransfers );
+                exam.getName(), exam.getDescription(), duration, sectionTransfers );
 
         return initialData;
     }

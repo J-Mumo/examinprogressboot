@@ -23,4 +23,69 @@ package com.joel.examinprogress.service.teacher.exam.edit;
  */
 public class EditExamRequest {
 
+    private Long examId;
+    private String name;
+    private String description;
+    private String duration;
+
+    public EditExamRequest(
+            Long examId,
+            String name,
+            String description,
+            String duration ) {
+
+        super();
+        this.examId = examId;
+        this.name = name;
+        this.description = description;
+        this.duration = duration;
+    }
+
+
+    public Long getExamId() {
+
+        return examId;
+    }
+
+
+    public void setExamId( Long examId ) {
+
+        this.examId = examId;
+    }
+
+
+    public String getName() {
+
+        return name;
+    }
+
+
+    public void setName( String name ) {
+
+        this.name = name;
+    }
+
+
+    public String getDescription() {
+
+        return description;
+    }
+
+
+    public void setDescription( String description ) {
+
+        this.description = description;
+    }
+
+
+    public String getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( String duration ) {
+
+        this.duration = duration;
+    }
 }

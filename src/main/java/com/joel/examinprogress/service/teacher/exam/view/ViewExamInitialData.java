@@ -17,9 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.view;
 
-import java.time.LocalDateTime;
-
-import com.joel.examinprogress.service.teacher.exam.section.shared.SectionTransfer;
+import com.joel.examinprogress.service.teacher.exam.shared.SectionTransfer;
 
 /**
  * @author Joel Mumo
@@ -29,25 +27,19 @@ public class ViewExamInitialData {
 
     private String name;
     private String description;
-    private LocalDateTime startTime;
     private String duration;
-    private boolean complete;
     private SectionTransfer[] sectionTransfers;
 
     public ViewExamInitialData(
             String name,
             String description,
-            LocalDateTime startTime,
             String duration,
-            boolean complete,
             SectionTransfer[] sectionTransfers ) {
 
         super();
         this.name = name;
         this.description = description;
-        this.startTime = startTime;
         this.duration = duration;
-        this.complete = complete;
         this.sectionTransfers = sectionTransfers;
     }
 
@@ -76,18 +68,6 @@ public class ViewExamInitialData {
     }
 
 
-    public LocalDateTime getStartTime() {
-
-        return startTime;
-    }
-
-
-    public void setStartTime( LocalDateTime startTime ) {
-
-        this.startTime = startTime;
-    }
-
-
     public String getDuration() {
 
         return duration;
@@ -97,18 +77,6 @@ public class ViewExamInitialData {
     public void setDuration( String duration ) {
 
         this.duration = duration;
-    }
-
-
-    public boolean isComplete() {
-
-        return complete;
-    }
-
-
-    public void setComplete( boolean complete ) {
-
-        this.complete = complete;
     }
 
 

@@ -15,33 +15,45 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.sections;
-
-import com.joel.examinprogress.service.teacher.exam.shared.SectionTransfer;
+package com.joel.examinprogress.service.teacher.exam.shared;
 
 /**
  * @author Joel Mumo
- * @date   16th June, 2020
+ * @date   26th June, 2020
  */
-public class SectionsInitialData {
+public class ExamTimerTypeTransfer {
 
-    private SectionTransfer[] sectionTransfers;
+    private Long examTimerTypeId;
+    private String name;
 
-    public SectionsInitialData( SectionTransfer[] sectionTransfers ) {
+    public ExamTimerTypeTransfer( Long examTimerTypeId, String name ) {
 
         super();
-        this.sectionTransfers = sectionTransfers;
+        this.examTimerTypeId = examTimerTypeId;
+        this.name = name;
     }
 
 
-    public SectionTransfer[] getSectionTransfers() {
+    public Long getExamTimerTypeId() {
 
-        return sectionTransfers;
+        return examTimerTypeId;
     }
 
 
-    public void setSectionTransfers( SectionTransfer[] sectionTransfers ) {
+    public void setExamTimerTypeId( Long examTimerTypeId ) {
 
-        this.sectionTransfers = sectionTransfers;
+        this.examTimerTypeId = examTimerTypeId;
+    }
+
+
+    public String getName() {
+
+        return name;
+    }
+
+
+    public void setName( String name ) {
+
+        this.name = name;
     }
 }

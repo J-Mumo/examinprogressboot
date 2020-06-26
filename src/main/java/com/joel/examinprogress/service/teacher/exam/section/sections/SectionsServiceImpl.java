@@ -26,8 +26,8 @@ import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
-import com.joel.examinprogress.service.teacher.exam.section.shared.SectionTransfer;
-import com.joel.examinprogress.service.teacher.exam.section.shared.SectionTransferComparator;
+import com.joel.examinprogress.service.teacher.exam.shared.SectionTransfer;
+import com.joel.examinprogress.service.teacher.exam.shared.SectionTransferComparator;
 
 /**
  * @author Joel Mumo

@@ -17,8 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.create;
 
-import java.time.Duration;
-import java.util.Calendar;
+import com.joel.examinprogress.service.teacher.exam.shared.ExamTimerTypeTransfer;
 
 /**
  * @author Joel Mumo
@@ -26,84 +25,23 @@ import java.util.Calendar;
  */
 public class CreateExamInitialData {
 
-    private String name;
-    private String description;
-    private Calendar startTime;
-    private Duration duration;
-    private boolean complete;
+    private ExamTimerTypeTransfer[] examTimerTypeTransfers;
 
-    public CreateExamInitialData(
-            String name,
-            String description,
-            Calendar startTime,
-            Duration duration,
-            boolean complete ) {
+    public CreateExamInitialData( ExamTimerTypeTransfer[] examTimerTypeTransfers ) {
 
         super();
-        this.name = name;
-        this.description = description;
-        this.startTime = startTime;
-        this.duration = duration;
-        this.complete = complete;
+        this.examTimerTypeTransfers = examTimerTypeTransfers;
     }
 
 
-    public String getName() {
+    public ExamTimerTypeTransfer[] getExamTimerTypeTransfers() {
 
-        return name;
+        return examTimerTypeTransfers;
     }
 
 
-    public void setName( String name ) {
+    public void setExamTimerTypeTransfers( ExamTimerTypeTransfer[] examTimerTypeTransfers ) {
 
-        this.name = name;
-    }
-
-
-    public String getDescription() {
-
-        return description;
-    }
-
-
-    public void setDescription( String description ) {
-
-        this.description = description;
-    }
-
-
-    public Calendar getStartTime() {
-
-        return startTime;
-    }
-
-
-    public void setStartTime( Calendar startTime ) {
-
-        this.startTime = startTime;
-    }
-
-
-    public Duration getDuration() {
-
-        return duration;
-    }
-
-
-    public void setDuration( Duration duration ) {
-
-        this.duration = duration;
-    }
-
-
-    public boolean isComplete() {
-
-        return complete;
-    }
-
-
-    public void setComplete( boolean complete ) {
-
-        this.complete = complete;
+        this.examTimerTypeTransfers = examTimerTypeTransfers;
     }
 }

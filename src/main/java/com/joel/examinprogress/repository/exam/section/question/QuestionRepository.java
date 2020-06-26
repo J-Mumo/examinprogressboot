@@ -17,20 +17,17 @@
 */
 package com.joel.examinprogress.repository.exam.section.question;
 
-import java.util.Set;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.joel.examinprogress.domain.exam.section.question.MultipleChoiceQuestion;
+import com.joel.examinprogress.domain.exam.section.question.Question;
 
 /**
  * @author Joel Mumo
  * @date   9th June, 2020
  */
 @Repository
-public interface MultipleChoiceQuestionRepository extends JpaRepository<MultipleChoiceQuestion,
+public interface QuestionRepository extends JpaRepository<Question,
         Long> {
 
-    Set<MultipleChoiceQuestion> findBySectionId( Long sectionId );
 }

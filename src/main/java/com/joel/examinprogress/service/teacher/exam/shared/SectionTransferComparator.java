@@ -15,18 +15,22 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.edit;
+package com.joel.examinprogress.service.teacher.exam.shared;
 
-import com.joel.examinprogress.service.shared.SaveResponse;
+import java.util.Comparator;
+
+import org.springframework.stereotype.Component;
 
 /**
  * @author Joel Mumo
- * @date   21st June, 2020
+ * @date   16th June, 2020
  */
-public interface EditExamService {
+@Component
+public class SectionTransferComparator implements Comparator<SectionTransfer> {
 
-    EditExamInitialData getInitialData( Long examId );
+    @Override
+    public int compare( SectionTransfer o1, SectionTransfer o2 ) {
 
-
-    SaveResponse save( EditExamRequest request );
+        return -1 * o1.getSectionId().compareTo( o2.getSectionId() );
+    }
 }

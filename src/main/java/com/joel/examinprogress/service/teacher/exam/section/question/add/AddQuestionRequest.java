@@ -15,20 +15,20 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.add;
+package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
 /**
  * @author Joel Mumo
  * @date   15th June, 2020
  */
-public class AddMultipleChoiceQuestionRequest {
+public class AddQuestionRequest {
 
     private Long sectionId;
     private String questionText;
     private Integer score;
     private AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
 
-    public AddMultipleChoiceQuestionRequest(
+    public AddQuestionRequest(
             Long sectionId,
             String questionText,
             Integer score,

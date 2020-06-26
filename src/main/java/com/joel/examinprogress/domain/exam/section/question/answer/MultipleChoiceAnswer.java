@@ -25,7 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
-import com.joel.examinprogress.domain.exam.section.question.MultipleChoiceQuestion;
+import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.student.Student;
 
 /**
@@ -33,8 +33,8 @@ import com.joel.examinprogress.domain.student.Student;
  * @date   9th June, 2020
  */
 @Entity
-@Table( name = "answer" )
-public class Answer extends AbstractPersistentEntity {
+@Table( name = "multiple_choice_answer" )
+public class MultipleChoiceAnswer extends AbstractPersistentEntity {
 
     /**
      * 
@@ -45,14 +45,11 @@ public class Answer extends AbstractPersistentEntity {
             length = 1024 )
     private String answerText;
 
-    @Column( name = "correct", columnDefinition = "boolean default false", nullable = false )
-    private Boolean correct;
-
     @ManyToOne( )
-    @JoinColumn( name = "fk_multiple_choice_question",
-            foreignKey = @ForeignKey( name = "answer_fk_multiple_choice_question" ),
+    @JoinColumn( name = "fk_question",
+            foreignKey = @ForeignKey( name = "multiple_choice_answer_fk_question" ),
             nullable = false )
-    private MultipleChoiceQuestion multipleChoiceQuestion;
+    private Question question;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_student",
@@ -72,27 +69,15 @@ public class Answer extends AbstractPersistentEntity {
     }
 
 
-    public Boolean getCorrect() {
+    public Question getQuestion() {
 
-        return correct;
+        return question;
     }
 
 
-    public void setCorrect( Boolean correct ) {
+    public void setQuestion( Question question ) {
 
-        this.correct = correct;
-    }
-
-
-    public MultipleChoiceQuestion getMultipleChoiceQuestion() {
-
-        return multipleChoiceQuestion;
-    }
-
-
-    public void setMultipleChoiceQuestion( MultipleChoiceQuestion multipleChoiceQuestion ) {
-
-        this.multipleChoiceQuestion = multipleChoiceQuestion;
+        this.question = question;
     }
 
 

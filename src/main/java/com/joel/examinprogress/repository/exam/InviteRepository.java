@@ -15,22 +15,18 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.shared;
+package com.joel.examinprogress.repository.exam;
 
-import java.util.Comparator;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import org.springframework.stereotype.Component;
+import com.joel.examinprogress.domain.exam.Invite;
 
 /**
  * @author Joel Mumo
- * @date   16th June, 2020
+ * @date   26th June, 2020
  */
-@Component
-public class SectionTransferComparator implements Comparator<SectionTransfer> {
+@Repository
+public interface InviteRepository extends JpaRepository<Invite, Long> {
 
-    @Override
-    public int compare( SectionTransfer o1, SectionTransfer o2 ) {
-
-        return -1 * o1.getSectionId().compareTo( o2.getSectionId() );
-    }
 }

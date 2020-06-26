@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.add;
+package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
 /**
  * @author Joel Mumo

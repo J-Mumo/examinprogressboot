@@ -15,33 +15,39 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.sections;
+package com.joel.examinprogress.domain.exam;
 
-import com.joel.examinprogress.service.teacher.exam.shared.SectionTransfer;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import com.joel.examinprogress.domain.AbstractPersistentEntity;
 
 /**
  * @author Joel Mumo
- * @date   16th June, 2020
+ * @date   25th June, 2020
  */
-public class SectionsInitialData {
+@Entity
+@Table( name = "exam_timer_type" )
+public class ExamTimerType extends AbstractPersistentEntity {
 
-    private SectionTransfer[] sectionTransfers;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8019189203812914933L;
 
-    public SectionsInitialData( SectionTransfer[] sectionTransfers ) {
+    @Column( name = "name", nullable = false, unique = false,
+            length = 50 )
+    private String name;
 
-        super();
-        this.sectionTransfers = sectionTransfers;
+    public String getName() {
+
+        return name;
     }
 
 
-    public SectionTransfer[] getSectionTransfers() {
+    public void setName( String name ) {
 
-        return sectionTransfers;
-    }
-
-
-    public void setSectionTransfers( SectionTransfer[] sectionTransfers ) {
-
-        this.sectionTransfers = sectionTransfers;
+        this.name = name;
     }
 }

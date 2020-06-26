@@ -17,11 +17,14 @@
 */
 package com.joel.examinprogress.domain.exam.section.question;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
@@ -29,29 +32,32 @@ import com.joel.examinprogress.domain.exam.section.Section;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   25th June, 2020
  */
 @Entity
-@Table( name = "multiple_choice_question" )
-public class MultipleChoiceQuestion extends AbstractPersistentEntity {
+@Table( name = "comprehension_question" )
+public class ComprehensionQuestion extends AbstractPersistentEntity {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 4052146954471159233L;
+    private static final long serialVersionUID = -7463941169539816604L;
 
     @Column( name = "questionText", nullable = false, unique = false,
             length = 1024 )
     private String questionText;
-
-    @Column( name = "score", nullable = false, unique = false )
-    private Integer score;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_section",
             foreignKey = @ForeignKey( name = "multiple_choice_question_fk_section" ),
             nullable = false )
     private Section section;
+
+    @OneToMany( )
+    @JoinColumn( name = "fk_questions",
+            foreignKey = @ForeignKey( name = "comprehension_question_fk_questions" ),
+            nullable = false )
+    private Set<Question> questions;
 
     public String getQuestionText() {
 
@@ -65,18 +71,6 @@ public class MultipleChoiceQuestion extends AbstractPersistentEntity {
     }
 
 
-    public Integer getScore() {
-
-        return score;
-    }
-
-
-    public void setScore( Integer score ) {
-
-        this.score = score;
-    }
-
-
     public Section getSection() {
 
         return section;
@@ -86,5 +80,17 @@ public class MultipleChoiceQuestion extends AbstractPersistentEntity {
     public void setSection( Section section ) {
 
         this.section = section;
+    }
+
+
+    public Set<Question> getQuestions() {
+
+        return questions;
+    }
+
+
+    public void setQuestions( Set<Question> questions ) {
+
+        this.questions = questions;
     }
 }

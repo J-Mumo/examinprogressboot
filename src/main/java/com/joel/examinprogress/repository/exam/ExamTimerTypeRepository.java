@@ -15,22 +15,18 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam.section.question.answer;
-
-import java.util.Set;
+package com.joel.examinprogress.repository.exam;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.joel.examinprogress.domain.exam.section.question.MultipleChoiceQuestion;
-import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
+import com.joel.examinprogress.domain.exam.ExamTimerType;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   26th June, 2020
  */
 @Repository
-public interface AnswerRepository extends JpaRepository<Answer, Long> {
+public interface ExamTimerTypeRepository extends JpaRepository<ExamTimerType, Long> {
 
-    Set<Answer> findByMultipleChoiceQuestion( MultipleChoiceQuestion multipleChoiceQuestion );
 }

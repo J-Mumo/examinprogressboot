@@ -15,18 +15,15 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.edit;
+package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
 import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
  * @author Joel Mumo
- * @date   21st June, 2020
+ * @date   15th June, 2020
  */
-public interface EditExamService {
+public interface AddQuestionService {
 
-    EditExamInitialData getInitialData( Long examId );
-
-
-    SaveResponse save( EditExamRequest request );
+    SaveResponse save( AddQuestionRequest request );
 }

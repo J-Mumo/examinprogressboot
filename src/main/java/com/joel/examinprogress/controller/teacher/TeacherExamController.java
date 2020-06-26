@@ -29,9 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
+import com.joel.examinprogress.service.teacher.exam.create.CreateExamInitialData;
 import com.joel.examinprogress.service.teacher.exam.create.CreateExamRequest;
 import com.joel.examinprogress.service.teacher.exam.create.CreateExamService;
 import com.joel.examinprogress.service.teacher.exam.edit.EditExamInitialData;
+import com.joel.examinprogress.service.teacher.exam.edit.EditExamRequest;
 import com.joel.examinprogress.service.teacher.exam.edit.EditExamService;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsService;
@@ -40,8 +42,8 @@ import com.joel.examinprogress.service.teacher.exam.section.create.CreateSection
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionService;
-import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.add.AddMultipleChoiceQuestionRequest;
-import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.add.AddMultipleChoiceQuestionService;
+import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionRequest;
+import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionService;
 import com.joel.examinprogress.service.teacher.exam.section.sections.SectionsInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.sections.SectionsService;
 import com.joel.examinprogress.service.teacher.exam.section.view.ViewSectionInitialData;
@@ -61,7 +63,7 @@ public class TeacherExamController {
     ExamsService examsService;
 
     @Autowired
-    CreateExamService examService;
+    CreateExamService createExamService;
 
     @Autowired
     EditExamService editExamService;
@@ -82,7 +84,7 @@ public class TeacherExamController {
     SectionsService sectionsService;
 
     @Autowired
-    AddMultipleChoiceQuestionService addMultipleChoiceQuestionService;
+    AddQuestionService addMultipleChoiceQuestionService;
 
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamsInitialData> getInitialData()
@@ -102,6 +104,16 @@ public class TeacherExamController {
     }
 
 
+    @RequestMapping( value = "edit/save", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> save(
+            @RequestBody EditExamRequest examRequest )
+            throws IOException {
+
+        SaveResponse response = editExamService.save( examRequest );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
     @RequestMapping( value = "view/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ViewExamInitialData> getInitial( @RequestBody Long examId )
             throws IOException {
@@ -111,12 +123,21 @@ public class TeacherExamController {
     }
 
 
+    @RequestMapping( value = "create/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<CreateExamInitialData> getCreateExamInitialData()
+            throws IOException {
+
+        CreateExamInitialData initialData = createExamService.getInitialData();
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
     @RequestMapping( value = "save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponseWithId> save(
             @RequestBody CreateExamRequest examRequest )
             throws IOException {
 
-        SaveResponseWithId response = examService.save( examRequest );
+        SaveResponseWithId response = createExamService.save( examRequest );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
@@ -163,7 +184,7 @@ public class TeacherExamController {
 
     @RequestMapping( value = "section/multiplechoicequestion/save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponse> save(
-            @RequestBody AddMultipleChoiceQuestionRequest request )
+            @RequestBody AddQuestionRequest request )
             throws IOException {
 
         SaveResponse response = addMultipleChoiceQuestionService.save( request );

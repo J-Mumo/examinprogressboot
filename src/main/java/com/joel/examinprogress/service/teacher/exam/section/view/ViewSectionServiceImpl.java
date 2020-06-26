@@ -25,11 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.Section;
-import com.joel.examinprogress.domain.exam.section.question.MultipleChoiceQuestion;
-import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
+import com.joel.examinprogress.domain.exam.section.question.Question;
+import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
-import com.joel.examinprogress.repository.exam.section.question.MultipleChoiceQuestionRepository;
-import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
+import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
 import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared.MultipleChoiceAnswerTransfer;
 import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared.MultipleChoiceAnswerTransferComparator;
 import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared.MultipleChoiceQuestionTransfer;
@@ -46,10 +45,7 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     private SectionRepository sectionRepository;
 
     @Autowired
-    private MultipleChoiceQuestionRepository multipleChoiceQuestionRepository;
-
-    @Autowired
-    private AnswerRepository answerRepository;
+    private MultipleChoiceAnswerRepository answerRepository;
 
     @Autowired
     private MultipleChoiceQuestionTransferComparator multipleChoiceQuestionTransferComparator;
@@ -57,7 +53,8 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     @Autowired
     private MultipleChoiceAnswerTransferComparator multipleChoiceAnswerTransferComparator;
 
-    private MultipleChoiceAnswerTransfer createMultipleChoiceAnswerTransfer( Answer answer ) {
+    private MultipleChoiceAnswerTransfer createMultipleChoiceAnswerTransfer(
+            MultipleChoiceAnswer answer ) {
 
         MultipleChoiceAnswerTransfer transfer = new MultipleChoiceAnswerTransfer(
                 answer.getId(), answer.getAnswerText() );
@@ -67,12 +64,12 @@ public class ViewSectionServiceImpl implements ViewSectionService {
 
 
     private MultipleChoiceAnswerTransfer[] createMultipleChoiceAnswerTransfers( Set<
-            Answer> answers ) {
+            MultipleChoiceAnswer> answers ) {
 
         SortedSet<MultipleChoiceAnswerTransfer> multipleChoiceAnswerTransfers =
                 new TreeSet<>( multipleChoiceAnswerTransferComparator );
 
-        for ( Answer answer : answers ) {
+        for ( MultipleChoiceAnswer answer : answers ) {
 
             multipleChoiceAnswerTransfers.add( createMultipleChoiceAnswerTransfer(
                     answer ) );
@@ -84,9 +81,9 @@ public class ViewSectionServiceImpl implements ViewSectionService {
 
 
     private MultipleChoiceQuestionTransfer createMultipleChoiceQuestionTransfer(
-            MultipleChoiceQuestion multipleChoiceQuestion ) {
+            Question multipleChoiceQuestion ) {
 
-        Set<Answer> answers = answerRepository.findByMultipleChoiceQuestion(
+        Set<MultipleChoiceAnswer> answers = answerRepository.findByQuestion(
                 multipleChoiceQuestion );
 
         MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers =
@@ -103,15 +100,15 @@ public class ViewSectionServiceImpl implements ViewSectionService {
 
 
     private MultipleChoiceQuestionTransfer[] createMultipleChoiceQuestionTransfers( Set<
-            MultipleChoiceQuestion> multipleChoiceQuestions ) {
+            Question> questions ) {
 
         SortedSet<MultipleChoiceQuestionTransfer> multipleChoiceQuestionTransfers =
                 new TreeSet<>( multipleChoiceQuestionTransferComparator );
 
-        for ( MultipleChoiceQuestion multipleChoiceQuestion : multipleChoiceQuestions ) {
+        for ( Question question : questions ) {
 
             multipleChoiceQuestionTransfers.add( createMultipleChoiceQuestionTransfer(
-                    multipleChoiceQuestion ) );
+                    question ) );
         }
 
         return multipleChoiceQuestionTransfers.toArray(
@@ -125,11 +122,10 @@ public class ViewSectionServiceImpl implements ViewSectionService {
         Section section = sectionRepository.findById( sectionId ).get();
         String name = section.getName();
         String description = section.getDescription();
-        Set<MultipleChoiceQuestion> multipleChoiceQuestions = multipleChoiceQuestionRepository
-                .findBySectionId( sectionId );
+        Set<Question> questions = section.getQuestions();
 
         MultipleChoiceQuestionTransfer[] multipleChoiceQuestionTransfers =
-                createMultipleChoiceQuestionTransfers( multipleChoiceQuestions );
+                createMultipleChoiceQuestionTransfers( questions );
 
         ViewSectionInitialData initialData = new ViewSectionInitialData( name, description,
                 multipleChoiceQuestionTransfers );

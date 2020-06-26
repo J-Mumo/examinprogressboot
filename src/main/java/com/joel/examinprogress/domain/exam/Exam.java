@@ -18,7 +18,6 @@
 package com.joel.examinprogress.domain.exam;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,20 +50,20 @@ public class Exam extends AbstractPersistentEntity {
             length = 1024 )
     private String description;
 
-    @Column( name = "start_time", nullable = false, unique = false )
-    private LocalDateTime startTime;
-
-    @Column( name = "duration", nullable = false, unique = false )
+    @Column( name = "duration", nullable = true, unique = false )
     private Duration duration;
-
-    @Column( name = "complete", columnDefinition = "boolean default false", nullable = false )
-    private boolean complete;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_teacher",
             foreignKey = @ForeignKey( name = "exam_fk_teacher" ),
             nullable = false )
     private Teacher teacher;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_exam_timer_type",
+            foreignKey = @ForeignKey( name = "exam_fk_exam_timer_type" ),
+            nullable = false )
+    private ExamTimerType examTimerType;
 
     public String getName() {
 
@@ -90,18 +89,6 @@ public class Exam extends AbstractPersistentEntity {
     }
 
 
-    public LocalDateTime getStartTime() {
-
-        return startTime;
-    }
-
-
-    public void setStartTime( LocalDateTime startTime ) {
-
-        this.startTime = startTime;
-    }
-
-
     public Duration getDuration() {
 
         return duration;
@@ -114,18 +101,6 @@ public class Exam extends AbstractPersistentEntity {
     }
 
 
-    public boolean isComplete() {
-
-        return complete;
-    }
-
-
-    public void setComplete( boolean complete ) {
-
-        this.complete = complete;
-    }
-
-
     public Teacher getTeacher() {
 
         return teacher;
@@ -135,5 +110,17 @@ public class Exam extends AbstractPersistentEntity {
     public void setTeacher( Teacher teacher ) {
 
         this.teacher = teacher;
+    }
+
+
+    public ExamTimerType getExamTimerType() {
+
+        return examTimerType;
+    }
+
+
+    public void setExamTimerType( ExamTimerType examTimerType ) {
+
+        this.examTimerType = examTimerType;
     }
 }

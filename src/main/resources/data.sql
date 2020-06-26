@@ -15,6 +15,16 @@ VALUES (1, 'User', current_timestamp, current_timestamp);
 INSERT INTO address_type (id, name, created_at, updated_at) 
 VALUES (3, 'Domain Organisation', current_timestamp, current_timestamp);
 
+-- exam_timer_type -----------------------------------------------------------------------------
+INSERT INTO exam_timer_type (id, name,created_at, updated_at)
+VALUES (1, 'Timed per Exam', current_timestamp, current_timestamp);
+
+INSERT INTO exam_timer_type (id, name,created_at, updated_at)
+VALUES (2, 'Timed per Section', current_timestamp, current_timestamp);
+
+INSERT INTO exam_timer_type (id, name, created_at, updated_at)
+VALUES (3, 'Timed per Question', current_timestamp, current_timestamp);
+
 -- domain_organisation -----------------------------------------------------------------------------
 INSERT INTO domain_organisation (id, name, domain, created_at, updated_at)
 VALUES (1, 'Exam In Progress', 'examinprogressweb.com', current_timestamp, current_timestamp);
