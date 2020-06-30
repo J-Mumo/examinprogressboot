@@ -2894,7 +2894,7 @@
 										"$ref": "AAAAAAFyl54A7JkeIjs="
 									},
 									"edgePosition": 1,
-									"text": "+Section has fk"
+									"text": "+Question has fk"
 								},
 								{
 									"_type": "EdgeLabelView",
@@ -9932,7 +9932,7 @@
 										"$ref": "AAAAAAFy7NpWrK5fFbo="
 									},
 									"edgePosition": 1,
-									"text": "+ComprehensionQuestion has fk"
+									"text": "+Question has fk"
 								},
 								{
 									"_type": "EdgeLabelView",
@@ -10713,7 +10713,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFyl4+rSpCkHmk="
 							},
-							"name": "Section has fk",
+							"name": "Question has fk",
 							"end1": {
 								"_type": "UMLAssociationEnd",
 								"_id": "AAAAAAFyl54A7JkbS/s=",
@@ -11415,7 +11415,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFy7NkUtKIDm9c="
 							},
-							"name": "ComprehensionQuestion has fk",
+							"name": "Question has fk",
 							"end1": {
 								"_type": "UMLAssociationEnd",
 								"_id": "AAAAAAFy7NpWq65cdRA=",

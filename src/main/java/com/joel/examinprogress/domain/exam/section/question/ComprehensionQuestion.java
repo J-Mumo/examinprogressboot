@@ -17,14 +17,11 @@
 */
 package com.joel.examinprogress.domain.exam.section.question;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
@@ -53,12 +50,6 @@ public class ComprehensionQuestion extends AbstractPersistentEntity {
             nullable = false )
     private Section section;
 
-    @OneToMany( )
-    @JoinColumn( name = "fk_questions",
-            foreignKey = @ForeignKey( name = "comprehension_question_fk_questions" ),
-            nullable = false )
-    private Set<Question> questions;
-
     public String getQuestionText() {
 
         return questionText;
@@ -80,17 +71,5 @@ public class ComprehensionQuestion extends AbstractPersistentEntity {
     public void setSection( Section section ) {
 
         this.section = section;
-    }
-
-
-    public Set<Question> getQuestions() {
-
-        return questions;
-    }
-
-
-    public void setQuestions( Set<Question> questions ) {
-
-        this.questions = questions;
     }
 }

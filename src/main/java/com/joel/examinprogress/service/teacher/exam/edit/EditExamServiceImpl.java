@@ -41,8 +41,10 @@ public class EditExamServiceImpl implements EditExamService {
 
         Exam exam = examRepository.findById( examId ).get();
         Duration examDuration = exam.getDuration();
-        String duration = String.format( "%d:%02d:%02d", examDuration.getSeconds() / 3600,
-                ( examDuration.getSeconds() % 3600 ) / 60, ( examDuration.getSeconds() % 60 ) );
+        String duration = examDuration != null ? String.format( "%d:%02d:%02d", examDuration
+                .getSeconds() / 3600,
+                ( examDuration.getSeconds() % 3600 ) / 60, ( examDuration.getSeconds() % 60 ) )
+                : null;
 
         EditExamInitialData initialData = new EditExamInitialData(
                 exam.getName(), exam.getDescription(), duration );

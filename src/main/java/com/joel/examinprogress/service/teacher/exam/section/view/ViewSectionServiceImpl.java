@@ -28,6 +28,7 @@ import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
+import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
 import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared.MultipleChoiceAnswerTransfer;
 import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared.MultipleChoiceAnswerTransferComparator;
@@ -43,6 +44,9 @@ public class ViewSectionServiceImpl implements ViewSectionService {
 
     @Autowired
     private SectionRepository sectionRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @Autowired
     private MultipleChoiceAnswerRepository answerRepository;
@@ -122,7 +126,7 @@ public class ViewSectionServiceImpl implements ViewSectionService {
         Section section = sectionRepository.findById( sectionId ).get();
         String name = section.getName();
         String description = section.getDescription();
-        Set<Question> questions = section.getQuestions();
+        Set<Question> questions = questionRepository.findBySectionId( sectionId );
 
         MultipleChoiceQuestionTransfer[] multipleChoiceQuestionTransfers =
                 createMultipleChoiceQuestionTransfers( questions );

@@ -23,11 +23,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
+import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.answer.ImageAnswer;
 import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
 import com.joel.examinprogress.domain.exam.section.question.answer.TextAnswer;
@@ -51,6 +53,18 @@ public class Question extends AbstractPersistentEntity {
 
     @Column( name = "score", nullable = false, unique = false )
     private Integer score;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_section",
+            foreignKey = @ForeignKey( name = "question_fk_section" ),
+            nullable = false )
+    private Section section;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_comprehension_question",
+            foreignKey = @ForeignKey( name = "question_fk_comprehension_question" ),
+            nullable = true )
+    private ComprehensionQuestion comprehensionQuestion;
 
     @OneToMany( )
     @JoinColumn( name = "fk_multiple_choice_answer",
@@ -91,6 +105,30 @@ public class Question extends AbstractPersistentEntity {
     public void setScore( Integer score ) {
 
         this.score = score;
+    }
+
+
+    public Section getSection() {
+
+        return section;
+    }
+
+
+    public void setSection( Section section ) {
+
+        this.section = section;
+    }
+
+
+    public ComprehensionQuestion getComprehensionQuestion() {
+
+        return comprehensionQuestion;
+    }
+
+
+    public void setComprehensionQuestion( ComprehensionQuestion comprehensionQuestion ) {
+
+        this.comprehensionQuestion = comprehensionQuestion;
     }
 
 

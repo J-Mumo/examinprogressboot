@@ -24,20 +24,26 @@ package com.joel.examinprogress.service.teacher.exam.section.question.add;
 public class AddQuestionRequest {
 
     private Long sectionId;
+    private String questionType;
     private String questionText;
     private Integer score;
+    private String answerType;
     private AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
 
     public AddQuestionRequest(
             Long sectionId,
+            String questionType,
             String questionText,
             Integer score,
+            String answerType,
             AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
 
         super();
         this.sectionId = sectionId;
+        this.questionType = questionType;
         this.questionText = questionText;
         this.score = score;
+        this.answerType = answerType;
         this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
     }
 
@@ -51,6 +57,30 @@ public class AddQuestionRequest {
     public void setSectionId( Long sectionId ) {
 
         this.sectionId = sectionId;
+    }
+
+
+    public String getQuestionType() {
+
+        return questionType;
+    }
+
+
+    public void setQuestionType( String questionType ) {
+
+        this.questionType = questionType;
+    }
+
+
+    public String getAnswerType() {
+
+        return answerType;
+    }
+
+
+    public void setAnswerType( String answerType ) {
+
+        this.answerType = answerType;
     }
 
 

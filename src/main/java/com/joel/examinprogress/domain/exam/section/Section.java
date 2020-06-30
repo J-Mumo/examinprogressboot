@@ -18,19 +18,16 @@
 package com.joel.examinprogress.domain.exam.section;
 
 import java.time.Duration;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
 import com.joel.examinprogress.domain.exam.Exam;
-import com.joel.examinprogress.domain.exam.section.question.Question;
 
 /**
  * @author Joel Mumo
@@ -61,12 +58,6 @@ public class Section extends AbstractPersistentEntity {
             foreignKey = @ForeignKey( name = "section_fk_exam" ),
             nullable = false )
     private Exam exam;
-
-    @OneToMany( )
-    @JoinColumn( name = "fk_question",
-            foreignKey = @ForeignKey( name = "section_fk_question" ),
-            nullable = false )
-    private Set<Question> questions;
 
     public String getName() {
 
@@ -113,17 +104,5 @@ public class Section extends AbstractPersistentEntity {
     public void setExam( Exam exam ) {
 
         this.exam = exam;
-    }
-
-
-    public Set<Question> getQuestions() {
-
-        return questions;
-    }
-
-
-    public void setQuestions( Set<Question> questions ) {
-
-        this.questions = questions;
     }
 }

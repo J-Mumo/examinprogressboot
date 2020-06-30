@@ -57,12 +57,10 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         Question question = new Question();
         question.setQuestionText( request.getQuestionText() );
         question.setScore( request.getScore() );
+        question.setSection( section );
         questionRepository.save( question );
 
-        Set<Question> questions = new HashSet<Question>();
-        questions.add( question );
-        section.setQuestions( questions );
-        sectionRepository.save( section );
+        Set<MultipleChoiceAnswer> multipleChoiceAnswers = new HashSet<MultipleChoiceAnswer>();
 
         for ( AddMultipleChoiceQuestionAnswerRequest answerRequest : request
                 .getAddMultipleChoiceQuestionAnswerRequests() ) {
@@ -70,7 +68,14 @@ public class AddQuestionServiceImpl implements AddQuestionService {
             answer.setAnswerText( answerRequest.getAnswerText() );
             answer.setQuestion( question );
             answerRepository.save( answer );
+
+            if ( answerRequest.isCorrect() ) {
+                multipleChoiceAnswers.add( answer );
+            }
         }
+
+        question.setMultipleChoiceAnswers( multipleChoiceAnswers );
+        questionRepository.save( question );
 
         return new SaveResponse( true, null );
     }
