@@ -41,24 +41,16 @@ import com.joel.examinprogress.service.shared.SaveResponse;
 public class AddQuestionServiceImpl implements AddQuestionService {
 
     @Autowired
-    SectionRepository sectionRepository;
+    private SectionRepository sectionRepository;
 
     @Autowired
-    MultipleChoiceAnswerRepository answerRepository;
+    private MultipleChoiceAnswerRepository answerRepository;
 
     @Autowired
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
 
-    @Transactional
-    @Override
-    public SaveResponse save( AddQuestionRequest request ) {
-
-        Section section = sectionRepository.findById( request.getSectionId() ).get();
-        Question question = new Question();
-        question.setQuestionText( request.getQuestionText() );
-        question.setScore( request.getScore() );
-        question.setSection( section );
-        questionRepository.save( question );
+    private void saveQuestionWithMultipleChoiceAnswers( Question question,
+            AddQuestionRequest request ) {
 
         Set<MultipleChoiceAnswer> multipleChoiceAnswers = new HashSet<MultipleChoiceAnswer>();
 
@@ -76,6 +68,26 @@ public class AddQuestionServiceImpl implements AddQuestionService {
 
         question.setMultipleChoiceAnswers( multipleChoiceAnswers );
         questionRepository.save( question );
+    }
+
+
+    @Transactional
+    @Override
+    public SaveResponse save( AddQuestionRequest request ) {
+
+        Section section = sectionRepository.findById( request.getSectionId() ).get();
+        Question question = new Question();
+        question.setQuestionText( request.getQuestionText() );
+        question.setScore( request.getScore() );
+        question.setAnswerType( request.getAnswerType() );
+        question.setSection( section );
+        questionRepository.save( question );
+
+        if ( request.getAnswerType().equals( "multipleChoiceSingleAnswer" ) ||
+                request.getAnswerType().equals( "multipleChoiceMultipleAnswers" ) ) {
+
+            saveQuestionWithMultipleChoiceAnswers( question, request );
+        }
 
         return new SaveResponse( true, null );
     }

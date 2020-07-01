@@ -47,12 +47,16 @@ public class Question extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 4052146954471159233L;
 
-    @Column( name = "questionText", nullable = false, unique = false,
+    @Column( name = "question_text", nullable = false, unique = false,
             length = 1024 )
     private String questionText;
 
     @Column( name = "score", nullable = false, unique = false )
     private Integer score;
+
+    @Column( name = "answer_type", nullable = false, unique = false,
+            length = 50 )
+    private String answerType;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_section",
@@ -105,6 +109,18 @@ public class Question extends AbstractPersistentEntity {
     public void setScore( Integer score ) {
 
         this.score = score;
+    }
+
+
+    public String getAnswerType() {
+
+        return answerType;
+    }
+
+
+    public void setAnswerType( String answerType ) {
+
+        this.answerType = answerType;
     }
 
 
