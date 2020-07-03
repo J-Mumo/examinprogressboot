@@ -19,53 +19,26 @@ package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
 /**
  * @author Joel Mumo
- * @date   15th June, 2020
+ * @date   1st July, 2020
  */
-public class AddQuestionRequest {
+public class QuestionRequest {
 
-    private Long sectionId;
     private String questionText;
     private Integer score;
     private String answerType;
     private AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
 
-    public AddQuestionRequest(
-            Long sectionId,
+    public QuestionRequest(
             String questionText,
             Integer score,
             String answerType,
             AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
 
         super();
-        this.sectionId = sectionId;
         this.questionText = questionText;
         this.score = score;
         this.answerType = answerType;
         this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
-    }
-
-
-    public Long getSectionId() {
-
-        return sectionId;
-    }
-
-
-    public void setSectionId( Long sectionId ) {
-
-        this.sectionId = sectionId;
-    }
-
-
-    public String getAnswerType() {
-
-        return answerType;
-    }
-
-
-    public void setAnswerType( String answerType ) {
-
-        this.answerType = answerType;
     }
 
 
@@ -90,6 +63,18 @@ public class AddQuestionRequest {
     public void setScore( Integer score ) {
 
         this.score = score;
+    }
+
+
+    public String getAnswerType() {
+
+        return answerType;
+    }
+
+
+    public void setAnswerType( String answerType ) {
+
+        this.answerType = answerType;
     }
 
 

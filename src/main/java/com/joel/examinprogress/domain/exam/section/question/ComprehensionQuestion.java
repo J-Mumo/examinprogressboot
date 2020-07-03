@@ -40,9 +40,9 @@ public class ComprehensionQuestion extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = -7463941169539816604L;
 
-    @Column( name = "questionText", nullable = false, unique = false,
-            length = 1024 )
-    private String questionText;
+    @Column( name = "comprehension", nullable = false, unique = false,
+            length = 10024 )
+    private String comprehension;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_section",
@@ -50,15 +50,15 @@ public class ComprehensionQuestion extends AbstractPersistentEntity {
             nullable = false )
     private Section section;
 
-    public String getQuestionText() {
+    public String getComprehension() {
 
-        return questionText;
+        return comprehension;
     }
 
 
-    public void setQuestionText( String questionText ) {
+    public void setComprehension( String comprehension ) {
 
-        this.questionText = questionText;
+        this.comprehension = comprehension;
     }
 
 

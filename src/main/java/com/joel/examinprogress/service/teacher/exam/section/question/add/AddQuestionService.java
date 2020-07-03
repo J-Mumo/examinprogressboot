@@ -18,6 +18,7 @@
 package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
 import com.joel.examinprogress.service.shared.SaveResponse;
+import com.joel.examinprogress.service.shared.SaveResponseWithId;
 
 /**
  * @author Joel Mumo
@@ -25,5 +26,8 @@ import com.joel.examinprogress.service.shared.SaveResponse;
  */
 public interface AddQuestionService {
 
-    SaveResponse save( AddQuestionRequest request );
+    SaveResponse saveQuestion( AddQuestionRequest request );
+
+
+    SaveResponseWithId saveComprehensionQuestion( AddComprehensionQuestionRequest request );
 }

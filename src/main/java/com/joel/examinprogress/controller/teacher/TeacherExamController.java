@@ -42,6 +42,7 @@ import com.joel.examinprogress.service.teacher.exam.section.create.CreateSection
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionService;
+import com.joel.examinprogress.service.teacher.exam.section.question.add.AddComprehensionQuestionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionService;
 import com.joel.examinprogress.service.teacher.exam.section.sections.SectionsInitialData;
@@ -84,7 +85,7 @@ public class TeacherExamController {
     SectionsService sectionsService;
 
     @Autowired
-    AddQuestionService addMultipleChoiceQuestionService;
+    AddQuestionService addQuestionService;
 
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamsInitialData> getInitialData()
@@ -182,12 +183,22 @@ public class TeacherExamController {
     }
 
 
-    @RequestMapping( value = "section/multiplechoicequestion/save", method = RequestMethod.POST )
+    @RequestMapping( value = "section/question/save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponse> save(
             @RequestBody AddQuestionRequest request )
             throws IOException {
 
-        SaveResponse response = addMultipleChoiceQuestionService.save( request );
+        SaveResponse response = addQuestionService.saveQuestion( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "section/comprehensionquestion/save", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponseWithId> save(
+            @RequestBody AddComprehensionQuestionRequest request )
+            throws IOException {
+
+        SaveResponseWithId response = addQuestionService.saveComprehensionQuestion( request );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
