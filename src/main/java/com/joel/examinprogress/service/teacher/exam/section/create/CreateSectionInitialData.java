@@ -17,16 +17,29 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.create;
 
-import com.joel.examinprogress.service.shared.SaveResponseWithId;
-
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   4th July, 2020
  */
-public interface CreateSectionService {
+public class CreateSectionInitialData {
 
-    CreateSectionInitialData getInitialData( Long examId );
+    private boolean examTimedBySection;
+
+    public CreateSectionInitialData( boolean examTimedBySection ) {
+
+        super();
+        this.examTimedBySection = examTimedBySection;
+    }
 
 
-    SaveResponseWithId save( CreateSectionRequest request );
+    public boolean isExamTimedBySection() {
+
+        return examTimedBySection;
+    }
+
+
+    public void setExamTimedBySection( boolean examTimedBySection ) {
+
+        this.examTimedBySection = examTimedBySection;
+    }
 }

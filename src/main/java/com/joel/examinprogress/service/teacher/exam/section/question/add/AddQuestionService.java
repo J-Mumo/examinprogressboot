@@ -26,6 +26,9 @@ import com.joel.examinprogress.service.shared.SaveResponseWithId;
  */
 public interface AddQuestionService {
 
+    AddQuestionInitialData getInitialData( Long sectionId );
+
+
     SaveResponse saveQuestion( AddQuestionRequest request );
 
 

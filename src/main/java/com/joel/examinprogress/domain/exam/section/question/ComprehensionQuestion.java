@@ -17,6 +17,8 @@
 */
 package com.joel.examinprogress.domain.exam.section.question;
 
+import java.time.Duration;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -44,6 +46,9 @@ public class ComprehensionQuestion extends AbstractPersistentEntity {
             length = 10024 )
     private String comprehension;
 
+    @Column( name = "duration", nullable = true, unique = false )
+    private Duration duration;
+
     @ManyToOne( )
     @JoinColumn( name = "fk_section",
             foreignKey = @ForeignKey( name = "multiple_choice_question_fk_section" ),
@@ -59,6 +64,18 @@ public class ComprehensionQuestion extends AbstractPersistentEntity {
     public void setComprehension( String comprehension ) {
 
         this.comprehension = comprehension;
+    }
+
+
+    public Duration getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( Duration duration ) {
+
+        this.duration = duration;
     }
 
 

@@ -22,13 +22,15 @@ public class EditSectionRequest {
     private Long sectionId;
     private String name;
     private String description;
+    private String duration;
 
-    public EditSectionRequest( Long sectionId, String name, String description ) {
+    public EditSectionRequest( Long sectionId, String name, String description, String duration ) {
 
         super();
         this.sectionId = sectionId;
         this.name = name;
         this.description = description;
+        this.duration = duration;
     }
 
 
@@ -65,5 +67,17 @@ public class EditSectionRequest {
     public void setDescription( String description ) {
 
         this.description = description;
+    }
+
+
+    public String getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( String duration ) {
+
+        this.duration = duration;
     }
 }

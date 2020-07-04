@@ -26,13 +26,15 @@ public class CreateSectionRequest {
     private Long examId;
     private String name;
     private String description;
+    private String duration;
 
-    public CreateSectionRequest( Long examId, String name, String description ) {
+    public CreateSectionRequest( Long examId, String name, String description, String duration ) {
 
         super();
         this.examId = examId;
         this.name = name;
         this.description = description;
+        this.duration = duration;
     }
 
 
@@ -69,5 +71,17 @@ public class CreateSectionRequest {
     public void setDescription( String description ) {
 
         this.description = description;
+    }
+
+
+    public String getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( String duration ) {
+
+        this.duration = duration;
     }
 }

@@ -37,12 +37,14 @@ import com.joel.examinprogress.service.teacher.exam.edit.EditExamRequest;
 import com.joel.examinprogress.service.teacher.exam.edit.EditExamService;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsService;
+import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionService;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionService;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddComprehensionQuestionRequest;
+import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionService;
 import com.joel.examinprogress.service.teacher.exam.section.sections.SectionsInitialData;
@@ -153,6 +155,16 @@ public class TeacherExamController {
     }
 
 
+    @RequestMapping( value = "section/create/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<CreateSectionInitialData> getCreateSectionInitialData(
+            @RequestBody Long examId )
+            throws IOException {
+
+        CreateSectionInitialData initialData = createSectionService.getInitialData( examId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
     @RequestMapping( value = "section/create/save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponseWithId> save(
             @RequestBody CreateSectionRequest sectionRequest )
@@ -183,7 +195,17 @@ public class TeacherExamController {
     }
 
 
-    @RequestMapping( value = "section/question/save", method = RequestMethod.POST )
+    @RequestMapping( value = "section/question/add/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<AddQuestionInitialData> getAddQuestionInitialData(
+            @RequestBody Long sectionId )
+            throws IOException {
+
+        AddQuestionInitialData initialData = addQuestionService.getInitialData( sectionId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "section/question/add/save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponse> save(
             @RequestBody AddQuestionRequest request )
             throws IOException {
@@ -193,7 +215,7 @@ public class TeacherExamController {
     }
 
 
-    @RequestMapping( value = "section/comprehensionquestion/save", method = RequestMethod.POST )
+    @RequestMapping( value = "section/comprehensionquestion/add/save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponseWithId> save(
             @RequestBody AddComprehensionQuestionRequest request )
             throws IOException {

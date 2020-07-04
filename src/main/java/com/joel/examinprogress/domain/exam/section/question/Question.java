@@ -17,6 +17,7 @@
 */
 package com.joel.examinprogress.domain.exam.section.question;
 
+import java.time.Duration;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -53,6 +54,9 @@ public class Question extends AbstractPersistentEntity {
 
     @Column( name = "score", nullable = false, unique = false )
     private Integer score;
+
+    @Column( name = "duration", nullable = true, unique = false )
+    private Duration duration;
 
     @Column( name = "answer_type", nullable = false, unique = false,
             length = 50 )
@@ -103,6 +107,18 @@ public class Question extends AbstractPersistentEntity {
     public Integer getScore() {
 
         return score;
+    }
+
+
+    public Duration getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( Duration duration ) {
+
+        this.duration = duration;
     }
 
 

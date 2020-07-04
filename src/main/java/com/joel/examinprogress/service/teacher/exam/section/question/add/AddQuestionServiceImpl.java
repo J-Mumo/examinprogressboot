@@ -17,6 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,10 +26,13 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.ComprehensionQuestion;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
+import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
 import com.joel.examinprogress.repository.exam.section.question.ComprehensionQuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
@@ -45,6 +49,9 @@ public class AddQuestionServiceImpl implements AddQuestionService {
 
     @Autowired
     private SectionRepository sectionRepository;
+
+    @Autowired
+    private ExamRepository examRepository;
 
     @Autowired
     private MultipleChoiceAnswerRepository answerRepository;
@@ -76,14 +83,36 @@ public class AddQuestionServiceImpl implements AddQuestionService {
     }
 
 
+    @Override
+    public AddQuestionInitialData getInitialData( Long sectionId ) {
+
+        Exam exam = sectionRepository.findById( sectionId ).get().getExam();
+        boolean examTimedByQuestion = false;
+
+        if ( ExamTimerTypeEnum.TIMED_PER_QUESTION.getName().equals( exam.getExamTimerType()
+                .getName() ) ) {
+            examTimedByQuestion = Boolean.TRUE;
+        }
+
+        AddQuestionInitialData initialData = new AddQuestionInitialData( examTimedByQuestion );
+        return initialData;
+    }
+
+
     @Transactional
     @Override
     public SaveResponse saveQuestion( AddQuestionRequest request ) {
+
+        Duration duration = null;
+        if ( request.getDuration() != null ) {
+            duration = Duration.parse( request.getDuration() );
+        }
 
         Section section = sectionRepository.findById( request.getSectionId() ).get();
         Question question = new Question();
         question.setQuestionText( request.getQuestionText() );
         question.setScore( request.getScore() );
+        question.setDuration( duration );
         question.setAnswerType( request.getAnswerType() );
         question.setSection( section );
         questionRepository.save( question );
@@ -99,6 +128,11 @@ public class AddQuestionServiceImpl implements AddQuestionService {
     @Override
     public SaveResponseWithId saveComprehensionQuestion( AddComprehensionQuestionRequest request ) {
 
+        Duration duration = null;
+        if ( request.getDuration() != null ) {
+            duration = Duration.parse( request.getDuration() );
+        }
+
         Section section = sectionRepository.findById( request.getSectionId() ).get();
         ComprehensionQuestion comprehensionQuestion = new ComprehensionQuestion();
         if ( request.getComprehensionQuestionId() != null ) {
@@ -107,6 +141,7 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         }
 
         comprehensionQuestion.setComprehension( request.getComprehension() );
+        comprehensionQuestion.setDuration( duration );
         comprehensionQuestion.setSection( section );
         comprehensionQuestionRepository.save( comprehensionQuestion );
 

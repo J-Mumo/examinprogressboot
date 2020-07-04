@@ -17,6 +17,8 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.edit;
 
+import java.time.Duration;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +42,15 @@ public class EditSectionServiceImpl implements EditSectionService {
     public EditSectionInitialData getInitialData( Long sectionId ) {
 
         Section section = sectionRepository.findById( sectionId ).get();
+        Duration sectionDuration = section.getDuration();
+        String duration = sectionDuration != null ? String.format( "%d:%02d:%02d", sectionDuration
+                .getSeconds() / 3600,
+                ( sectionDuration.getSeconds() % 3600 ) / 60, ( sectionDuration.getSeconds()
+                        % 60 ) )
+                : null;
+
         EditSectionInitialData initialData = new EditSectionInitialData( section.getName(), section
-                .getDescription() );
+                .getDescription(), duration );
 
         return initialData;
     }
@@ -51,9 +60,18 @@ public class EditSectionServiceImpl implements EditSectionService {
     @Override
     public SaveResponse save( EditSectionRequest request ) {
 
+        String duration[] = request.getDuration() != null ? request.getDuration().split( ":" )
+                : null;
+        String hour = duration != null ? duration[0] : "";
+        String minute = duration != null ? duration[1] : "";
+        String examDuration = "PT" + hour + "H" + minute + "M";
+        Duration sectionDuration = request.getDuration() != null ? Duration.parse( examDuration )
+                : null;
+
         Section section = sectionRepository.findById( request.getSectionId() ).get();
         section.setName( request.getName() );
         section.setDescription( request.getDescription() );
+        section.setDuration( sectionDuration );
         sectionRepository.save( section );
 
         return new SaveResponse( true, null );

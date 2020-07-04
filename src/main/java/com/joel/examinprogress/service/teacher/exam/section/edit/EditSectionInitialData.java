@@ -25,12 +25,14 @@ public class EditSectionInitialData {
 
     private String name;
     private String description;
+    private String duration;
 
-    public EditSectionInitialData( String name, String description ) {
+    public EditSectionInitialData( String name, String description, String duration ) {
 
         super();
         this.name = name;
         this.description = description;
+        this.duration = duration;
     }
 
 
@@ -55,5 +57,17 @@ public class EditSectionInitialData {
     public void setDescription( String description ) {
 
         this.description = description;
+    }
+
+
+    public String getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( String duration ) {
+
+        this.duration = duration;
     }
 }

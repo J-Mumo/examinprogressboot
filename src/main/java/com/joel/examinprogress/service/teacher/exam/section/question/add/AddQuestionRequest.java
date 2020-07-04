@@ -26,6 +26,7 @@ public class AddQuestionRequest {
     private Long sectionId;
     private String questionText;
     private Integer score;
+    private String duration;
     private String answerType;
     private AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
 
@@ -33,6 +34,7 @@ public class AddQuestionRequest {
             Long sectionId,
             String questionText,
             Integer score,
+            String duration,
             String answerType,
             AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
 
@@ -40,6 +42,7 @@ public class AddQuestionRequest {
         this.sectionId = sectionId;
         this.questionText = questionText;
         this.score = score;
+        this.duration = duration;
         this.answerType = answerType;
         this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
     }
@@ -90,6 +93,18 @@ public class AddQuestionRequest {
     public void setScore( Integer score ) {
 
         this.score = score;
+    }
+
+
+    public String getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( String duration ) {
+
+        this.duration = duration;
     }
 
 

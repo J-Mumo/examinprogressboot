@@ -58,10 +58,10 @@ public class EditExamServiceImpl implements EditExamService {
 
         String duration[] = request.getDuration() != null ? request.getDuration().split( ":" )
                 : null;
-        String hour = duration[0];
-        String minute = duration[1];
+        String hour = duration != null ? duration[0] : "";
+        String minute = duration != null ? duration[1] : "";
         String examDuration = "PT" + hour + "H" + minute + "M";
-        Duration examTime = Duration.parse( examDuration );
+        Duration examTime = request.getDuration() != null ? Duration.parse( examDuration ) : null;
 
         Exam exam = examRepository.findById( request.getExamId() ).get();
         exam.setName( request.getName() );
