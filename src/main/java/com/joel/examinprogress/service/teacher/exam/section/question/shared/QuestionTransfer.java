@@ -15,27 +15,30 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared;
+package com.joel.examinprogress.service.teacher.exam.section.question.shared;
 
 /**
  * @author Joel Mumo
  * @date   17th June, 2020
  */
-public class MultipleChoiceQuestionTransfer {
+public class QuestionTransfer {
 
     private Long questionId;
+    private String questionType;
     private String questionText;
     private Integer score;
     private MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers;
 
-    public MultipleChoiceQuestionTransfer(
+    public QuestionTransfer(
             Long questionId,
+            String questionType,
             String questionTxt,
             Integer score,
             MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers ) {
 
         super();
         this.questionId = questionId;
+        this.questionType = questionType;
         this.questionText = questionTxt;
         this.score = score;
         this.multipleChoiceAnswerTransfers = multipleChoiceAnswerTransfers;
@@ -51,6 +54,18 @@ public class MultipleChoiceQuestionTransfer {
     public void setQuestionId( Long questionId ) {
 
         this.questionId = questionId;
+    }
+
+
+    public String getQuestionType() {
+
+        return questionType;
+    }
+
+
+    public void setQuestionType( String questionType ) {
+
+        this.questionType = questionType;
     }
 
 

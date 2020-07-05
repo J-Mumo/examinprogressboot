@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared;
+package com.joel.examinprogress.service.teacher.exam.section.question.shared;
 
 import java.util.Comparator;
 
@@ -26,11 +26,11 @@ import org.springframework.stereotype.Component;
  * @date   16th June, 2020
  */
 @Component
-public class MultipleChoiceQuestionTransferComparator implements Comparator<
-        MultipleChoiceQuestionTransfer> {
+public class QuestionTransferComparator implements Comparator<
+        QuestionTransfer> {
 
     @Override
-    public int compare( MultipleChoiceQuestionTransfer o1, MultipleChoiceQuestionTransfer o2 ) {
+    public int compare( QuestionTransfer o1, QuestionTransfer o2 ) {
 
         return -1 * o1.getQuestionId().compareTo( o2.getQuestionId() );
     }

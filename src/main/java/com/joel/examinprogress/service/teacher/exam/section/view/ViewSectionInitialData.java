@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.view;
 
-import com.joel.examinprogress.service.teacher.exam.section.question.multiplechoice.shared.MultipleChoiceQuestionTransfer;
+import com.joel.examinprogress.service.teacher.exam.section.question.shared.QuestionTransfer;
 
 /**
  * @author Joel Mumo
@@ -27,12 +27,12 @@ public class ViewSectionInitialData {
 
     private String name;
     private String description;
-    private MultipleChoiceQuestionTransfer[] multipleChoiceQuestionTransfers;
+    private QuestionTransfer[] multipleChoiceQuestionTransfers;
 
     public ViewSectionInitialData(
             String name,
             String description,
-            MultipleChoiceQuestionTransfer[] multipleChoiceQuestionTransfers ) {
+            QuestionTransfer[] multipleChoiceQuestionTransfers ) {
 
         super();
         this.name = name;
@@ -65,14 +65,14 @@ public class ViewSectionInitialData {
     }
 
 
-    public MultipleChoiceQuestionTransfer[] getMultipleChoiceQuestionTransfers() {
+    public QuestionTransfer[] getMultipleChoiceQuestionTransfers() {
 
         return multipleChoiceQuestionTransfers;
     }
 
 
     public void setMultipleChoiceQuestionTransfers(
-            MultipleChoiceQuestionTransfer[] multipleChoiceQuestionTransfers ) {
+            QuestionTransfer[] multipleChoiceQuestionTransfers ) {
 
         this.multipleChoiceQuestionTransfers = multipleChoiceQuestionTransfers;
     }

@@ -17,6 +17,8 @@
 */
 package com.joel.examinprogress.repository.exam.section.question;
 
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -30,4 +32,5 @@ import com.joel.examinprogress.domain.exam.section.question.ComprehensionQuestio
 public interface ComprehensionQuestionRepository extends JpaRepository<ComprehensionQuestion,
         Long> {
 
+    Set<ComprehensionQuestion> findBySectionId( Long sectionId );
 }
