@@ -19,6 +19,7 @@ package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
 import java.time.Duration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -29,16 +30,20 @@ import org.springframework.stereotype.Service;
 import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.section.Section;
-import com.joel.examinprogress.domain.exam.section.question.ComprehensionQuestion;
 import com.joel.examinprogress.domain.exam.section.question.Question;
+import com.joel.examinprogress.domain.exam.section.question.QuestionType;
+import com.joel.examinprogress.domain.exam.section.question.QuestionTypeEnum;
+import com.joel.examinprogress.domain.exam.section.question.answer.AnswerType;
 import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
-import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
-import com.joel.examinprogress.repository.exam.section.question.ComprehensionQuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
+import com.joel.examinprogress.repository.exam.section.question.QuestionTypeRepository;
+import com.joel.examinprogress.repository.exam.section.question.answer.AnswerTypeRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
+import com.joel.examinprogress.service.teacher.exam.section.question.shared.AnswerTypeTransfer;
+import com.joel.examinprogress.service.teacher.exam.section.question.shared.QuestionTypeTransfer;
 
 /**
  * @author Joel Mumo
@@ -48,10 +53,13 @@ import com.joel.examinprogress.service.shared.SaveResponseWithId;
 public class AddQuestionServiceImpl implements AddQuestionService {
 
     @Autowired
-    private SectionRepository sectionRepository;
+    private QuestionTypeRepository questionTypeRepository;
 
     @Autowired
-    private ExamRepository examRepository;
+    private AnswerTypeRepository answerTypeRepository;
+
+    @Autowired
+    private SectionRepository sectionRepository;
 
     @Autowired
     private MultipleChoiceAnswerRepository answerRepository;
@@ -59,8 +67,55 @@ public class AddQuestionServiceImpl implements AddQuestionService {
     @Autowired
     private QuestionRepository questionRepository;
 
-    @Autowired
-    private ComprehensionQuestionRepository comprehensionQuestionRepository;
+    private QuestionTypeTransfer createQuestionTypeTransfer( QuestionType questionType ) {
+
+        QuestionTypeTransfer transfer = new QuestionTypeTransfer(
+                questionType.getId(),
+                questionType.getName() );
+
+        return transfer;
+    }
+
+
+    private QuestionTypeTransfer[] createQuestionTypeTransfers( List<
+            QuestionType> questionTypes ) {
+
+        Set<QuestionTypeTransfer> questionTypeTransfers = new HashSet<>();
+
+        for ( QuestionType questionType : questionTypes ) {
+
+            questionTypeTransfers.add( createQuestionTypeTransfer( questionType ) );
+        }
+
+        return questionTypeTransfers.toArray( new QuestionTypeTransfer[questionTypeTransfers
+                .size()] );
+    }
+
+
+    private AnswerTypeTransfer createAnswerTypeTransfer( AnswerType answerType ) {
+
+        AnswerTypeTransfer transfer = new AnswerTypeTransfer(
+                answerType.getId(),
+                answerType.getName() );
+
+        return transfer;
+    }
+
+
+    private AnswerTypeTransfer[] createAnswerTypeTransfers( List<
+            AnswerType> answerTypes ) {
+
+        Set<AnswerTypeTransfer> answerTypeTransfers = new HashSet<>();
+
+        for ( AnswerType answerType : answerTypes ) {
+
+            answerTypeTransfers.add( createAnswerTypeTransfer( answerType ) );
+        }
+
+        return answerTypeTransfers.toArray( new AnswerTypeTransfer[answerTypeTransfers
+                .size()] );
+    }
+
 
     private void saveQuestionWithMultipleChoiceAnswers( Question question,
             AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
@@ -94,7 +149,13 @@ public class AddQuestionServiceImpl implements AddQuestionService {
             examTimedByQuestion = Boolean.TRUE;
         }
 
-        AddQuestionInitialData initialData = new AddQuestionInitialData( examTimedByQuestion );
+        List<QuestionType> questionTypes = questionTypeRepository.findAll();
+        List<AnswerType> answerTypes = answerTypeRepository.findAll();
+        QuestionTypeTransfer[] questionTypeTransfers = createQuestionTypeTransfers( questionTypes );
+        AnswerTypeTransfer[] answerTypeTransfers = createAnswerTypeTransfers( answerTypes );
+        AddQuestionInitialData initialData = new AddQuestionInitialData( examTimedByQuestion,
+                questionTypeTransfers, answerTypeTransfers );
+
         return initialData;
     }
 
@@ -109,12 +170,16 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         }
 
         Section section = sectionRepository.findById( request.getSectionId() ).get();
+        Long questionTypeId = QuestionTypeEnum.QUESTION.getQuestionTypeId();
+        QuestionType questionType = questionTypeRepository.findById( questionTypeId ).get();
+        AnswerType answerType = answerTypeRepository.findById( request.getAnswerTypeId() ).get();
         Question question = new Question();
         question.setQuestionText( request.getQuestionText() );
         question.setScore( request.getScore() );
         question.setDuration( duration );
-        question.setAnswerType( request.getAnswerType() );
+        question.setAnswerType( answerType );
         question.setSection( section );
+        question.setQuestionType( questionType );
         questionRepository.save( question );
 
         saveQuestionWithMultipleChoiceAnswers( question, request
@@ -134,29 +199,38 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         }
 
         Section section = sectionRepository.findById( request.getSectionId() ).get();
-        ComprehensionQuestion comprehensionQuestion = new ComprehensionQuestion();
+        Long questionTypeId = QuestionTypeEnum.COMPREHENSION_QUESTION.getQuestionTypeId();
+        QuestionType questionType = questionTypeRepository.findById( questionTypeId ).get();
+        AnswerType answerType = answerTypeRepository.findById( request.getAnswerTypeId() ).get();
+        Question comprehensionQuestion = new Question();
         if ( request.getComprehensionQuestionId() != null ) {
-            comprehensionQuestion = comprehensionQuestionRepository.findById( request
+            comprehensionQuestion = questionRepository.findById( request
                     .getComprehensionQuestionId() ).get();
         }
 
-        comprehensionQuestion.setComprehension( request.getComprehension() );
+        comprehensionQuestion.setQuestionText( request.getComprehension() );
+        comprehensionQuestion.setQuestionType( questionType );
         comprehensionQuestion.setDuration( duration );
+        comprehensionQuestion.setAnswerType( answerType );
         comprehensionQuestion.setSection( section );
-        comprehensionQuestionRepository.save( comprehensionQuestion );
+        questionRepository.save( comprehensionQuestion );
 
+        Long normalQuestionTypeId = QuestionTypeEnum.QUESTION.getQuestionTypeId();
+        QuestionType normalQuestionType = questionTypeRepository.findById( normalQuestionTypeId )
+                .get();
         Question question = new Question();
         question.setQuestionText( request.getQuestionRequest().getQuestionText() );
         question.setScore( request.getQuestionRequest().getScore() );
-        question.setAnswerType( request.getQuestionRequest().getAnswerType() );
+        question.setAnswerType( answerType );
         question.setComprehensionQuestion( comprehensionQuestion );
         question.setSection( section );
+        question.setQuestionType( normalQuestionType );
         questionRepository.save( question );
 
         saveQuestionWithMultipleChoiceAnswers( question, request.getQuestionRequest()
                 .getAddMultipleChoiceQuestionAnswerRequests() );
 
-        return new SaveResponseWithId( true, null, comprehensionQuestion.getId() );
+        return new SaveResponseWithId( true, null, question.getId() );
     }
 
 }

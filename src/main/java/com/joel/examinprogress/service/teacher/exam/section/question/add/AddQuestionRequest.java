@@ -24,14 +24,15 @@ package com.joel.examinprogress.service.teacher.exam.section.question.add;
 public class AddQuestionRequest {
 
     private Long sectionId;
+    private Long answerTypeId;
     private String questionText;
     private Integer score;
     private String duration;
-    private String answerType;
     private AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
 
     public AddQuestionRequest(
             Long sectionId,
+            Long answerTypeId,
             String questionText,
             Integer score,
             String duration,
@@ -40,10 +41,10 @@ public class AddQuestionRequest {
 
         super();
         this.sectionId = sectionId;
+        this.answerTypeId = answerTypeId;
         this.questionText = questionText;
         this.score = score;
         this.duration = duration;
-        this.answerType = answerType;
         this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
     }
 
@@ -60,15 +61,15 @@ public class AddQuestionRequest {
     }
 
 
-    public String getAnswerType() {
+    public Long getAnswerTypeId() {
 
-        return answerType;
+        return answerTypeId;
     }
 
 
-    public void setAnswerType( String answerType ) {
+    public void setAnswerTypeId( Long answerTypeId ) {
 
-        this.answerType = answerType;
+        this.answerTypeId = answerTypeId;
     }
 
 

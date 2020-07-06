@@ -25,11 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.Section;
-import com.joel.examinprogress.domain.exam.section.question.ComprehensionQuestion;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
-import com.joel.examinprogress.repository.exam.section.question.ComprehensionQuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceAnswerTransfer;
@@ -49,9 +47,6 @@ public class ViewSectionServiceImpl implements ViewSectionService {
 
     @Autowired
     private QuestionRepository questionRepository;
-
-    @Autowired
-    private ComprehensionQuestionRepository comprehensionQuestionRepository;
 
     @Autowired
     private MultipleChoiceAnswerRepository answerRepository;
@@ -98,13 +93,13 @@ public class ViewSectionServiceImpl implements ViewSectionService {
         MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers =
                 createMultipleChoiceAnswerTransfers( answers );
 
-        QuestionTransfer transfer = new QuestionTransfer(
-                multipleChoiceQuestion.getId(),
-                multipleChoiceQuestion.getQuestionText(),
-                multipleChoiceQuestion.getScore(),
-                multipleChoiceAnswerTransfers );
+        //        QuestionTransfer transfer = new QuestionTransfer(
+        //                multipleChoiceQuestion.getId(),
+        //                multipleChoiceQuestion.getQuestionText(),
+        //                multipleChoiceQuestion.getScore(),
+        //                multipleChoiceAnswerTransfers );
 
-        return transfer;
+        return null;
     }
 
 
@@ -132,15 +127,15 @@ public class ViewSectionServiceImpl implements ViewSectionService {
         String name = section.getName();
         String description = section.getDescription();
         Set<Question> questions = questionRepository.findBySectionId( sectionId );
-        Set<ComprehensionQuestion> comprehensionQuestions = comprehensionQuestionRepository
-                .findBySectionId( sectionId );
-
-        for ( ComprehensionQuestion comprehensionQuestion : comprehensionQuestions ) {
-            Set<Question> questionsInComprehensionQuestion = questionRepository
-                    .findByComprehensionQuestion( comprehensionQuestion );
-
-            questions.removeAll( questionsInComprehensionQuestion );
-        }
+        //        Set<ComprehensionQuestion> comprehensionQuestions = comprehensionQuestionRepository
+        //                .findBySectionId( sectionId );
+        //
+        //        for ( ComprehensionQuestion comprehensionQuestion : comprehensionQuestions ) {
+        //            Set<Question> questionsInComprehensionQuestion = questionRepository
+        //                    .findByComprehensionQuestion( comprehensionQuestion );
+        //
+        //            questions.removeAll( questionsInComprehensionQuestion );
+        //        }
 
         QuestionTransfer[] multipleChoiceQuestionTransfers =
                 createMultipleChoiceQuestionTransfers( questions );

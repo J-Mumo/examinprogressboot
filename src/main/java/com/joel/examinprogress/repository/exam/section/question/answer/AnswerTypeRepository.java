@@ -15,22 +15,18 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam.section.question;
-
-import java.util.Set;
+package com.joel.examinprogress.repository.exam.section.question.answer;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.joel.examinprogress.domain.exam.section.question.Question;
+import com.joel.examinprogress.domain.exam.section.question.answer.AnswerType;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   5th July, 2020
  */
 @Repository
-public interface QuestionRepository extends JpaRepository<Question,
-        Long> {
+public interface AnswerTypeRepository extends JpaRepository<AnswerType, Long> {
 
-    Set<Question> findBySectionId( Long sectionId );
 }

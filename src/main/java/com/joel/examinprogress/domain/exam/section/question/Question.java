@@ -31,6 +31,7 @@ import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
 import com.joel.examinprogress.domain.exam.section.Section;
+import com.joel.examinprogress.domain.exam.section.question.answer.AnswerType;
 import com.joel.examinprogress.domain.exam.section.question.answer.ImageAnswer;
 import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
 import com.joel.examinprogress.domain.exam.section.question.answer.TextAnswer;
@@ -52,15 +53,11 @@ public class Question extends AbstractPersistentEntity {
             length = 1024 )
     private String questionText;
 
-    @Column( name = "score", nullable = false, unique = false )
+    @Column( name = "score", nullable = true, unique = false )
     private Integer score;
 
     @Column( name = "duration", nullable = true, unique = false )
     private Duration duration;
-
-    @Column( name = "answer_type", nullable = false, unique = false,
-            length = 50 )
-    private String answerType;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_section",
@@ -72,7 +69,19 @@ public class Question extends AbstractPersistentEntity {
     @JoinColumn( name = "fk_comprehension_question",
             foreignKey = @ForeignKey( name = "question_fk_comprehension_question" ),
             nullable = true )
-    private ComprehensionQuestion comprehensionQuestion;
+    private Question comprehensionQuestion;
+
+    @OneToOne( )
+    @JoinColumn( name = "fk_answer_type",
+            foreignKey = @ForeignKey( name = "question_fk_answer_type" ),
+            nullable = false )
+    private AnswerType answerType;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_question_type",
+            foreignKey = @ForeignKey( name = "question_fk_question_type" ),
+            nullable = false )
+    private QuestionType questionType;
 
     @OneToMany( )
     @JoinColumn( name = "fk_multiple_choice_answer",
@@ -128,18 +137,6 @@ public class Question extends AbstractPersistentEntity {
     }
 
 
-    public String getAnswerType() {
-
-        return answerType;
-    }
-
-
-    public void setAnswerType( String answerType ) {
-
-        this.answerType = answerType;
-    }
-
-
     public Section getSection() {
 
         return section;
@@ -152,15 +149,39 @@ public class Question extends AbstractPersistentEntity {
     }
 
 
-    public ComprehensionQuestion getComprehensionQuestion() {
+    public Question getComprehensionQuestion() {
 
         return comprehensionQuestion;
     }
 
 
-    public void setComprehensionQuestion( ComprehensionQuestion comprehensionQuestion ) {
+    public void setComprehensionQuestion( Question comprehensionQuestion ) {
 
         this.comprehensionQuestion = comprehensionQuestion;
+    }
+
+
+    public QuestionType getQuestionType() {
+
+        return questionType;
+    }
+
+
+    public void setQuestionType( QuestionType questionType ) {
+
+        this.questionType = questionType;
+    }
+
+
+    public AnswerType getAnswerType() {
+
+        return answerType;
+    }
+
+
+    public void setAnswerType( AnswerType answerType ) {
+
+        this.answerType = answerType;
     }
 
 

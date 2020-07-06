@@ -25,6 +25,26 @@ VALUES (2, 'Timed per Section', current_timestamp, current_timestamp);
 INSERT INTO exam_timer_type (id, name, created_at, updated_at)
 VALUES (3, 'Timed per Question', current_timestamp, current_timestamp);
 
+-- question_type -----------------------------------------------------------------------------
+INSERT INTO question_type (id, name,created_at, updated_at)
+VALUES (1, 'Question', current_timestamp, current_timestamp);
+
+INSERT INTO question_type (id, name,created_at, updated_at)
+VALUES (2, 'Comprehension question', current_timestamp, current_timestamp);
+
+-- answer_type -----------------------------------------------------------------------------
+INSERT INTO answer_type (id, name,created_at, updated_at)
+VALUES (1, 'Multiple choice single answer', current_timestamp, current_timestamp);
+
+INSERT INTO answer_type (id, name,created_at, updated_at)
+VALUES (2, 'Multiple choice multiple answers', current_timestamp, current_timestamp);
+
+INSERT INTO answer_type (id, name,created_at, updated_at)
+VALUES (3, 'Text answer', current_timestamp, current_timestamp);
+
+INSERT INTO answer_type (id, name,created_at, updated_at)
+VALUES (4, 'Image answer', current_timestamp, current_timestamp);
+
 -- domain_organisation -----------------------------------------------------------------------------
 INSERT INTO domain_organisation (id, name, domain, created_at, updated_at)
 VALUES (1, 'Exam In Progress', 'examinprogressweb.com', current_timestamp, current_timestamp);

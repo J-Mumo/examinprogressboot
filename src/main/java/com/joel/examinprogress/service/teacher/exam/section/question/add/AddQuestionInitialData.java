@@ -17,6 +17,9 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
+import com.joel.examinprogress.service.teacher.exam.section.question.shared.AnswerTypeTransfer;
+import com.joel.examinprogress.service.teacher.exam.section.question.shared.QuestionTypeTransfer;
+
 /**
  * @author Joel Mumo
  * @date   4th July, 2020
@@ -24,11 +27,17 @@ package com.joel.examinprogress.service.teacher.exam.section.question.add;
 public class AddQuestionInitialData {
 
     private boolean examTimedByQuestion;
+    private QuestionTypeTransfer[] questionTypeTransfers;
+    private AnswerTypeTransfer[] answerTypeTransfers;
 
-    public AddQuestionInitialData( boolean examTimedByQuestion ) {
+    public AddQuestionInitialData( boolean examTimedByQuestion,
+            QuestionTypeTransfer[] questionTypeTransfers,
+            AnswerTypeTransfer[] answerTypeTransfers ) {
 
         super();
         this.examTimedByQuestion = examTimedByQuestion;
+        this.questionTypeTransfers = questionTypeTransfers;
+        this.answerTypeTransfers = answerTypeTransfers;
     }
 
 
@@ -41,5 +50,29 @@ public class AddQuestionInitialData {
     public void setExamTimedByQuestion( boolean examTimedByQuestion ) {
 
         this.examTimedByQuestion = examTimedByQuestion;
+    }
+
+
+    public QuestionTypeTransfer[] getQuestionTypeTransfers() {
+
+        return questionTypeTransfers;
+    }
+
+
+    public void setQuestionTypeTransfers( QuestionTypeTransfer[] questionTypeTransfers ) {
+
+        this.questionTypeTransfers = questionTypeTransfers;
+    }
+
+
+    public AnswerTypeTransfer[] getAnswerTypeTransfers() {
+
+        return answerTypeTransfers;
+    }
+
+
+    public void setAnswerTypeTransfers( AnswerTypeTransfer[] answerTypeTransfers ) {
+
+        this.answerTypeTransfers = answerTypeTransfers;
     }
 }

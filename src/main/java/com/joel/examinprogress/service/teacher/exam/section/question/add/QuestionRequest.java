@@ -25,19 +25,16 @@ public class QuestionRequest {
 
     private String questionText;
     private Integer score;
-    private String answerType;
     private AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
 
     public QuestionRequest(
             String questionText,
             Integer score,
-            String answerType,
             AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
 
         super();
         this.questionText = questionText;
         this.score = score;
-        this.answerType = answerType;
         this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
     }
 
@@ -63,18 +60,6 @@ public class QuestionRequest {
     public void setScore( Integer score ) {
 
         this.score = score;
-    }
-
-
-    public String getAnswerType() {
-
-        return answerType;
-    }
-
-
-    public void setAnswerType( String answerType ) {
-
-        this.answerType = answerType;
     }
 
 

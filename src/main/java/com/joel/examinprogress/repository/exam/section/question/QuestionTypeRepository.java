@@ -17,20 +17,16 @@
 */
 package com.joel.examinprogress.repository.exam.section.question;
 
-import java.util.Set;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.joel.examinprogress.domain.exam.section.question.ComprehensionQuestion;
+import com.joel.examinprogress.domain.exam.section.question.QuestionType;
 
 /**
  * @author Joel Mumo
- * @date   26th June, 2020
+ * @date   5th July, 2020
  */
 @Repository
-public interface ComprehensionQuestionRepository extends JpaRepository<ComprehensionQuestion,
-        Long> {
+public interface QuestionTypeRepository extends JpaRepository<QuestionType, Long> {
 
-    Set<ComprehensionQuestion> findBySectionId( Long sectionId );
 }
