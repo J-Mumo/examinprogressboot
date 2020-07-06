@@ -17,6 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.view;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -52,7 +53,7 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     private MultipleChoiceAnswerRepository answerRepository;
 
     @Autowired
-    private QuestionTransferComparator multipleChoiceQuestionTransferComparator;
+    private QuestionTransferComparator questionTransferComparator;
 
     @Autowired
     private MultipleChoiceAnswerTransferComparator multipleChoiceAnswerTransferComparator;
@@ -84,39 +85,40 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     }
 
 
-    private QuestionTransfer createMultipleChoiceQuestionTransfer(
-            Question multipleChoiceQuestion ) {
+    private QuestionTransfer createQuestionTransfer(
+            Question question ) {
 
         Set<MultipleChoiceAnswer> answers = answerRepository.findByQuestion(
-                multipleChoiceQuestion );
+                question );
 
         MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers =
                 createMultipleChoiceAnswerTransfers( answers );
 
-        //        QuestionTransfer transfer = new QuestionTransfer(
-        //                multipleChoiceQuestion.getId(),
-        //                multipleChoiceQuestion.getQuestionText(),
-        //                multipleChoiceQuestion.getScore(),
-        //                multipleChoiceAnswerTransfers );
+        QuestionTransfer transfer = new QuestionTransfer(
+                question.getId(),
+                question.getQuestionType().getName(),
+                question.getQuestionText(),
+                question.getScore(),
+                multipleChoiceAnswerTransfers );
 
-        return null;
+        return transfer;
     }
 
 
-    private QuestionTransfer[] createMultipleChoiceQuestionTransfers( Set<
+    private QuestionTransfer[] createQuestionTransfers( Set<
             Question> questions ) {
 
-        SortedSet<QuestionTransfer> multipleChoiceQuestionTransfers =
-                new TreeSet<>( multipleChoiceQuestionTransferComparator );
+        SortedSet<QuestionTransfer> questionTransfers =
+                new TreeSet<>( questionTransferComparator );
 
         for ( Question question : questions ) {
 
-            multipleChoiceQuestionTransfers.add( createMultipleChoiceQuestionTransfer(
+            questionTransfers.add( createQuestionTransfer(
                     question ) );
         }
 
-        return multipleChoiceQuestionTransfers.toArray(
-                new QuestionTransfer[multipleChoiceQuestionTransfers.size()] );
+        return questionTransfers.toArray(
+                new QuestionTransfer[questionTransfers.size()] );
     }
 
 
@@ -127,21 +129,20 @@ public class ViewSectionServiceImpl implements ViewSectionService {
         String name = section.getName();
         String description = section.getDescription();
         Set<Question> questions = questionRepository.findBySectionId( sectionId );
-        //        Set<ComprehensionQuestion> comprehensionQuestions = comprehensionQuestionRepository
-        //                .findBySectionId( sectionId );
-        //
-        //        for ( ComprehensionQuestion comprehensionQuestion : comprehensionQuestions ) {
-        //            Set<Question> questionsInComprehensionQuestion = questionRepository
-        //                    .findByComprehensionQuestion( comprehensionQuestion );
-        //
-        //            questions.removeAll( questionsInComprehensionQuestion );
-        //        }
+        Set<Question> questionsInComprehensionQuestion = new HashSet<>();
 
-        QuestionTransfer[] multipleChoiceQuestionTransfers =
-                createMultipleChoiceQuestionTransfers( questions );
+        for ( Question question : questions ) {
+            if ( question.getComprehensionQuestion() != null ) {
+                questionsInComprehensionQuestion.add( question );
+            }
+        }
+
+        questions.removeAll( questionsInComprehensionQuestion );
+        QuestionTransfer[] questionTransfers =
+                createQuestionTransfers( questions );
 
         ViewSectionInitialData initialData = new ViewSectionInitialData( name, description,
-                multipleChoiceQuestionTransfers );
+                questionTransfers );
 
         return initialData;
     }

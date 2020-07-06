@@ -27,17 +27,17 @@ public class ViewSectionInitialData {
 
     private String name;
     private String description;
-    private QuestionTransfer[] multipleChoiceQuestionTransfers;
+    private QuestionTransfer[] questionTransfers;
 
     public ViewSectionInitialData(
             String name,
             String description,
-            QuestionTransfer[] multipleChoiceQuestionTransfers ) {
+            QuestionTransfer[] questionTransfers ) {
 
         super();
         this.name = name;
         this.description = description;
-        this.multipleChoiceQuestionTransfers = multipleChoiceQuestionTransfers;
+        this.questionTransfers = questionTransfers;
     }
 
 
@@ -65,15 +65,14 @@ public class ViewSectionInitialData {
     }
 
 
-    public QuestionTransfer[] getMultipleChoiceQuestionTransfers() {
+    public QuestionTransfer[] getQuestionTransfers() {
 
-        return multipleChoiceQuestionTransfers;
+        return questionTransfers;
     }
 
 
-    public void setMultipleChoiceQuestionTransfers(
-            QuestionTransfer[] multipleChoiceQuestionTransfers ) {
+    public void setQuestionTransfers( QuestionTransfer[] questionTransfers ) {
 
-        this.multipleChoiceQuestionTransfers = multipleChoiceQuestionTransfers;
+        this.questionTransfers = questionTransfers;
     }
 }
