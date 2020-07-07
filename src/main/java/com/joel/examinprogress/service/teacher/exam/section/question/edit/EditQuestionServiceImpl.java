@@ -41,7 +41,7 @@ import com.joel.examinprogress.service.teacher.exam.section.question.shared.Mult
 public class EditQuestionServiceImpl implements EditQuestionService {
 
     @Autowired
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
 
     @Autowired
     private MultipleChoiceAnswerTransferComparator multipleChoiceAnswerTransferComparator;
@@ -110,10 +110,11 @@ public class EditQuestionServiceImpl implements EditQuestionService {
             comprehensionQuestion = true;
         }
 
-        Duration examDuration = question.getDuration();
-        String duration = examDuration != null ? String.format( "%d:%02d:%02d", examDuration
+        Duration questionDuration = question.getDuration();
+        String duration = questionDuration != null ? String.format( "%d:%02d:%02d", questionDuration
                 .getSeconds() / 3600,
-                ( examDuration.getSeconds() % 3600 ) / 60, ( examDuration.getSeconds() % 60 ) )
+                ( questionDuration.getSeconds() % 3600 ) / 60, ( questionDuration.getSeconds()
+                        % 60 ) )
                 : null;
 
         Set<MultipleChoiceAnswer> answers = multipleChoiceAnswerRepository.findByQuestion(

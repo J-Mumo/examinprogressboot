@@ -25,12 +25,14 @@ public class MultipleChoiceAnswerTransfer {
 
     private Long answerId;
     private String answerTxt;
+    private boolean correct;
 
-    public MultipleChoiceAnswerTransfer( Long answerId, String answerTxt ) {
+    public MultipleChoiceAnswerTransfer( Long answerId, String answerTxt, boolean correct ) {
 
         super();
         this.answerId = answerId;
         this.answerTxt = answerTxt;
+        this.correct = correct;
     }
 
 
@@ -55,5 +57,17 @@ public class MultipleChoiceAnswerTransfer {
     public void setAnswerTxt( String answerTxt ) {
 
         this.answerTxt = answerTxt;
+    }
+
+
+    public boolean isCorrect() {
+
+        return correct;
+    }
+
+
+    public void setCorrect( boolean correct ) {
+
+        this.correct = correct;
     }
 }

@@ -62,7 +62,7 @@ public class ViewSectionServiceImpl implements ViewSectionService {
             MultipleChoiceAnswer answer ) {
 
         MultipleChoiceAnswerTransfer transfer = new MultipleChoiceAnswerTransfer(
-                answer.getId(), answer.getAnswerText() );
+                answer.getId(), answer.getAnswerText(), false );
 
         return transfer;
     }
