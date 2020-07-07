@@ -15,22 +15,37 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.question.add;
+package com.joel.examinprogress.service.teacher.exam.section.question.shared;
 
 /**
  * @author Joel Mumo
  * @date   15th June, 2020
  */
-public class AddMultipleChoiceQuestionAnswerRequest {
+public class MultipleChoiceQuestionAnswerRequest {
 
+    private Long answerId;
     private String answerText;
     private boolean correct;
 
-    public AddMultipleChoiceQuestionAnswerRequest( String answerText, boolean correct ) {
+    public MultipleChoiceQuestionAnswerRequest( Long answerId, String answerText,
+            boolean correct ) {
 
         super();
+        this.answerId = answerId;
         this.answerText = answerText;
         this.correct = correct;
+    }
+
+
+    public Long getAnswerId() {
+
+        return answerId;
+    }
+
+
+    public void setAnswerId( Long answerId ) {
+
+        this.answerId = answerId;
     }
 
 

@@ -15,63 +15,47 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.section.question.add;
+package com.joel.examinprogress.service.teacher.exam.section.question.edit;
 
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceQuestionAnswerRequest;
 
 /**
  * @author Joel Mumo
- * @date   15th June, 2020
+ * @date   7th July, 2020
  */
-public class AddQuestionRequest {
+public class EditQuestionRequest {
 
-    private Long sectionId;
-    private Long answerTypeId;
+    private Long questionId;
     private String questionText;
     private Integer score;
     private String duration;
-    private MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
+    private MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests;
 
-    public AddQuestionRequest(
-            Long sectionId,
-            Long answerTypeId,
+    public EditQuestionRequest(
+            Long questionId,
             String questionText,
             Integer score,
             String duration,
-            String answerType,
-            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+            MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
         super();
-        this.sectionId = sectionId;
-        this.answerTypeId = answerTypeId;
+        this.questionId = questionId;
         this.questionText = questionText;
         this.score = score;
         this.duration = duration;
-        this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
+        this.multipleChoiceQuestionAnswerRequests = multipleChoiceQuestionAnswerRequests;
     }
 
 
-    public Long getSectionId() {
+    public Long getQuestionId() {
 
-        return sectionId;
+        return questionId;
     }
 
 
-    public void setSectionId( Long sectionId ) {
+    public void setQuestionId( Long questionId ) {
 
-        this.sectionId = sectionId;
-    }
-
-
-    public Long getAnswerTypeId() {
-
-        return answerTypeId;
-    }
-
-
-    public void setAnswerTypeId( Long answerTypeId ) {
-
-        this.answerTypeId = answerTypeId;
+        this.questionId = questionId;
     }
 
 
@@ -111,15 +95,15 @@ public class AddQuestionRequest {
     }
 
 
-    public MultipleChoiceQuestionAnswerRequest[] getAddMultipleChoiceQuestionAnswerRequests() {
+    public MultipleChoiceQuestionAnswerRequest[] getMultipleChoiceQuestionAnswerRequests() {
 
-        return addMultipleChoiceQuestionAnswerRequests;
+        return multipleChoiceQuestionAnswerRequests;
     }
 
 
-    public void setAddMultipleChoiceQuestionAnswerRequests(
-            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+    public void setMultipleChoiceQuestionAnswerRequests(
+            MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
-        this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
+        this.multipleChoiceQuestionAnswerRequests = multipleChoiceQuestionAnswerRequests;
     }
 }

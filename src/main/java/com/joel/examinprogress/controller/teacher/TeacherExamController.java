@@ -47,6 +47,11 @@ import com.joel.examinprogress.service.teacher.exam.section.question.add.AddComp
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionService;
+import com.joel.examinprogress.service.teacher.exam.section.question.edit.EditQuestionInitialData;
+import com.joel.examinprogress.service.teacher.exam.section.question.edit.EditQuestionRequest;
+import com.joel.examinprogress.service.teacher.exam.section.question.edit.EditQuestionService;
+import com.joel.examinprogress.service.teacher.exam.section.question.view.ViewQuestionInitialData;
+import com.joel.examinprogress.service.teacher.exam.section.question.view.ViewQuestionService;
 import com.joel.examinprogress.service.teacher.exam.section.sections.SectionsInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.sections.SectionsService;
 import com.joel.examinprogress.service.teacher.exam.section.view.ViewSectionInitialData;
@@ -63,31 +68,37 @@ import com.joel.examinprogress.service.teacher.exam.view.ViewExamService;
 public class TeacherExamController {
 
     @Autowired
-    ExamsService examsService;
+    private ExamsService examsService;
 
     @Autowired
-    CreateExamService createExamService;
+    private CreateExamService createExamService;
 
     @Autowired
-    EditExamService editExamService;
+    private EditExamService editExamService;
 
     @Autowired
-    ViewExamService viewExamService;
+    private ViewExamService viewExamService;
 
     @Autowired
-    CreateSectionService createSectionService;
+    private CreateSectionService createSectionService;
 
     @Autowired
-    EditSectionService editSectionService;
+    private EditSectionService editSectionService;
 
     @Autowired
-    ViewSectionService viewSectionService;
+    private ViewSectionService viewSectionService;
 
     @Autowired
-    SectionsService sectionsService;
+    private SectionsService sectionsService;
 
     @Autowired
-    AddQuestionService addQuestionService;
+    private AddQuestionService addQuestionService;
+
+    @Autowired
+    private ViewQuestionService viewQuestionService;
+
+    @Autowired
+    private EditQuestionService editQuestionService;
 
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamsInitialData> getInitialData()
@@ -195,6 +206,16 @@ public class TeacherExamController {
     }
 
 
+    @RequestMapping( value = "sections/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<SectionsInitialData> getInitialData(
+            @RequestBody Long examId )
+            throws IOException {
+
+        SectionsInitialData initialData = sectionsService.getInitialData( examId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
     @RequestMapping( value = "section/question/add/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<AddQuestionInitialData> getAddQuestionInitialData(
             @RequestBody Long sectionId )
@@ -225,12 +246,32 @@ public class TeacherExamController {
     }
 
 
-    @RequestMapping( value = "sections/getinitialdata", method = RequestMethod.POST )
-    public ResponseEntity<SectionsInitialData> getInitialData(
-            @RequestBody Long examId )
+    @RequestMapping( value = "section/question/view/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<ViewQuestionInitialData> getViewQuestionInitialData(
+            @RequestBody Long questionId )
             throws IOException {
 
-        SectionsInitialData initialData = sectionsService.getInitialData( examId );
+        ViewQuestionInitialData initialData = viewQuestionService.getInitialData( questionId );
         return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "section/question/edit/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<EditQuestionInitialData> getEditQuestionInitialData(
+            @RequestBody Long questionId )
+            throws IOException {
+
+        EditQuestionInitialData initialData = editQuestionService.getInitialData( questionId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "section/question/edit/save", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> save(
+            @RequestBody EditQuestionRequest request )
+            throws IOException {
+
+        SaveResponse response = editQuestionService.saveQuestion( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 }

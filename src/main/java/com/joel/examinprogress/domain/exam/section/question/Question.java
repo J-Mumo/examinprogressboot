@@ -22,6 +22,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -100,6 +101,9 @@ public class Question extends AbstractPersistentEntity {
             foreignKey = @ForeignKey( name = "question_fk_image_answer" ),
             nullable = true )
     private ImageAnswer imageAnswer;
+
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "question" )
+    private Set<Question> questions;
 
     public String getQuestionText() {
 
@@ -218,5 +222,17 @@ public class Question extends AbstractPersistentEntity {
     public void setImageAnswer( ImageAnswer imageAnswer ) {
 
         this.imageAnswer = imageAnswer;
+    }
+
+
+    public Set<Question> getQuestions() {
+
+        return questions;
+    }
+
+
+    public void setQuestions( Set<Question> questions ) {
+
+        this.questions = questions;
     }
 }

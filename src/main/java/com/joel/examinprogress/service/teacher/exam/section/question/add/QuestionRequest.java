@@ -17,6 +17,8 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.question.add;
 
+import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceQuestionAnswerRequest;
+
 /**
  * @author Joel Mumo
  * @date   1st July, 2020
@@ -25,12 +27,12 @@ public class QuestionRequest {
 
     private String questionText;
     private Integer score;
-    private AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
+    private MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
 
     public QuestionRequest(
             String questionText,
             Integer score,
-            AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
 
         super();
         this.questionText = questionText;
@@ -63,14 +65,14 @@ public class QuestionRequest {
     }
 
 
-    public AddMultipleChoiceQuestionAnswerRequest[] getAddMultipleChoiceQuestionAnswerRequests() {
+    public MultipleChoiceQuestionAnswerRequest[] getAddMultipleChoiceQuestionAnswerRequests() {
 
         return addMultipleChoiceQuestionAnswerRequests;
     }
 
 
     public void setAddMultipleChoiceQuestionAnswerRequests(
-            AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
 
         this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
     }

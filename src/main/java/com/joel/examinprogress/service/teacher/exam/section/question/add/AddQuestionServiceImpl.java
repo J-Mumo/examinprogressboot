@@ -42,6 +42,7 @@ import com.joel.examinprogress.repository.exam.section.question.answer.AnswerTyp
 import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
+import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceQuestionAnswerRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.AnswerTypeTransfer;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.QuestionTypeTransfer;
 
@@ -118,11 +119,11 @@ public class AddQuestionServiceImpl implements AddQuestionService {
 
 
     private void saveQuestionWithMultipleChoiceAnswers( Question question,
-            AddMultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
 
         Set<MultipleChoiceAnswer> multipleChoiceAnswers = new HashSet<MultipleChoiceAnswer>();
 
-        for ( AddMultipleChoiceQuestionAnswerRequest answerRequest : addMultipleChoiceQuestionAnswerRequests ) {
+        for ( MultipleChoiceQuestionAnswerRequest answerRequest : addMultipleChoiceQuestionAnswerRequests ) {
             MultipleChoiceAnswer answer = new MultipleChoiceAnswer();
             answer.setAnswerText( answerRequest.getAnswerText() );
             answer.setQuestion( question );

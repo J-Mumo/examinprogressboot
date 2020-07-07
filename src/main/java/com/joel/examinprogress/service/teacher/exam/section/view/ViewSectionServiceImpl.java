@@ -50,7 +50,7 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private MultipleChoiceAnswerRepository answerRepository;
+    private MultipleChoiceAnswerRepository multipleChoiceAnswerRepository;
 
     @Autowired
     private QuestionTransferComparator questionTransferComparator;
@@ -88,7 +88,7 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     private QuestionTransfer createQuestionTransfer(
             Question question ) {
 
-        Set<MultipleChoiceAnswer> answers = answerRepository.findByQuestion(
+        Set<MultipleChoiceAnswer> answers = multipleChoiceAnswerRepository.findByQuestion(
                 question );
 
         MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers =
