@@ -27,17 +27,17 @@ public class QuestionRequest {
 
     private String questionText;
     private Integer score;
-    private MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
+    private MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests;
 
     public QuestionRequest(
             String questionText,
             Integer score,
-            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+            MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
         super();
         this.questionText = questionText;
         this.score = score;
-        this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
+        this.multipleChoiceQuestionAnswerRequests = multipleChoiceQuestionAnswerRequests;
     }
 
 
@@ -65,15 +65,15 @@ public class QuestionRequest {
     }
 
 
-    public MultipleChoiceQuestionAnswerRequest[] getAddMultipleChoiceQuestionAnswerRequests() {
+    public MultipleChoiceQuestionAnswerRequest[] getMultipleChoiceQuestionAnswerRequests() {
 
-        return addMultipleChoiceQuestionAnswerRequests;
+        return multipleChoiceQuestionAnswerRequests;
     }
 
 
-    public void setAddMultipleChoiceQuestionAnswerRequests(
-            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+    public void setMultipleChoiceQuestionAnswerRequests(
+            MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
-        this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
+        this.multipleChoiceQuestionAnswerRequests = multipleChoiceQuestionAnswerRequests;
     }
 }

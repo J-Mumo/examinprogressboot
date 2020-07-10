@@ -70,7 +70,7 @@ public class Question extends AbstractPersistentEntity {
     @JoinColumn( name = "fk_comprehension_question",
             foreignKey = @ForeignKey( name = "question_fk_comprehension_question" ),
             nullable = true )
-    private Question comprehensionQuestion;
+    private Question question;
 
     @OneToOne( )
     @JoinColumn( name = "fk_answer_type",
@@ -102,6 +102,7 @@ public class Question extends AbstractPersistentEntity {
             nullable = true )
     private ImageAnswer imageAnswer;
 
+    // Questions in a comprehension question
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "question" )
     private Set<Question> questions;
 
@@ -153,15 +154,15 @@ public class Question extends AbstractPersistentEntity {
     }
 
 
-    public Question getComprehensionQuestion() {
+    public Question getQuestion() {
 
-        return comprehensionQuestion;
+        return question;
     }
 
 
-    public void setComprehensionQuestion( Question comprehensionQuestion ) {
+    public void setQuestion( Question question ) {
 
-        this.comprehensionQuestion = comprehensionQuestion;
+        this.question = question;
     }
 
 

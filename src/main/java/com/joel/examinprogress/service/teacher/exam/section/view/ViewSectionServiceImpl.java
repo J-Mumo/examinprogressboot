@@ -132,7 +132,8 @@ public class ViewSectionServiceImpl implements ViewSectionService {
         Set<Question> questionsInComprehensionQuestion = new HashSet<>();
 
         for ( Question question : questions ) {
-            if ( question.getComprehensionQuestion() != null ) {
+            // Check if it has a comprehension question
+            if ( question.getQuestion() != null ) {
                 questionsInComprehensionQuestion.add( question );
             }
         }

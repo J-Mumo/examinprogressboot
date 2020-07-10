@@ -23,6 +23,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
@@ -38,6 +39,7 @@ import com.joel.examinprogress.service.teacher.exam.section.question.shared.Ques
  * @author Joel Mumo
  * @date   7th July, 2020
  */
+@Service
 public class ViewQuestionServiceImpl implements ViewQuestionService {
 
     @Autowired
@@ -108,7 +110,8 @@ public class ViewQuestionServiceImpl implements ViewQuestionService {
 
     private QuestionTransfer[] createQuestionTransfers( Question comprehensionQuestion ) {
 
-        Set<Question> questions = comprehensionQuestion.getQuestions();
+        Set<Question> questions = questionRepository.findByQuestionId( comprehensionQuestion
+                .getId() );
         SortedSet<QuestionTransfer> questionTransfers =
                 new TreeSet<>( questionTransferComparator );
 

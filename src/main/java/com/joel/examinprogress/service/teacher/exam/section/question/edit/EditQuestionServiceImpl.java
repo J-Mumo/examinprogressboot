@@ -24,6 +24,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
@@ -38,6 +39,7 @@ import com.joel.examinprogress.service.teacher.exam.section.question.shared.Mult
  * @author Joel Mumo
  * @date   7th July, 2020
  */
+@Service
 public class EditQuestionServiceImpl implements EditQuestionService {
 
     @Autowired
@@ -53,7 +55,7 @@ public class EditQuestionServiceImpl implements EditQuestionService {
             MultipleChoiceAnswer answer ) {
 
         MultipleChoiceAnswerTransfer transfer = new MultipleChoiceAnswerTransfer(
-                answer.getId(), answer.getAnswerText() );
+                answer.getId(), answer.getAnswerText(), false );
 
         return transfer;
     }

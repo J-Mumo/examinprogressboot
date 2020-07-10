@@ -33,4 +33,7 @@ public interface QuestionRepository extends JpaRepository<Question,
         Long> {
 
     Set<Question> findBySectionId( Long sectionId );
+
+
+    Set<Question> findByQuestionId( Long comprehensionQuestionId );
 }

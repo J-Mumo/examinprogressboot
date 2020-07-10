@@ -30,7 +30,7 @@ public class AddQuestionRequest {
     private String questionText;
     private Integer score;
     private String duration;
-    private MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests;
+    private MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests;
 
     public AddQuestionRequest(
             Long sectionId,
@@ -39,7 +39,7 @@ public class AddQuestionRequest {
             Integer score,
             String duration,
             String answerType,
-            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+            MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
         super();
         this.sectionId = sectionId;
@@ -47,7 +47,7 @@ public class AddQuestionRequest {
         this.questionText = questionText;
         this.score = score;
         this.duration = duration;
-        this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
+        this.multipleChoiceQuestionAnswerRequests = multipleChoiceQuestionAnswerRequests;
     }
 
 
@@ -111,15 +111,15 @@ public class AddQuestionRequest {
     }
 
 
-    public MultipleChoiceQuestionAnswerRequest[] getAddMultipleChoiceQuestionAnswerRequests() {
+    public MultipleChoiceQuestionAnswerRequest[] getMultipleChoiceQuestionAnswerRequests() {
 
-        return addMultipleChoiceQuestionAnswerRequests;
+        return multipleChoiceQuestionAnswerRequests;
     }
 
 
-    public void setAddMultipleChoiceQuestionAnswerRequests(
-            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+    public void setMultipleChoiceQuestionAnswerRequests(
+            MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
-        this.addMultipleChoiceQuestionAnswerRequests = addMultipleChoiceQuestionAnswerRequests;
+        this.multipleChoiceQuestionAnswerRequests = multipleChoiceQuestionAnswerRequests;
     }
 }

@@ -42,8 +42,8 @@ import com.joel.examinprogress.repository.exam.section.question.answer.AnswerTyp
 import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
-import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceQuestionAnswerRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.AnswerTypeTransfer;
+import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceQuestionAnswerRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.QuestionTypeTransfer;
 
 /**
@@ -119,11 +119,11 @@ public class AddQuestionServiceImpl implements AddQuestionService {
 
 
     private void saveQuestionWithMultipleChoiceAnswers( Question question,
-            MultipleChoiceQuestionAnswerRequest[] addMultipleChoiceQuestionAnswerRequests ) {
+            MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
         Set<MultipleChoiceAnswer> multipleChoiceAnswers = new HashSet<MultipleChoiceAnswer>();
 
-        for ( MultipleChoiceQuestionAnswerRequest answerRequest : addMultipleChoiceQuestionAnswerRequests ) {
+        for ( MultipleChoiceQuestionAnswerRequest answerRequest : multipleChoiceQuestionAnswerRequests ) {
             MultipleChoiceAnswer answer = new MultipleChoiceAnswer();
             answer.setAnswerText( answerRequest.getAnswerText() );
             answer.setQuestion( question );
@@ -183,8 +183,9 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         question.setQuestionType( questionType );
         questionRepository.save( question );
 
-        saveQuestionWithMultipleChoiceAnswers( question, request
-                .getAddMultipleChoiceQuestionAnswerRequests() );
+        if ( request.getMultipleChoiceQuestionAnswerRequests().length > 0 )
+            saveQuestionWithMultipleChoiceAnswers( question, request
+                    .getMultipleChoiceQuestionAnswerRequests() );
 
         return new SaveResponse( true, null );
     }
@@ -223,15 +224,16 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         question.setQuestionText( request.getQuestionRequest().getQuestionText() );
         question.setScore( request.getQuestionRequest().getScore() );
         question.setAnswerType( answerType );
-        question.setComprehensionQuestion( comprehensionQuestion );
+        question.setQuestion( comprehensionQuestion );
         question.setSection( section );
         question.setQuestionType( normalQuestionType );
         questionRepository.save( question );
 
-        saveQuestionWithMultipleChoiceAnswers( question, request.getQuestionRequest()
-                .getAddMultipleChoiceQuestionAnswerRequests() );
+        if ( request.getQuestionRequest().getMultipleChoiceQuestionAnswerRequests().length > 0 )
+            saveQuestionWithMultipleChoiceAnswers( question, request.getQuestionRequest()
+                    .getMultipleChoiceQuestionAnswerRequests() );
 
-        return new SaveResponseWithId( true, null, question.getId() );
+        return new SaveResponseWithId( true, null, comprehensionQuestion.getId() );
     }
 
 }
