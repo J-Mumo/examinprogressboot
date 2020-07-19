@@ -26,23 +26,32 @@ import com.joel.examinprogress.service.teacher.exam.section.question.shared.Mult
 public class EditQuestionInitialData {
 
     private boolean comprehensionQuestion;
+    private boolean comprehensionSubQuestion;
+    private boolean examTimedByQuestion;
     private String question;
-    private String duration;
+    private String duration;;
     private Integer score;
+    private String answerType;
     private MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers;
 
     public EditQuestionInitialData(
             boolean comprehensionQuestion,
+            boolean comprehensionSubQuestion,
+            boolean examTimedByQuestion,
             String question,
             String duration,
             Integer score,
+            String answerType,
             MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers ) {
 
         super();
         this.comprehensionQuestion = comprehensionQuestion;
+        this.comprehensionSubQuestion = comprehensionSubQuestion;
+        this.examTimedByQuestion = examTimedByQuestion;
         this.question = question;
         this.duration = duration;
         this.score = score;
+        this.answerType = answerType;
         this.multipleChoiceAnswerTransfers = multipleChoiceAnswerTransfers;
     }
 
@@ -56,6 +65,30 @@ public class EditQuestionInitialData {
     public void setComprehensionQuestion( boolean comprehensionQuestion ) {
 
         this.comprehensionQuestion = comprehensionQuestion;
+    }
+
+
+    public boolean isComprehensionSubQuestion() {
+
+        return comprehensionSubQuestion;
+    }
+
+
+    public void setComprehensionSubQuestion( boolean comprehensionSubQuestion ) {
+
+        this.comprehensionSubQuestion = comprehensionSubQuestion;
+    }
+
+
+    public boolean isExamTimedByQuestion() {
+
+        return examTimedByQuestion;
+    }
+
+
+    public void setExamTimedByQuestion( boolean examTimedByQuestion ) {
+
+        this.examTimedByQuestion = examTimedByQuestion;
     }
 
 
@@ -92,6 +125,18 @@ public class EditQuestionInitialData {
     public void setScore( Integer score ) {
 
         this.score = score;
+    }
+
+
+    public String getAnswerType() {
+
+        return answerType;
+    }
+
+
+    public void setAnswerType( String answerType ) {
+
+        this.answerType = answerType;
     }
 
 

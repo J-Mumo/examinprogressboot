@@ -33,13 +33,13 @@ import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.QuestionType;
 import com.joel.examinprogress.domain.exam.section.question.QuestionTypeEnum;
+import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 import com.joel.examinprogress.domain.exam.section.question.answer.AnswerType;
-import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionTypeRepository;
+import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.AnswerTypeRepository;
-import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.AnswerTypeTransfer;
@@ -63,7 +63,7 @@ public class AddQuestionServiceImpl implements AddQuestionService {
     private SectionRepository sectionRepository;
 
     @Autowired
-    private MultipleChoiceAnswerRepository answerRepository;
+    private AnswerRepository answerRepository;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -118,15 +118,16 @@ public class AddQuestionServiceImpl implements AddQuestionService {
     }
 
 
-    private void saveQuestionWithMultipleChoiceAnswers( Question question,
+    private void saveQuestionWithMultipleChoiceAnswers( Question question, AnswerType answerType,
             MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
-        Set<MultipleChoiceAnswer> multipleChoiceAnswers = new HashSet<MultipleChoiceAnswer>();
+        Set<Answer> multipleChoiceAnswers = new HashSet<Answer>();
 
         for ( MultipleChoiceQuestionAnswerRequest answerRequest : multipleChoiceQuestionAnswerRequests ) {
-            MultipleChoiceAnswer answer = new MultipleChoiceAnswer();
+            Answer answer = new Answer();
             answer.setAnswerText( answerRequest.getAnswerText() );
             answer.setQuestion( question );
+            answer.setAnswerType( answerType );
             answerRepository.save( answer );
 
             if ( answerRequest.isCorrect() ) {
@@ -134,7 +135,7 @@ public class AddQuestionServiceImpl implements AddQuestionService {
             }
         }
 
-        question.setMultipleChoiceAnswers( multipleChoiceAnswers );
+        question.setAnswers( multipleChoiceAnswers );
         questionRepository.save( question );
     }
 
@@ -184,7 +185,7 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         questionRepository.save( question );
 
         if ( request.getMultipleChoiceQuestionAnswerRequests().length > 0 )
-            saveQuestionWithMultipleChoiceAnswers( question, request
+            saveQuestionWithMultipleChoiceAnswers( question, answerType, request
                     .getMultipleChoiceQuestionAnswerRequests() );
 
         return new SaveResponse( true, null );
@@ -230,10 +231,10 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         questionRepository.save( question );
 
         if ( request.getQuestionRequest().getMultipleChoiceQuestionAnswerRequests().length > 0 )
-            saveQuestionWithMultipleChoiceAnswers( question, request.getQuestionRequest()
+            saveQuestionWithMultipleChoiceAnswers( question, answerType, request
+                    .getQuestionRequest()
                     .getMultipleChoiceQuestionAnswerRequests() );
 
         return new SaveResponseWithId( true, null, comprehensionQuestion.getId() );
     }
-
 }

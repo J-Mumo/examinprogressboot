@@ -36,7 +36,7 @@ public class AnswerType extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 11416465103629656L;
 
-    @Column( name = "name", nullable = false, unique = false,
+    @Column( name = "name", nullable = false, unique = true,
             length = 50 )
     private String name;
 

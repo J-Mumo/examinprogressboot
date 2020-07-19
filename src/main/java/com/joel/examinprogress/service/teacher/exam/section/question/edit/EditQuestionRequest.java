@@ -29,6 +29,7 @@ public class EditQuestionRequest {
     private String questionText;
     private Integer score;
     private String duration;
+    private String answerType;
     private MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests;
 
     public EditQuestionRequest(
@@ -36,6 +37,7 @@ public class EditQuestionRequest {
             String questionText,
             Integer score,
             String duration,
+            String answerType,
             MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
         super();
@@ -43,6 +45,7 @@ public class EditQuestionRequest {
         this.questionText = questionText;
         this.score = score;
         this.duration = duration;
+        this.answerType = answerType;
         this.multipleChoiceQuestionAnswerRequests = multipleChoiceQuestionAnswerRequests;
     }
 
@@ -92,6 +95,18 @@ public class EditQuestionRequest {
     public void setDuration( String duration ) {
 
         this.duration = duration;
+    }
+
+
+    public String getAnswerType() {
+
+        return answerType;
+    }
+
+
+    public void setAnswerType( String answerType ) {
+
+        this.answerType = answerType;
     }
 
 

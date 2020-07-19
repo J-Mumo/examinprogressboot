@@ -17,6 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.view;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -27,10 +28,10 @@ import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.Question;
-import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
+import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
-import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
+import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceAnswerTransfer;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceAnswerTransferComparator;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.QuestionTransfer;
@@ -50,7 +51,7 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private MultipleChoiceAnswerRepository multipleChoiceAnswerRepository;
+    private AnswerRepository answerRepository;
 
     @Autowired
     private QuestionTransferComparator questionTransferComparator;
@@ -59,22 +60,22 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     private MultipleChoiceAnswerTransferComparator multipleChoiceAnswerTransferComparator;
 
     private MultipleChoiceAnswerTransfer createMultipleChoiceAnswerTransfer(
-            MultipleChoiceAnswer answer ) {
+            Answer answer ) {
 
         MultipleChoiceAnswerTransfer transfer = new MultipleChoiceAnswerTransfer(
-                answer.getId(), answer.getAnswerText(), false );
+                answer.getId(), answer.getAnswerText(), false, answer.getAnswerType().getName() );
 
         return transfer;
     }
 
 
     private MultipleChoiceAnswerTransfer[] createMultipleChoiceAnswerTransfers( Set<
-            MultipleChoiceAnswer> answers ) {
+            Answer> answers ) {
 
         SortedSet<MultipleChoiceAnswerTransfer> multipleChoiceAnswerTransfers =
                 new TreeSet<>( multipleChoiceAnswerTransferComparator );
 
-        for ( MultipleChoiceAnswer answer : answers ) {
+        for ( Answer answer : answers ) {
 
             multipleChoiceAnswerTransfers.add( createMultipleChoiceAnswerTransfer(
                     answer ) );
@@ -88,17 +89,23 @@ public class ViewSectionServiceImpl implements ViewSectionService {
     private QuestionTransfer createQuestionTransfer(
             Question question ) {
 
-        Set<MultipleChoiceAnswer> answers = multipleChoiceAnswerRepository.findByQuestion(
+        Set<Answer> answers = answerRepository.findByQuestion(
                 question );
 
         MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers =
                 createMultipleChoiceAnswerTransfers( answers );
 
+        Duration questionDuration = question.getDuration();
+        String duration = questionDuration != null ? String.format( "%d:%02d:%02d", questionDuration
+                .getSeconds() / 3600,
+                ( questionDuration.getSeconds() % 3600 ) / 60, ( questionDuration.getSeconds()
+                        % 60 ) ) : null;
+
         QuestionTransfer transfer = new QuestionTransfer(
                 question.getId(),
                 question.getQuestionType().getName(),
                 question.getQuestionText(),
-                question.getScore(),
+                question.getScore(), duration,
                 multipleChoiceAnswerTransfers );
 
         return transfer;

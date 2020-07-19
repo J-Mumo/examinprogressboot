@@ -21,33 +21,47 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
 import com.joel.examinprogress.domain.exam.section.question.Question;
+import com.joel.examinprogress.domain.student.Student;
 
 /**
  * @author Joel Mumo
- * @date   25th June, 2020
+ * @date   16th July, 2020
  */
 @Entity
-@Table( name = "image_answer" )
-public class ImageAnswer extends AbstractPersistentEntity {
+@Table( name = "answer" )
+public class Answer extends AbstractPersistentEntity {
 
     /**
      * 
      */
-    private static final long serialVersionUID = -6816947449326529070L;
+    private static final long serialVersionUID = 6939196251681546886L;
 
-    @Column( name = "answerText", nullable = false, unique = false )
+    @Column( name = "answerText", nullable = false, unique = false,
+            length = 1024 )
     private String answerText;
 
-    @OneToOne( )
+    @ManyToOne( )
     @JoinColumn( name = "fk_question",
-            foreignKey = @ForeignKey( name = "multiple_choice_answer_fk_question" ),
+            foreignKey = @ForeignKey( name = "answer_fk_question" ),
             nullable = false )
     private Question question;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_student",
+            foreignKey = @ForeignKey( name = "answer_fk_student" ),
+            nullable = true )
+    private Student student;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_answer_type",
+            foreignKey = @ForeignKey( name = "answer_fk_answer_type" ),
+            nullable = false )
+    private AnswerType answerType;
 
     public String getAnswerText() {
 
@@ -70,6 +84,30 @@ public class ImageAnswer extends AbstractPersistentEntity {
     public void setQuestion( Question question ) {
 
         this.question = question;
+    }
+
+
+    public Student getStudent() {
+
+        return student;
+    }
+
+
+    public void setStudent( Student student ) {
+
+        this.student = student;
+    }
+
+
+    public AnswerType getAnswerType() {
+
+        return answerType;
+    }
+
+
+    public void setAnswerType( AnswerType answerType ) {
+
+        this.answerType = answerType;
     }
 
 }

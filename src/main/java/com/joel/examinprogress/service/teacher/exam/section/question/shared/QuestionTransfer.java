@@ -27,6 +27,7 @@ public class QuestionTransfer {
     private String questionType;
     private String questionText;
     private Integer score;
+    private String duration;
     private MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers;
 
     public QuestionTransfer(
@@ -34,6 +35,7 @@ public class QuestionTransfer {
             String questionType,
             String questionTxt,
             Integer score,
+            String duration,
             MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers ) {
 
         super();
@@ -41,6 +43,7 @@ public class QuestionTransfer {
         this.questionType = questionType;
         this.questionText = questionTxt;
         this.score = score;
+        this.duration = duration;
         this.multipleChoiceAnswerTransfers = multipleChoiceAnswerTransfers;
     }
 
@@ -90,6 +93,18 @@ public class QuestionTransfer {
     public void setScore( Integer score ) {
 
         this.score = score;
+    }
+
+
+    public String getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( String duration ) {
+
+        this.duration = duration;
     }
 
 

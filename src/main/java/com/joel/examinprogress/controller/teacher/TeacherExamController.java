@@ -267,11 +267,11 @@ public class TeacherExamController {
 
 
     @RequestMapping( value = "section/question/edit/save", method = RequestMethod.POST )
-    public ResponseEntity<SaveResponse> save(
+    public ResponseEntity<SaveResponseWithId> save(
             @RequestBody EditQuestionRequest request )
             throws IOException {
 
-        SaveResponse response = editQuestionService.saveQuestion( request );
+        SaveResponseWithId response = editQuestionService.saveQuestion( request );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 }

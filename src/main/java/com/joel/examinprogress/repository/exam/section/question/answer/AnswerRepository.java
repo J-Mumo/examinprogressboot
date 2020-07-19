@@ -23,14 +23,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.joel.examinprogress.domain.exam.section.question.Question;
-import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
+import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   16th July, 2020
  */
 @Repository
-public interface MultipleChoiceAnswerRepository extends JpaRepository<MultipleChoiceAnswer, Long> {
+public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
-    Set<MultipleChoiceAnswer> findByQuestion( Question question );
+    Set<Answer> findByQuestion( Question question );
 }

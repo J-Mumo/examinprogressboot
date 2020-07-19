@@ -25,8 +25,8 @@ public enum AnswerTypeEnum {
 
     MULTIPLE_CHOICE_SINGLE_ANSWER( 1l, "Multiple choice single answer" ),
     MULTIPLE_CHOICE_MULTIPLE_ANSWERS( 2l, "Multiple choice multiple answers" ),
-    TEXT_ANSWER( 3l, "Text Answer" ),
-    IMAGE_ANSWER( 3l, "Image Answer" );
+    TEXT_ANSWER( 3l, "Text answer" ),
+    IMAGE_ANSWER( 3l, "Image answer" );
 
     private Long answerTypeId;
     private String name;

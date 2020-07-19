@@ -26,11 +26,16 @@ import java.util.TreeSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.section.question.Question;
-import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
+import com.joel.examinprogress.domain.exam.section.question.QuestionTypeEnum;
+import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
+import com.joel.examinprogress.domain.exam.section.question.answer.AnswerType;
+import com.joel.examinprogress.domain.exam.section.question.answer.AnswerTypeEnum;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
-import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
-import com.joel.examinprogress.service.shared.SaveResponse;
+import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
+import com.joel.examinprogress.service.shared.SaveResponseWithId;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceAnswerTransfer;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceAnswerTransferComparator;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceQuestionAnswerRequest;
@@ -49,28 +54,35 @@ public class EditQuestionServiceImpl implements EditQuestionService {
     private MultipleChoiceAnswerTransferComparator multipleChoiceAnswerTransferComparator;
 
     @Autowired
-    MultipleChoiceAnswerRepository multipleChoiceAnswerRepository;
+    private AnswerRepository answerRepository;
 
     private MultipleChoiceAnswerTransfer createMultipleChoiceAnswerTransfer(
-            MultipleChoiceAnswer answer ) {
+            Answer answer, Set<Answer> correctAnswers ) {
+
+        boolean correct = false;
+        for ( Answer correctAnswer : correctAnswers ) {
+            if ( correctAnswer == answer )
+                correct = true;
+        }
 
         MultipleChoiceAnswerTransfer transfer = new MultipleChoiceAnswerTransfer(
-                answer.getId(), answer.getAnswerText(), false );
+                answer.getId(), answer.getAnswerText(), correct, answer.getAnswerType().getName() );
 
         return transfer;
     }
 
 
-    private MultipleChoiceAnswerTransfer[] createMultipleChoiceAnswerTransfers( Set<
-            MultipleChoiceAnswer> answers ) {
+    private MultipleChoiceAnswerTransfer[] createMultipleChoiceAnswerTransfers( Question question,
+            Set<Answer> answers ) {
 
         SortedSet<MultipleChoiceAnswerTransfer> multipleChoiceAnswerTransfers =
                 new TreeSet<>( multipleChoiceAnswerTransferComparator );
 
-        for ( MultipleChoiceAnswer answer : answers ) {
+        Set<Answer> correctAnswers = question.getAnswers();
+        for ( Answer answer : answers ) {
 
             multipleChoiceAnswerTransfers.add( createMultipleChoiceAnswerTransfer(
-                    answer ) );
+                    answer, correctAnswers ) );
         }
 
         return multipleChoiceAnswerTransfers.toArray(
@@ -81,23 +93,27 @@ public class EditQuestionServiceImpl implements EditQuestionService {
     private void saveMultipleChoiceAnswers( Question question,
             MultipleChoiceQuestionAnswerRequest[] requests ) {
 
-        Set<MultipleChoiceAnswer> multipleChoiceAnswers = new HashSet<MultipleChoiceAnswer>();
+        Set<Answer> correctMultipleChoiceAnswers = new HashSet<Answer>();
+        Set<Answer> multipleChoiceAnswers = answerRepository
+                .findByQuestion( question );
+
+        AnswerType answerType = multipleChoiceAnswers.iterator().next().getAnswerType();
+        answerRepository.deleteAll( multipleChoiceAnswers );
 
         for ( MultipleChoiceQuestionAnswerRequest answerRequest : requests ) {
-            MultipleChoiceAnswer answer = multipleChoiceAnswerRepository.findById( answerRequest
-                    .getAnswerId() ).get();
 
+            Answer answer = new Answer();
             answer.setAnswerText( answerRequest.getAnswerText() );
-            multipleChoiceAnswerRepository.save( answer );
+            answer.setQuestion( question );
+            answer.setAnswerType( answerType );
+            answerRepository.save( answer );
 
             if ( answerRequest.isCorrect() ) {
-                multipleChoiceAnswers.add( answer );
+                correctMultipleChoiceAnswers.add( answer );
             }
-            else
-                multipleChoiceAnswers.remove( answer );
         }
 
-        question.setMultipleChoiceAnswers( multipleChoiceAnswers );
+        question.setAnswers( correctMultipleChoiceAnswers );
         questionRepository.save( question );
     }
 
@@ -105,11 +121,25 @@ public class EditQuestionServiceImpl implements EditQuestionService {
     @Override
     public EditQuestionInitialData getInitialData( Long questionId ) {
 
-        Question question = questionRepository.findById( questionId ).get();
-        boolean comprehensionQuestion = false;
+        Exam exam = questionRepository.findById( questionId ).get().getSection().getExam();
+        boolean examTimedByQuestion = false;
 
-        if ( question.getQuestions() != null ) {
+        if ( ExamTimerTypeEnum.TIMED_PER_QUESTION.getName().equals( exam.getExamTimerType()
+                .getName() ) ) {
+            examTimedByQuestion = Boolean.TRUE;
+        }
+
+        Question question = questionRepository.findById( questionId ).get();
+        AnswerType answerType = question.getAnswerType();
+        boolean comprehensionQuestion = false;
+        boolean comprehensionSubQuestion = false;
+
+        if ( question.getQuestionType().getId().equals( QuestionTypeEnum.COMPREHENSION_QUESTION
+                .getQuestionTypeId() ) ) {
             comprehensionQuestion = true;
+        }
+        if ( question.getQuestion() != null ) {
+            comprehensionSubQuestion = true;
         }
 
         Duration questionDuration = question.getDuration();
@@ -119,22 +149,24 @@ public class EditQuestionServiceImpl implements EditQuestionService {
                         % 60 ) )
                 : null;
 
-        Set<MultipleChoiceAnswer> answers = multipleChoiceAnswerRepository.findByQuestion(
-                question );
+        Set<Answer> answers = answerRepository.findByQuestion( question );
 
-        MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers =
-                createMultipleChoiceAnswerTransfers( answers );
+        String answer_type = answerType.getName();
+
+        MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers = !comprehensionQuestion
+                ? createMultipleChoiceAnswerTransfers( question, answers )
+                : null;
 
         EditQuestionInitialData initialData = new EditQuestionInitialData( comprehensionQuestion,
-                question.getQuestionText(), duration, question.getScore(),
-                multipleChoiceAnswerTransfers );
+                comprehensionSubQuestion, examTimedByQuestion, question.getQuestionText(), duration,
+                question.getScore(), answer_type, multipleChoiceAnswerTransfers );
 
         return initialData;
     }
 
 
     @Override
-    public SaveResponse saveQuestion( EditQuestionRequest request ) {
+    public SaveResponseWithId saveQuestion( EditQuestionRequest request ) {
 
         String duration[] = request.getDuration() != null ? request.getDuration().split( ":" )
                 : null;
@@ -151,12 +183,17 @@ public class EditQuestionServiceImpl implements EditQuestionService {
         question.setDuration( questionDuration );
         questionRepository.save( question );
 
-        if ( request.getMultipleChoiceQuestionAnswerRequests().length < 1 ) {
+        if ( !request.getAnswerType().equals( AnswerTypeEnum.TEXT_ANSWER.getName() ) ) {
 
             saveMultipleChoiceAnswers( question, request
                     .getMultipleChoiceQuestionAnswerRequests() );
         }
 
-        return new SaveResponse( true, null );
+        Long id = question.getId();
+        if ( question.getQuestion() != null ) {
+            id = question.getQuestion().getId();
+        }
+
+        return new SaveResponseWithId( true, null, id );
     }
 }

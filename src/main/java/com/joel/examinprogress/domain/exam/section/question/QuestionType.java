@@ -36,7 +36,7 @@ public class QuestionType extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = -7783203521207718519L;
 
-    @Column( name = "name", nullable = false, unique = false,
+    @Column( name = "name", nullable = false, unique = true,
             length = 50 )
     private String name;
 

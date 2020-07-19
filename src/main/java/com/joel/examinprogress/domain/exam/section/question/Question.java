@@ -32,10 +32,8 @@ import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
 import com.joel.examinprogress.domain.exam.section.Section;
+import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 import com.joel.examinprogress.domain.exam.section.question.answer.AnswerType;
-import com.joel.examinprogress.domain.exam.section.question.answer.ImageAnswer;
-import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
-import com.joel.examinprogress.domain.exam.section.question.answer.TextAnswer;
 
 /**
  * @author Joel Mumo
@@ -85,22 +83,10 @@ public class Question extends AbstractPersistentEntity {
     private QuestionType questionType;
 
     @OneToMany( )
-    @JoinColumn( name = "fk_multiple_choice_answer",
-            foreignKey = @ForeignKey( name = "question_fk_multiple_choice_answer" ),
+    @JoinColumn( name = "fk_answer",
+            foreignKey = @ForeignKey( name = "question_fk_answer" ),
             nullable = true )
-    private Set<MultipleChoiceAnswer> multipleChoiceAnswers;
-
-    @OneToOne( )
-    @JoinColumn( name = "fk_text_answer",
-            foreignKey = @ForeignKey( name = "question_fk_text_answer" ),
-            nullable = true )
-    private TextAnswer textAnswer;
-
-    @OneToOne( )
-    @JoinColumn( name = "fk_image_answer",
-            foreignKey = @ForeignKey( name = "question_fk_image_answer" ),
-            nullable = true )
-    private ImageAnswer imageAnswer;
+    private Set<Answer> answers;
 
     // Questions in a comprehension question
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "question" )
@@ -190,39 +176,15 @@ public class Question extends AbstractPersistentEntity {
     }
 
 
-    public Set<MultipleChoiceAnswer> getMultipleChoiceAnswers() {
+    public Set<Answer> getAnswers() {
 
-        return multipleChoiceAnswers;
+        return answers;
     }
 
 
-    public void setMultipleChoiceAnswers( Set<MultipleChoiceAnswer> multipleChoiceAnswers ) {
+    public void setAnswers( Set<Answer> answers ) {
 
-        this.multipleChoiceAnswers = multipleChoiceAnswers;
-    }
-
-
-    public TextAnswer getTextAnswer() {
-
-        return textAnswer;
-    }
-
-
-    public void setTextAnswer( TextAnswer textAnswer ) {
-
-        this.textAnswer = textAnswer;
-    }
-
-
-    public ImageAnswer getImageAnswer() {
-
-        return imageAnswer;
-    }
-
-
-    public void setImageAnswer( ImageAnswer imageAnswer ) {
-
-        this.imageAnswer = imageAnswer;
+        this.answers = answers;
     }
 
 

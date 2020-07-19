@@ -24,15 +24,18 @@ package com.joel.examinprogress.service.teacher.exam.section.question.shared;
 public class MultipleChoiceAnswerTransfer {
 
     private Long answerId;
-    private String answerTxt;
+    private String answerText;
     private boolean correct;
+    private String answerType;
 
-    public MultipleChoiceAnswerTransfer( Long answerId, String answerTxt, boolean correct ) {
+    public MultipleChoiceAnswerTransfer( Long answerId, String answerText, boolean correct,
+            String answerType ) {
 
         super();
         this.answerId = answerId;
-        this.answerTxt = answerTxt;
+        this.answerText = answerText;
         this.correct = correct;
+        this.answerType = answerType;
     }
 
 
@@ -48,15 +51,15 @@ public class MultipleChoiceAnswerTransfer {
     }
 
 
-    public String getAnswerTxt() {
+    public String getAnswerText() {
 
-        return answerTxt;
+        return answerText;
     }
 
 
-    public void setAnswerTxt( String answerTxt ) {
+    public void setAnswerText( String answerText ) {
 
-        this.answerTxt = answerTxt;
+        this.answerText = answerText;
     }
 
 
@@ -69,5 +72,17 @@ public class MultipleChoiceAnswerTransfer {
     public void setCorrect( boolean correct ) {
 
         this.correct = correct;
+    }
+
+
+    public String getAnswerType() {
+
+        return answerType;
+    }
+
+
+    public void setAnswerType( String answerType ) {
+
+        this.answerType = answerType;
     }
 }

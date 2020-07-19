@@ -23,29 +23,14 @@ package com.joel.examinprogress.service.teacher.exam.section.question.shared;
  */
 public class MultipleChoiceQuestionAnswerRequest {
 
-    private Long answerId;
     private String answerText;
     private boolean correct;
 
-    public MultipleChoiceQuestionAnswerRequest( Long answerId, String answerText,
-            boolean correct ) {
+    public MultipleChoiceQuestionAnswerRequest( String answerText, boolean correct ) {
 
         super();
-        this.answerId = answerId;
         this.answerText = answerText;
         this.correct = correct;
-    }
-
-
-    public Long getAnswerId() {
-
-        return answerId;
-    }
-
-
-    public void setAnswerId( Long answerId ) {
-
-        this.answerId = answerId;
     }
 
 

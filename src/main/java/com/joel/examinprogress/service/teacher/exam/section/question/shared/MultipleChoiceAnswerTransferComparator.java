@@ -32,6 +32,6 @@ public class MultipleChoiceAnswerTransferComparator implements Comparator<
     @Override
     public int compare( MultipleChoiceAnswerTransfer o1, MultipleChoiceAnswerTransfer o2 ) {
 
-        return -1 * o1.getAnswerId().compareTo( o2.getAnswerId() );
+        return 1 * o1.getAnswerId().compareTo( o2.getAnswerId() );
     }
 }

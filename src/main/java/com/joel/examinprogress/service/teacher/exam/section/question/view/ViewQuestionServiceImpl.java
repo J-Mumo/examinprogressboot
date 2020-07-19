@@ -26,9 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.question.Question;
-import com.joel.examinprogress.domain.exam.section.question.answer.MultipleChoiceAnswer;
+import com.joel.examinprogress.domain.exam.section.question.QuestionType;
+import com.joel.examinprogress.domain.exam.section.question.QuestionTypeEnum;
+import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
-import com.joel.examinprogress.repository.exam.section.question.answer.MultipleChoiceAnswerRepository;
+import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.ComprehensionQuestionTransfer;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceAnswerTransfer;
 import com.joel.examinprogress.service.teacher.exam.section.question.shared.MultipleChoiceAnswerTransferComparator;
@@ -46,7 +48,7 @@ public class ViewQuestionServiceImpl implements ViewQuestionService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private MultipleChoiceAnswerRepository multipleChoiceAnswerRepository;
+    private AnswerRepository answerRepository;
 
     @Autowired
     private QuestionTransferComparator questionTransferComparator;
@@ -55,28 +57,28 @@ public class ViewQuestionServiceImpl implements ViewQuestionService {
     private MultipleChoiceAnswerTransferComparator multipleChoiceAnswerTransferComparator;
 
     private MultipleChoiceAnswerTransfer createMultipleChoiceAnswerTransfer(
-            MultipleChoiceAnswer answer, Set<MultipleChoiceAnswer> correctAnswers ) {
+            Answer answer, Set<Answer> correctAnswers ) {
 
         boolean correct = false;
-        for ( MultipleChoiceAnswer correctAnswer : correctAnswers ) {
+        for ( Answer correctAnswer : correctAnswers ) {
             if ( answer == correctAnswer ) {
                 correct = true;
             }
         }
         MultipleChoiceAnswerTransfer transfer = new MultipleChoiceAnswerTransfer(
-                answer.getId(), answer.getAnswerText(), correct );
+                answer.getId(), answer.getAnswerText(), correct, answer.getAnswerType().getName() );
 
         return transfer;
     }
 
 
     private MultipleChoiceAnswerTransfer[] createMultipleChoiceAnswerTransfers( Set<
-            MultipleChoiceAnswer> answers, Set<MultipleChoiceAnswer> correctAnswers ) {
+            Answer> answers, Set<Answer> correctAnswers ) {
 
         SortedSet<MultipleChoiceAnswerTransfer> multipleChoiceAnswerTransfers =
                 new TreeSet<>( multipleChoiceAnswerTransferComparator );
 
-        for ( MultipleChoiceAnswer answer : answers ) {
+        for ( Answer answer : answers ) {
 
             multipleChoiceAnswerTransfers.add( createMultipleChoiceAnswerTransfer(
                     answer, correctAnswers ) );
@@ -90,18 +92,23 @@ public class ViewQuestionServiceImpl implements ViewQuestionService {
     private QuestionTransfer createQuestionTransfer(
             Question question ) {
 
-        Set<MultipleChoiceAnswer> correctAnswers = question.getMultipleChoiceAnswers();
-        Set<MultipleChoiceAnswer> answers = multipleChoiceAnswerRepository.findByQuestion(
-                question );
+        Set<Answer> correctAnswers = question.getAnswers();
+        Set<Answer> answers = answerRepository.findByQuestion( question );
 
         MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers =
                 createMultipleChoiceAnswerTransfers( answers, correctAnswers );
+
+        Duration questionDuration = question.getDuration();
+        String duration = questionDuration != null ? String.format( "%d:%02d:%02d", questionDuration
+                .getSeconds() / 3600,
+                ( questionDuration.getSeconds() % 3600 ) / 60, ( questionDuration.getSeconds()
+                        % 60 ) ) : null;
 
         QuestionTransfer transfer = new QuestionTransfer(
                 question.getId(),
                 question.getQuestionType().getName(),
                 question.getQuestionText(),
-                question.getScore(),
+                question.getScore(), duration,
                 multipleChoiceAnswerTransfers );
 
         return transfer;
@@ -133,8 +140,7 @@ public class ViewQuestionServiceImpl implements ViewQuestionService {
         String duration = questionDuration != null ? String.format( "%d:%02d:%02d", questionDuration
                 .getSeconds() / 3600,
                 ( questionDuration.getSeconds() % 3600 ) / 60, ( questionDuration.getSeconds()
-                        % 60 ) )
-                : null;
+                        % 60 ) ) : null;
 
         QuestionTransfer[] questionTransfers = createQuestionTransfers( question );
         ComprehensionQuestionTransfer transfer = new ComprehensionQuestionTransfer( questionTxt,
@@ -148,11 +154,12 @@ public class ViewQuestionServiceImpl implements ViewQuestionService {
     public ViewQuestionInitialData getInitialData( Long questionId ) {
 
         Question question = questionRepository.findById( questionId ).get();
+        QuestionType questionType = question.getQuestionType();
         boolean comprehensionQuestion = false;
         ComprehensionQuestionTransfer comprehensionQuestionTransfer = null;
         QuestionTransfer questionTransfer = null;
 
-        if ( question.getQuestions() != null ) {
+        if ( questionType.getId() == QuestionTypeEnum.COMPREHENSION_QUESTION.getQuestionTypeId() ) {
             comprehensionQuestion = true;
             comprehensionQuestionTransfer = createComprehensionQuestionTransfer( question );
         }

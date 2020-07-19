@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.section.question.edit;
 
-import com.joel.examinprogress.service.shared.SaveResponse;
+import com.joel.examinprogress.service.shared.SaveResponseWithId;
 
 /**
  * @author Joel Mumo
@@ -28,6 +28,6 @@ public interface EditQuestionService {
     EditQuestionInitialData getInitialData( Long questionId );
 
 
-    SaveResponse saveQuestion( EditQuestionRequest request );
+    SaveResponseWithId saveQuestion( EditQuestionRequest request );
 
 }
