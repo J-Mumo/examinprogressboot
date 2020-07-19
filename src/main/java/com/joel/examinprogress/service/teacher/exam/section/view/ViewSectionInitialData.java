@@ -27,16 +27,19 @@ public class ViewSectionInitialData {
 
     private String name;
     private String description;
+    private String duration;
     private QuestionTransfer[] questionTransfers;
 
     public ViewSectionInitialData(
             String name,
             String description,
+            String duration,
             QuestionTransfer[] questionTransfers ) {
 
         super();
         this.name = name;
         this.description = description;
+        this.duration = duration;
         this.questionTransfers = questionTransfers;
     }
 
@@ -62,6 +65,18 @@ public class ViewSectionInitialData {
     public void setDescription( String description ) {
 
         this.description = description;
+    }
+
+
+    public String getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( String duration ) {
+
+        this.duration = duration;
     }
 
 

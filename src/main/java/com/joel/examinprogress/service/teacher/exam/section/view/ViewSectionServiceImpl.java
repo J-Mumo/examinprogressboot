@@ -138,6 +138,12 @@ public class ViewSectionServiceImpl implements ViewSectionService {
         Set<Question> questions = questionRepository.findBySectionId( sectionId );
         Set<Question> questionsInComprehensionQuestion = new HashSet<>();
 
+        Duration sectionDuration = section.getDuration();
+        String duration = sectionDuration != null ? String.format( "%d:%02d:%02d", sectionDuration
+                .getSeconds() / 3600,
+                ( sectionDuration.getSeconds() % 3600 ) / 60, ( sectionDuration.getSeconds()
+                        % 60 ) ) : null;
+
         for ( Question question : questions ) {
             // Check if it has a comprehension question
             if ( question.getQuestion() != null ) {
@@ -150,7 +156,7 @@ public class ViewSectionServiceImpl implements ViewSectionService {
                 createQuestionTransfers( questions );
 
         ViewSectionInitialData initialData = new ViewSectionInitialData( name, description,
-                questionTransfers );
+                duration, questionTransfers );
 
         return initialData;
     }
