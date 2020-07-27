@@ -29,18 +29,21 @@ public class ViewExamInitialData {
     private String description;
     private String duration;
     private SectionTransfer[] sectionTransfers;
+    private boolean hasInvites;
 
     public ViewExamInitialData(
             String name,
             String description,
             String duration,
-            SectionTransfer[] sectionTransfers ) {
+            SectionTransfer[] sectionTransfers,
+            boolean hasInvites ) {
 
         super();
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.sectionTransfers = sectionTransfers;
+        this.hasInvites = hasInvites;
     }
 
 
@@ -89,5 +92,17 @@ public class ViewExamInitialData {
     public void setSectionTransfers( SectionTransfer[] sectionTransfers ) {
 
         this.sectionTransfers = sectionTransfers;
+    }
+
+
+    public boolean isHasInvites() {
+
+        return hasInvites;
+    }
+
+
+    public void setHasInvites( boolean hasInvites ) {
+
+        this.hasInvites = hasInvites;
     }
 }

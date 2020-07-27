@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.joel.examinprogress.context.threads.ThreadLocals;
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
 import com.joel.examinprogress.service.teacher.exam.create.CreateExamInitialData;
@@ -37,6 +38,12 @@ import com.joel.examinprogress.service.teacher.exam.edit.EditExamRequest;
 import com.joel.examinprogress.service.teacher.exam.edit.EditExamService;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsService;
+import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteRequest;
+import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteService;
+import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteInitialData;
+import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteRequest;
+import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteService;
+import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteToEmailRequest;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionService;
@@ -100,6 +107,12 @@ public class TeacherExamController {
     @Autowired
     private EditQuestionService editQuestionService;
 
+    @Autowired
+    private CreateInviteService createInviteService;
+
+    @Autowired
+    private SendInviteService sendInviteService;
+
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamsInitialData> getInitialData()
             throws IOException {
@@ -151,7 +164,8 @@ public class TeacherExamController {
             @RequestBody CreateExamRequest examRequest )
             throws IOException {
 
-        SaveResponseWithId response = createExamService.save( examRequest );
+        String domain = ThreadLocals.domainThreadLocal.get();
+        SaveResponseWithId response = createExamService.save( examRequest, domain );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
@@ -272,6 +286,46 @@ public class TeacherExamController {
             throws IOException {
 
         SaveResponseWithId response = editQuestionService.saveQuestion( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "invite/create/save", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponseWithId> save(
+            @RequestBody CreateInviteRequest request )
+            throws IOException {
+
+        SaveResponseWithId response = createInviteService.save( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "invite/send/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<SendInviteInitialData> getSendInviteInitialData(
+            @RequestBody Long inviteId )
+            throws IOException {
+
+        SendInviteInitialData examLink = sendInviteService.getInitialData( inviteId );
+        return ResponseEntity.status( HttpStatus.OK ).body( examLink );
+    }
+
+
+    @RequestMapping( value = "invite/sendtoemail", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> sendInviteToEmail(
+            @RequestBody SendInviteToEmailRequest request )
+            throws IOException {
+
+        SaveResponse response = sendInviteService.sendInviteToEmail( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "invite/send", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> sendInvite(
+            @RequestBody SendInviteRequest request )
+            throws IOException {
+
+        SaveResponse response = sendInviteService.sendInvite( request );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 }

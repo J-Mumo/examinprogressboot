@@ -18,12 +18,15 @@
 package com.joel.examinprogress.domain.exam;
 
 import java.time.Duration;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
@@ -53,6 +56,10 @@ public class Exam extends AbstractPersistentEntity {
     @Column( name = "duration", nullable = true, unique = false )
     private Duration duration;
 
+    @Column( name = "exam_link", nullable = false, unique = false,
+            length = 128 )
+    private String examLink;
+
     @ManyToOne( )
     @JoinColumn( name = "fk_teacher",
             foreignKey = @ForeignKey( name = "exam_fk_teacher" ),
@@ -64,6 +71,9 @@ public class Exam extends AbstractPersistentEntity {
             foreignKey = @ForeignKey( name = "exam_fk_exam_timer_type" ),
             nullable = false )
     private ExamTimerType examTimerType;
+
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "exam" )
+    private Set<Invite> invites;
 
     public String getName() {
 
@@ -101,6 +111,18 @@ public class Exam extends AbstractPersistentEntity {
     }
 
 
+    public String getExamLink() {
+
+        return examLink;
+    }
+
+
+    public void setExamLink( String examLink ) {
+
+        this.examLink = examLink;
+    }
+
+
     public Teacher getTeacher() {
 
         return teacher;
@@ -122,5 +144,17 @@ public class Exam extends AbstractPersistentEntity {
     public void setExamTimerType( ExamTimerType examTimerType ) {
 
         this.examTimerType = examTimerType;
+    }
+
+
+    public Set<Invite> getInvites() {
+
+        return invites;
+    }
+
+
+    public void setInvites( Set<Invite> invites ) {
+
+        this.invites = invites;
     }
 }

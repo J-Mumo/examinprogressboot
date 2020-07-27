@@ -39,6 +39,10 @@ public class ExamToken extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 3910693378116108040L;
 
+    @Column( name = "email", nullable = false, unique = true,
+            length = 256 )
+    private String email;
+
     @Column( name = "token", nullable = false, unique = false,
             length = 128 )
     private String token;
@@ -48,6 +52,18 @@ public class ExamToken extends AbstractPersistentEntity {
             foreignKey = @ForeignKey( name = "exam_token_fk_invite" ),
             nullable = false )
     private Invite invite;
+
+    public String getEmail() {
+
+        return email;
+    }
+
+
+    public void setEmail( String email ) {
+
+        this.email = email;
+    }
+
 
     public String getToken() {
 

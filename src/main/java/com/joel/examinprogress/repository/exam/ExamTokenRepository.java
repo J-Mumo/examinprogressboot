@@ -29,4 +29,5 @@ import com.joel.examinprogress.domain.exam.ExamToken;
 @Repository
 public interface ExamTokenRepository extends JpaRepository<ExamToken, Long> {
 
+    ExamToken findByEmail( String email );
 }

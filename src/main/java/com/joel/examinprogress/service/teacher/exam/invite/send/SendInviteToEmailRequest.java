@@ -15,18 +15,45 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.create;
-
-import com.joel.examinprogress.service.shared.SaveResponseWithId;
+package com.joel.examinprogress.service.teacher.exam.invite.send;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   25th July, 2020
  */
-public interface CreateExamService {
+public class SendInviteToEmailRequest {
 
-    CreateExamInitialData getInitialData();
+    private Long inviteId;
+    private String email;
+
+    public SendInviteToEmailRequest( Long inviteId, String email ) {
+
+        super();
+        this.inviteId = inviteId;
+        this.email = email;
+    }
 
 
-    SaveResponseWithId save( CreateExamRequest request, String domain );
+    public Long getInviteId() {
+
+        return inviteId;
+    }
+
+
+    public void setInviteId( Long inviteId ) {
+
+        this.inviteId = inviteId;
+    }
+
+
+    public String getEmail() {
+
+        return email;
+    }
+
+
+    public void setEmail( String email ) {
+
+        this.email = email;
+    }
 }

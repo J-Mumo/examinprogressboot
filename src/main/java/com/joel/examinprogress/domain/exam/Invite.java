@@ -17,7 +17,8 @@
 */
 package com.joel.examinprogress.domain.exam;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,13 +43,16 @@ public class Invite extends AbstractPersistentEntity {
     private static final long serialVersionUID = 9184192553295368727L;
 
     @Column( name = "exam_start_date", nullable = false )
-    private LocalDateTime examStartDate;
+    private Date examStartDate;
 
     @Column( name = "exam_end_date", nullable = true )
-    private LocalDateTime examEndDate;
+    private Date examEndDate;
 
     @Column( name = "exam_start_time", nullable = true )
-    private LocalDateTime examStartTime;
+    private Duration examStartTime;
+
+    @Column( name = "pausable", nullable = false )
+    private Boolean pausable;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_exam",
@@ -56,39 +60,51 @@ public class Invite extends AbstractPersistentEntity {
             nullable = false )
     private Exam exam;
 
-    public LocalDateTime getExamStartDate() {
+    public Date getExamStartDate() {
 
         return examStartDate;
     }
 
 
-    public void setExamStartDate( LocalDateTime examStartDate ) {
+    public void setExamStartDate( Date examStartDate ) {
 
         this.examStartDate = examStartDate;
     }
 
 
-    public LocalDateTime getExamEndDate() {
+    public Date getExamEndDate() {
 
         return examEndDate;
     }
 
 
-    public void setExamEndDate( LocalDateTime examEndDate ) {
+    public void setExamEndDate( Date examEndDate ) {
 
         this.examEndDate = examEndDate;
     }
 
 
-    public LocalDateTime getExamStartTime() {
+    public Duration getExamStartTime() {
 
         return examStartTime;
     }
 
 
-    public void setExamStartTime( LocalDateTime examStartTime ) {
+    public void setExamStartTime( Duration examStartTime ) {
 
         this.examStartTime = examStartTime;
+    }
+
+
+    public Boolean getPausable() {
+
+        return pausable;
+    }
+
+
+    public void setPausable( Boolean pausable ) {
+
+        this.pausable = pausable;
     }
 
 

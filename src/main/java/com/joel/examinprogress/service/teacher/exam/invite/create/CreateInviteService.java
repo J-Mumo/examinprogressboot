@@ -15,18 +15,15 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.create;
+package com.joel.examinprogress.service.teacher.exam.invite.create;
 
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   25th July, 2020
  */
-public interface CreateExamService {
+public interface CreateInviteService {
 
-    CreateExamInitialData getInitialData();
-
-
-    SaveResponseWithId save( CreateExamRequest request, String domain );
+    SaveResponseWithId save( CreateInviteRequest request );
 }

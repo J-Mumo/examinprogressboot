@@ -15,18 +15,23 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.create;
+package com.joel.examinprogress.service.teacher.exam.invite.send;
 
-import com.joel.examinprogress.service.shared.SaveResponseWithId;
+import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
  * @author Joel Mumo
- * @date   11th June, 2020
+ * @date   25th July, 2020
  */
-public interface CreateExamService {
+public interface SendInviteService {
 
-    CreateExamInitialData getInitialData();
+    String EMAIL_ERROR_RBKEY = "boot/register/error/email/email_exists_already";
+
+    SendInviteInitialData getInitialData( Long inviteId );
 
 
-    SaveResponseWithId save( CreateExamRequest request, String domain );
+    SaveResponse sendInviteToEmail( SendInviteToEmailRequest request );
+
+
+    SaveResponse sendInvite( SendInviteRequest request );
 }

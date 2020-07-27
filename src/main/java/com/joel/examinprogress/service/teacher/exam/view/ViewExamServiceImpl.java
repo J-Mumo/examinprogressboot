@@ -80,12 +80,16 @@ public class ViewExamServiceImpl implements ViewExamService {
         Set<Section> sections = sectionRepository.findByExamId( examId );
         SectionTransfer[] sectionTransfers = createSectionTransfers( sections );
         Duration examDuration = exam.getDuration();
+        boolean hasInvites = false;
+        if ( !exam.getInvites().isEmpty() )
+            hasInvites = true;
+
         String duration = examDuration != null ? String.format( "%d:%02d:%02d", examDuration
                 .getSeconds() / 3600, ( examDuration.getSeconds() % 3600 ) / 60, ( examDuration
                         .getSeconds() % 60 ) ) : null;
 
         ViewExamInitialData initialData = new ViewExamInitialData(
-                exam.getName(), exam.getDescription(), duration, sectionTransfers );
+                exam.getName(), exam.getDescription(), duration, sectionTransfers, hasInvites );
 
         return initialData;
     }
