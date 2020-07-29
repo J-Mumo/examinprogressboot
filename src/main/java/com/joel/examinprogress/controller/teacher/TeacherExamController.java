@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joel.examinprogress.context.threads.ThreadLocals;
+import com.joel.examinprogress.service.shared.DeleteResponse;
 import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
 import com.joel.examinprogress.service.teacher.exam.create.CreateExamInitialData;
@@ -44,6 +45,8 @@ import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteInitia
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteRequest;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteService;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteToEmailRequest;
+import com.joel.examinprogress.service.teacher.exam.invite.view.ViewInviteInitialData;
+import com.joel.examinprogress.service.teacher.exam.invite.view.ViewInviteService;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionService;
@@ -112,6 +115,9 @@ public class TeacherExamController {
 
     @Autowired
     private SendInviteService sendInviteService;
+
+    @Autowired
+    private ViewInviteService viewInviteService;
 
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamsInitialData> getInitialData()
@@ -326,6 +332,25 @@ public class TeacherExamController {
             throws IOException {
 
         SaveResponse response = sendInviteService.sendInvite( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "invite/view/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<ViewInviteInitialData> getViewInviteInitialData(
+            @RequestBody Long inviteId )
+            throws IOException {
+
+        ViewInviteInitialData examLink = viewInviteService.getInitialData( inviteId );
+        return ResponseEntity.status( HttpStatus.OK ).body( examLink );
+    }
+
+
+    @RequestMapping( value = "invite/unsendtoemail", method = RequestMethod.POST )
+    public ResponseEntity<DeleteResponse> unsendInvite(
+            @RequestBody Long examTokenId ) throws IOException {
+
+        DeleteResponse response = viewInviteService.unsendInvite( examTokenId );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 }

@@ -42,6 +42,21 @@ public class Invite extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 9184192553295368727L;
 
+    @Column( name = "name", nullable = false, unique = false,
+            length = 100 )
+    private String name;
+
+    public String getName() {
+
+        return name;
+    }
+
+
+    public void setName( String name ) {
+
+        this.name = name;
+    }
+
     @Column( name = "exam_start_date", nullable = false )
     private Date examStartDate;
 

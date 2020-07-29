@@ -15,25 +15,45 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
-
-import java.util.Set;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.ExamToken;
-import com.joel.examinprogress.domain.exam.Invite;
+package com.joel.examinprogress.service.teacher.exam.invite.view;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   28th July, 2020
  */
-@Repository
-public interface ExamTokenRepository extends JpaRepository<ExamToken, Long> {
+public class ExamTokenTransfer {
 
-    ExamToken findByEmail( String email );
+    private Long examTokenId;
+    private String email;
+
+    public ExamTokenTransfer( Long examTokenId, String email ) {
+
+        super();
+        this.examTokenId = examTokenId;
+        this.email = email;
+    }
 
 
-    Set<ExamToken> findByInvite( Invite invite );
+    public Long getExamTokenId() {
+
+        return examTokenId;
+    }
+
+
+    public void setExamTokenId( Long examTokenId ) {
+
+        this.examTokenId = examTokenId;
+    }
+
+
+    public String getEmail() {
+
+        return email;
+    }
+
+
+    public void setEmail( String email ) {
+
+        this.email = email;
+    }
 }

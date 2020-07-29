@@ -19,6 +19,8 @@ package com.joel.examinprogress.service.teacher.exam.invite.create;
 
 import java.time.Duration;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,7 @@ public class CreateInviteServiceImpl implements CreateInviteService {
     @Autowired
     InviteRepository inviteRepository;
 
+    @Transactional
     @Override
     public SaveResponseWithId save( CreateInviteRequest request ) {
 
@@ -51,6 +54,7 @@ public class CreateInviteServiceImpl implements CreateInviteService {
 
         Exam exam = examRepository.findById( request.getExamId() ).get();
         Invite invite = new Invite();
+        invite.setName( request.getName() );
         invite.setExamStartDate( request.getExamStartDate() );
         invite.setExamEndDate( request.getExamEndDate() );
         invite.setPausable( request.isPausable() );

@@ -15,25 +15,18 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
+package com.joel.examinprogress.service.teacher.exam.invite.view;
 
-import java.util.Set;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.ExamToken;
-import com.joel.examinprogress.domain.exam.Invite;
+import com.joel.examinprogress.service.shared.DeleteResponse;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   28th July, 2020
  */
-@Repository
-public interface ExamTokenRepository extends JpaRepository<ExamToken, Long> {
+public interface ViewInviteService {
 
-    ExamToken findByEmail( String email );
+    ViewInviteInitialData getInitialData( Long inviteId );
 
 
-    Set<ExamToken> findByInvite( Invite invite );
+    DeleteResponse unsendInvite( Long examTokenId );
 }

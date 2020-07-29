@@ -15,50 +15,41 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.invite.create;
+package com.joel.examinprogress.service.teacher.exam.invite.view;
 
 import java.util.Date;
 
 /**
  * @author Joel Mumo
- * @date   25th July, 2020
+ * @date   28th July, 2020
  */
-public class CreateInviteRequest {
+public class ViewInviteInitialData {
 
-    private Long examId;
     private String name;
     private Date examStartDate;
     private Date examEndDate;
     private boolean pausable;
     private String examStartTime;
+    private String examLink;
+    private ExamTokenTransfer[] examTokenTransfers;
 
-    public CreateInviteRequest(
-            Long examId,
+    public ViewInviteInitialData(
             String name,
             Date examStartDate,
             Date examEndDate,
             boolean pausable,
-            String examStartTime ) {
+            String examStartTime,
+            String examLink,
+            ExamTokenTransfer[] examTokenTransfers ) {
 
         super();
-        this.examId = examId;
         this.name = name;
         this.examStartDate = examStartDate;
         this.examEndDate = examEndDate;
         this.pausable = pausable;
         this.examStartTime = examStartTime;
-    }
-
-
-    public Long getExamId() {
-
-        return examId;
-    }
-
-
-    public void setExamId( Long examId ) {
-
-        this.examId = examId;
+        this.examLink = examLink;
+        this.examTokenTransfers = examTokenTransfers;
     }
 
 
@@ -119,5 +110,29 @@ public class CreateInviteRequest {
     public void setExamStartTime( String examStartTime ) {
 
         this.examStartTime = examStartTime;
+    }
+
+
+    public String getExamLink() {
+
+        return examLink;
+    }
+
+
+    public void setExamLink( String examLink ) {
+
+        this.examLink = examLink;
+    }
+
+
+    public ExamTokenTransfer[] getExamTokenTransfers() {
+
+        return examTokenTransfers;
+    }
+
+
+    public void setExamTokenTransfers( ExamTokenTransfer[] examTokenTransfers ) {
+
+        this.examTokenTransfers = examTokenTransfers;
     }
 }

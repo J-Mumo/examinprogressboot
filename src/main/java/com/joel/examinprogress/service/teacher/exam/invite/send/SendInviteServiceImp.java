@@ -17,6 +17,8 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.send;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -73,6 +75,7 @@ public class SendInviteServiceImp implements SendInviteService {
     }
 
 
+    @Transactional
     @Override
     public SaveResponse sendInviteToEmail( SendInviteToEmailRequest request ) {
 
@@ -99,6 +102,7 @@ public class SendInviteServiceImp implements SendInviteService {
     }
 
 
+    @Transactional
     @Override
     public SaveResponse sendInvite( SendInviteRequest request ) {
 
