@@ -15,21 +15,22 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
+package com.joel.examinprogress.service.teacher.exam.invite.invites;
 
-import java.util.Set;
+import java.util.Comparator;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.Invite;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Joel Mumo
- * @date   26th June, 2020
+ * @date   30th July, 2020
  */
-@Repository
-public interface InviteRepository extends JpaRepository<Invite, Long> {
+@Component
+public class InviteTransferComparator implements Comparator<InviteTransfer> {
 
-    Set<Invite> findByExamId( Long examId );
+    @Override
+    public int compare( InviteTransfer o1, InviteTransfer o2 ) {
+
+        return -1 * o1.getInviteId().compareTo( o2.getInviteId() );
+    }
 }

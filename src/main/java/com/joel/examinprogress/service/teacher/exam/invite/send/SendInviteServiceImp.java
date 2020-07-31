@@ -17,6 +17,8 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.send;
 
+import java.util.Set;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +47,16 @@ public class SendInviteServiceImp implements SendInviteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private boolean emailExists( String email ) {
+    private boolean emailExists( Set<ExamToken> examTokens, String email ) {
 
-        ExamToken examToken = examTokenRepository.findByEmail( email );
-
-        if ( examToken == null ) {
-
-            return false;
+        boolean exists = false;
+        for ( ExamToken examToken : examTokens ) {
+            if ( email.equals( examToken.getEmail() ) )
+                exists = true;
+            break;
         }
 
-        return true;
+        return exists;
     }
 
 
@@ -80,8 +82,9 @@ public class SendInviteServiceImp implements SendInviteService {
     public SaveResponse sendInviteToEmail( SendInviteToEmailRequest request ) {
 
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
+        Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         String email = request.getEmail();
-        boolean emailExists = emailExists( email );
+        boolean emailExists = emailExists( examTokens, email );
         SaveResponse saveResponse;
 
         if ( emailExists ) {
@@ -107,8 +110,9 @@ public class SendInviteServiceImp implements SendInviteService {
     public SaveResponse sendInvite( SendInviteRequest request ) {
 
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
+        Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         for ( String email : request.getEmails() ) {
-            boolean emailExists = emailExists( email );
+            boolean emailExists = emailExists( examTokens, email );
 
             if ( !emailExists ) {
 

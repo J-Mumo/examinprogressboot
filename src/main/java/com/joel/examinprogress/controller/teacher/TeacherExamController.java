@@ -41,6 +41,11 @@ import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsService;
 import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteRequest;
 import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteService;
+import com.joel.examinprogress.service.teacher.exam.invite.edit.EditInviteInitialData;
+import com.joel.examinprogress.service.teacher.exam.invite.edit.EditInviteRequest;
+import com.joel.examinprogress.service.teacher.exam.invite.edit.EditInviteService;
+import com.joel.examinprogress.service.teacher.exam.invite.invites.InvitesInitialData;
+import com.joel.examinprogress.service.teacher.exam.invite.invites.InvitesService;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteInitialData;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteRequest;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteService;
@@ -118,6 +123,12 @@ public class TeacherExamController {
 
     @Autowired
     private ViewInviteService viewInviteService;
+
+    @Autowired
+    private EditInviteService editInviteService;
+
+    @Autowired
+    private InvitesService invitesService;
 
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamsInitialData> getInitialData()
@@ -352,5 +363,35 @@ public class TeacherExamController {
 
         DeleteResponse response = viewInviteService.unsendInvite( examTokenId );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "invite/edit/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<EditInviteInitialData> getEditInviteInitialData(
+            @RequestBody Long inviteId )
+            throws IOException {
+
+        EditInviteInitialData initialData = editInviteService.getInitialData( inviteId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "invite/edit/save", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> save(
+            @RequestBody EditInviteRequest request )
+            throws IOException {
+
+        SaveResponse response = editInviteService.save( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "invite/invites/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<InvitesInitialData> getInvitesInitialData(
+            @RequestBody Long examId )
+            throws IOException {
+
+        InvitesInitialData initialData = invitesService.getInitialData( examId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
     }
 }

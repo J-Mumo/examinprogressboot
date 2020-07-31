@@ -15,21 +15,13 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
-
-import java.util.Set;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.Invite;
+package com.joel.examinprogress.service.teacher.exam.invite.invites;
 
 /**
  * @author Joel Mumo
- * @date   26th June, 2020
+ * @date   30th July, 2020
  */
-@Repository
-public interface InviteRepository extends JpaRepository<Invite, Long> {
+public interface InvitesService {
 
-    Set<Invite> findByExamId( Long examId );
+    InvitesInitialData getInitialData( Long examId );
 }
