@@ -34,6 +34,7 @@ import com.joel.examinprogress.service.shared.SaveResponseWithId;
 import com.joel.examinprogress.service.teacher.exam.create.CreateExamInitialData;
 import com.joel.examinprogress.service.teacher.exam.create.CreateExamRequest;
 import com.joel.examinprogress.service.teacher.exam.create.CreateExamService;
+import com.joel.examinprogress.service.teacher.exam.delete.DeleteExamService;
 import com.joel.examinprogress.service.teacher.exam.edit.EditExamInitialData;
 import com.joel.examinprogress.service.teacher.exam.edit.EditExamRequest;
 import com.joel.examinprogress.service.teacher.exam.edit.EditExamService;
@@ -41,6 +42,7 @@ import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsService;
 import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteRequest;
 import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteService;
+import com.joel.examinprogress.service.teacher.exam.invite.delete.DeleteInviteService;
 import com.joel.examinprogress.service.teacher.exam.invite.edit.EditInviteInitialData;
 import com.joel.examinprogress.service.teacher.exam.invite.edit.EditInviteRequest;
 import com.joel.examinprogress.service.teacher.exam.invite.edit.EditInviteService;
@@ -55,6 +57,7 @@ import com.joel.examinprogress.service.teacher.exam.invite.view.ViewInviteServic
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.create.CreateSectionService;
+import com.joel.examinprogress.service.teacher.exam.section.delete.DeleteSectionService;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.edit.EditSectionService;
@@ -62,6 +65,7 @@ import com.joel.examinprogress.service.teacher.exam.section.question.add.AddComp
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.add.AddQuestionService;
+import com.joel.examinprogress.service.teacher.exam.section.question.delete.DeleteQuestionService;
 import com.joel.examinprogress.service.teacher.exam.section.question.edit.EditQuestionInitialData;
 import com.joel.examinprogress.service.teacher.exam.section.question.edit.EditQuestionRequest;
 import com.joel.examinprogress.service.teacher.exam.section.question.edit.EditQuestionService;
@@ -95,6 +99,9 @@ public class TeacherExamController {
     private ViewExamService viewExamService;
 
     @Autowired
+    private DeleteExamService deleteExamService;
+
+    @Autowired
     private CreateSectionService createSectionService;
 
     @Autowired
@@ -102,6 +109,9 @@ public class TeacherExamController {
 
     @Autowired
     private ViewSectionService viewSectionService;
+
+    @Autowired
+    private DeleteSectionService deleteSectionService;
 
     @Autowired
     private SectionsService sectionsService;
@@ -114,6 +124,9 @@ public class TeacherExamController {
 
     @Autowired
     private EditQuestionService editQuestionService;
+
+    @Autowired
+    private DeleteQuestionService deleteQuestionService;
 
     @Autowired
     private CreateInviteService createInviteService;
@@ -129,6 +142,9 @@ public class TeacherExamController {
 
     @Autowired
     private InvitesService invitesService;
+
+    @Autowired
+    private DeleteInviteService deleteInviteService;
 
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamsInitialData> getInitialData()
@@ -187,6 +203,16 @@ public class TeacherExamController {
     }
 
 
+    @RequestMapping( value = "delete", method = RequestMethod.POST )
+    public ResponseEntity<DeleteResponse> deleteExam(
+            @RequestBody Long examId )
+            throws IOException {
+
+        DeleteResponse response = deleteExamService.deleteExam( examId );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
     @RequestMapping( value = "section/view/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ViewSectionInitialData> getViewSectionInitialData(
             @RequestBody Long sectionId )
@@ -233,6 +259,16 @@ public class TeacherExamController {
             throws IOException {
 
         SaveResponse response = editSectionService.save( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "section/delete", method = RequestMethod.POST )
+    public ResponseEntity<DeleteResponse> deleteSection(
+            @RequestBody Long sectionId )
+            throws IOException {
+
+        DeleteResponse response = deleteSectionService.deleteSection( sectionId );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
@@ -303,6 +339,16 @@ public class TeacherExamController {
             throws IOException {
 
         SaveResponseWithId response = editQuestionService.saveQuestion( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "section/question/delete", method = RequestMethod.POST )
+    public ResponseEntity<DeleteResponse> deleteQuestion(
+            @RequestBody Long questionId )
+            throws IOException {
+
+        DeleteResponse response = deleteQuestionService.deleteQuestion( questionId );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
@@ -393,5 +439,15 @@ public class TeacherExamController {
 
         InvitesInitialData initialData = invitesService.getInitialData( examId );
         return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "invite/delete", method = RequestMethod.POST )
+    public ResponseEntity<DeleteResponse> deleteInvite(
+            @RequestBody Long inviteId )
+            throws IOException {
+
+        DeleteResponse response = deleteInviteService.deleteInvite( inviteId );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 }
