@@ -15,28 +15,23 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
+package com.joel.examinprogress.helper.email.sendexaminvite;
 
-import java.util.Set;
+import java.util.Locale;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
+import com.joel.examinprogress.domain.organisation.DomainOrganisation;
+import com.joel.examinprogress.helper.email.EmailSentResponse;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   31st July, 2020
  */
-@Repository
-public interface ExamTokenRepository extends JpaRepository<ExamToken, Long> {
+public interface SendExamInviteEmailHelper {
 
-    ExamToken findByEmail( String email );
+    String SEND_EXAM_TOKEN = "SEND_EXAM_TOKEN";
 
-
-    ExamToken findByToken( String token );
-
-
-    Set<ExamToken> findByInvite( Invite invite );
+    EmailSentResponse sendExamInvite( DomainOrganisation organisation, String email,
+            String examToken, Invite invite, Locale locale, String domain, int serverPort,
+            String protocol );
 }

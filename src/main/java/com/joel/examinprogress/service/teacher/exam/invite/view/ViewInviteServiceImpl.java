@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
+import com.joel.examinprogress.helper.link.LinkHelper;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
 import com.joel.examinprogress.repository.exam.InviteRepository;
 import com.joel.examinprogress.service.shared.DeleteResponse;
@@ -48,6 +49,9 @@ public class ViewInviteServiceImpl implements ViewInviteService {
 
     @Autowired
     private ExamTokenTransferComparator examTokenTransferComparator;
+
+    @Autowired
+    private LinkHelper linkHelper;
 
     private ExamTokenTransfer createSectionTransfer( ExamToken examToken ) {
 
@@ -74,10 +78,13 @@ public class ViewInviteServiceImpl implements ViewInviteService {
 
 
     @Override
-    public ViewInviteInitialData getInitialData( Long inviteId ) {
+    public ViewInviteInitialData getInitialData( Long inviteId, String domain, Integer serverPort,
+            String protocol ) {
 
         Invite invite = inviteRepository.findById( inviteId ).get();
-        String examLink = invite.getExam().getExamLink();
+        String inviteCode = linkHelper.createDomainLink( domain, serverPort, protocol ) +
+                "/student/exam/token?invitecode=" + invite.getInviteCode();
+
         Duration inviteStartTime = invite.getExamStartTime();
         String startTime = inviteStartTime != null ? String.format( "%d:%02d:%02d", inviteStartTime
                 .getSeconds() / 3600, ( inviteStartTime.getSeconds() % 3600 ) / 60,
@@ -89,7 +96,7 @@ public class ViewInviteServiceImpl implements ViewInviteService {
 
         ViewInviteInitialData initialData = new ViewInviteInitialData(
                 invite.getName(), invite.getExamStartDate(), invite.getExamEndDate(),
-                invite.getPausable(), startTime, examLink, examTokenTransfers );
+                invite.getPausable(), startTime, inviteCode, examTokenTransfers );
 
         return initialData;
     }
@@ -104,5 +111,4 @@ public class ViewInviteServiceImpl implements ViewInviteService {
 
         return new DeleteResponse( true, null );
     }
-
 }

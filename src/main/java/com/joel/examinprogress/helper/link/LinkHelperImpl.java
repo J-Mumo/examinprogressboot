@@ -15,28 +15,33 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.exam;
+package com.joel.examinprogress.helper.link;
 
-import java.util.Set;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.ExamToken;
-import com.joel.examinprogress.domain.exam.Invite;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   8th Aug, 2020
  */
-@Repository
-public interface ExamTokenRepository extends JpaRepository<ExamToken, Long> {
+@Service
+public class LinkHelperImpl implements LinkHelper {
 
-    ExamToken findByEmail( String email );
+    private String getFormattedProtocol( String protocol ) {
+
+        StringBuilder link = new StringBuilder();
+        link.append( protocol );
+        link.append( "//" );
+        return link.toString();
+    }
 
 
-    ExamToken findByToken( String token );
+    @Override
+    public String createDomainLink( String domain, int serverPort, String protocol ) {
 
+        String link = getFormattedProtocol( protocol ) + domain + ":"
+                + serverPort;
 
-    Set<ExamToken> findByInvite( Invite invite );
+        return link;
+    }
+
 }

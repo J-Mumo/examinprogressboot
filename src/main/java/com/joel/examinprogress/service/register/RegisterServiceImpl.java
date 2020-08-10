@@ -15,24 +15,33 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.register.teacher;
+package com.joel.examinprogress.service.register;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.joel.examinprogress.domain.exam.ExamToken;
+import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.domain.organisation.DomainOrganisation;
+import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.teacher.Teacher;
 import com.joel.examinprogress.domain.user.Role;
+import com.joel.examinprogress.domain.user.RoleEnum;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.email.EmailSentResponse;
 import com.joel.examinprogress.helper.hash.HashHelper;
+import com.joel.examinprogress.repository.exam.ExamTokenRepository;
+import com.joel.examinprogress.repository.exam.InviteRepository;
 import com.joel.examinprogress.repository.organisation.OrganisationRepository;
+import com.joel.examinprogress.repository.student.StudentRepository;
 import com.joel.examinprogress.repository.teacher.TeacherRepository;
 import com.joel.examinprogress.repository.user.RoleRepository;
 import com.joel.examinprogress.repository.user.UserRepository;
@@ -44,25 +53,37 @@ import com.joel.examinprogress.service.shared.SaveResponse;
  * @date   28 May, 2020
  */
 @Service
-public class RegisterTeacherServiceImpl implements RegisterTeacherService {
+public class RegisterServiceImpl implements RegisterService {
 
     @Autowired
-    OrganisationRepository organisationRepository;
+    private OrganisationRepository organisationRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    TeacherRepository teacherRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    private TeacherRepository teacherRepository;
 
     @Autowired
-    HashHelper hashHelper;
+    private StudentRepository studentRepository;
 
     @Autowired
-    EmailService emailService;
+    private ExamTokenRepository examTokenRepository;
+
+    @Autowired
+    private InviteRepository inviteRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private HashHelper hashHelper;
+
+    @Autowired
+    private EmailService emailService;
 
     private boolean emailExists( String email ) {
 
@@ -89,17 +110,58 @@ public class RegisterTeacherServiceImpl implements RegisterTeacherService {
     }
 
 
-    @Transactional
+    private String getHashWithBcrypt( Long id, String email ) {
+
+        String hashed = passwordEncoder.encode( id + email );
+        return hashed;
+    }
+
+
     private void registerTeacher( User user ) {
 
         Teacher teacher = new Teacher();
         teacher.setUser( user );
         teacherRepository.save( teacher );
+
+        Role role = roleRepository.findById( RoleEnum.TEACHER.getId() ).get();
+        Set<Role> roles = new HashSet<>();
+        roles.add( role );
+        user.setRoles( roles );
+        userRepository.save( user );
+    }
+
+
+    private void registerStudent( User user, RegisterRequest request ) {
+
+        ExamToken examToken = examTokenRepository.findByEmail( user.getEmail() );
+        if ( examToken == null ) {
+
+            Invite invite = inviteRepository.findByInviteCode( request.getCode() );
+            String token = getHashWithBcrypt( invite.getId(), user.getEmail() ).replaceAll( "/",
+                    "sL4sh" );
+
+            examToken = new ExamToken();
+            examToken.setEmail( user.getEmail() );
+            examToken.setToken( token );
+            examToken.setInvite( invite );
+            examTokenRepository.save( examToken );
+
+        }
+        Student student = new Student();
+        student.setUser( user );
+        student.setExamToken( examToken );
+        studentRepository.save( student );
+
+        Role role = roleRepository.findById( RoleEnum.STUDENT.getId() ).get();
+        Set<Role> roles = new HashSet<>();
+        roles.add( role );
+        user.setRoles( roles );
+        userRepository.save( user );
     }
 
 
     @Transactional
-    private User register( RegisterTeacherRequest request,
+    private User register( RegisterRequest request,
             DomainOrganisation domainOrganisation, String email )
             throws IOException {
 
@@ -114,9 +176,6 @@ public class RegisterTeacherServiceImpl implements RegisterTeacherService {
         String emailActivationCode = createEmailActivationCode();
         user.setEmailActivationCode( emailActivationCode );
         user.setDomainOrganisation( domainOrganisation );
-        Set<Role> roles = user.getRoles();
-        roles.clear();
-        //        roles.addAll( roleRepository.findAll() );
         userRepository.save( user );
 
         return user;
@@ -125,7 +184,7 @@ public class RegisterTeacherServiceImpl implements RegisterTeacherService {
 
     @Override
     @Transactional
-    public SaveResponse save( RegisterTeacherRequest request, String domain,
+    public SaveResponse save( RegisterRequest request, String domain,
             int serverPort, String protocol ) throws IOException {
 
         DomainOrganisation organisation = organisationRepository.findByDomain( domain );
@@ -141,7 +200,12 @@ public class RegisterTeacherServiceImpl implements RegisterTeacherService {
 
             User user = register( request, organisation,
                     email );
-            registerTeacher( user );
+
+            if ( request.getCode() != null )
+                registerStudent( user, request );
+            else
+                registerTeacher( user );
+
             Locale locale = new Locale( "en" );
 
             EmailSentResponse emailSentResponse =

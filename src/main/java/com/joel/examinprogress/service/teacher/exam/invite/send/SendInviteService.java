@@ -27,11 +27,14 @@ public interface SendInviteService {
 
     String EMAIL_ERROR_RBKEY = "boot/register/error/email/email_exists_already";
 
-    SendInviteInitialData getInitialData( Long inviteId );
+    SendInviteInitialData getInitialData( Long inviteId, String domain,
+            Integer serverPort, String protocol );
 
 
-    SaveResponse sendInviteToEmail( SendInviteToEmailRequest request );
+    SaveResponse sendInviteToEmail( SendInviteToEmailRequest request, String domain,
+            Integer serverPort, String protocol );
 
 
-    SaveResponse sendInvite( SendInviteRequest request );
+    SaveResponse sendInvite( SendInviteRequest request, String domain, Integer serverPort,
+            String protocol );
 }

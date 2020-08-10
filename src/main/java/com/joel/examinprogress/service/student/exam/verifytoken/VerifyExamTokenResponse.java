@@ -15,50 +15,48 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.register.teacher;
+package com.joel.examinprogress.service.student.exam.verifytoken;
 
 /**
  * @author Joel Mumo
- * @date   28 May, 2020
+ * @date   8th Aug, 2020
  */
-public class RegisterTeacherRequest {
+public class VerifyExamTokenResponse {
 
-    private String firstName;
-    private String lastName;
+    private boolean verified;
+    private boolean registered;
     private String email;
-    private String password;
 
-    public RegisterTeacherRequest( String firstName, String lastName, String email, String password ) {
+    public VerifyExamTokenResponse( boolean verified, boolean registered, String email ) {
 
         super();
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.verified = verified;
+        this.registered = registered;
         this.email = email;
-        this.password = password;
     }
 
 
-    public String getFirstName() {
+    public boolean isVerified() {
 
-        return firstName;
+        return verified;
     }
 
 
-    public void setFirstName( String firstName ) {
+    public void setVerified( boolean verified ) {
 
-        this.firstName = firstName;
+        this.verified = verified;
     }
 
 
-    public String getLastName() {
+    public boolean isRegistered() {
 
-        return lastName;
+        return registered;
     }
 
 
-    public void setLastName( String lastName ) {
+    public void setRegistered( boolean registered ) {
 
-        this.lastName = lastName;
+        this.registered = registered;
     }
 
 
@@ -71,17 +69,5 @@ public class RegisterTeacherRequest {
     public void setEmail( String email ) {
 
         this.email = email;
-    }
-
-
-    public String getPassword() {
-
-        return password;
-    }
-
-
-    public void setPassword( String password ) {
-
-        this.password = password;
     }
 }

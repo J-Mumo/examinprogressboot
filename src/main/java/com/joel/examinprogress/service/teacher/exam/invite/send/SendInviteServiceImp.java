@@ -17,6 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.send;
 
+import java.util.Locale;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -27,8 +28,13 @@ import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
+import com.joel.examinprogress.domain.organisation.DomainOrganisation;
+import com.joel.examinprogress.helper.email.EmailSentResponse;
+import com.joel.examinprogress.helper.link.LinkHelper;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
 import com.joel.examinprogress.repository.exam.InviteRepository;
+import com.joel.examinprogress.repository.organisation.OrganisationRepository;
+import com.joel.examinprogress.service.email.EmailService;
 import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
@@ -46,6 +52,15 @@ public class SendInviteServiceImp implements SendInviteService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private LinkHelper linkHelper;
 
     private boolean emailExists( Set<ExamToken> examTokens, String email ) {
 
@@ -68,19 +83,23 @@ public class SendInviteServiceImp implements SendInviteService {
 
 
     @Override
-    public SendInviteInitialData getInitialData( Long inviteId ) {
+    public SendInviteInitialData getInitialData( Long inviteId, String domain,
+            Integer serverPort, String protocol ) {
 
         Invite invite = inviteRepository.findById( inviteId ).get();
-        String examLink = invite.getExam().getExamLink();
+        String inviteCode = linkHelper.createDomainLink( domain, serverPort, protocol ) +
+                "/student/exam/token?invitecode=" + invite.getInviteCode();
 
-        return new SendInviteInitialData( examLink );
+        return new SendInviteInitialData( inviteCode );
     }
 
 
     @Transactional
     @Override
-    public SaveResponse sendInviteToEmail( SendInviteToEmailRequest request ) {
+    public SaveResponse sendInviteToEmail( SendInviteToEmailRequest request, String domain,
+            Integer serverPort, String protocol ) {
 
+        DomainOrganisation organisation = organisationRepository.findByDomain( domain );
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
         Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         String email = request.getEmail();
@@ -93,11 +112,26 @@ public class SendInviteServiceImp implements SendInviteService {
         }
         else {
 
+            String hash = getHashWithBcrypt( invite.getId(), email );
+            String linkHash = hash.replaceAll( "/", "sL4sh" );
+            String token = linkHash;
+
             ExamToken examToken = new ExamToken();
             examToken.setEmail( request.getEmail() );
-            examToken.setToken( getHashWithBcrypt( invite.getId(), email ) );
+            examToken.setToken( token );
             examToken.setInvite( invite );
             examTokenRepository.save( examToken );
+
+            Locale locale = new Locale( "en" );
+
+            EmailSentResponse emailSentResponse =
+                    emailService.sendInviteToExam( organisation, email, token, invite, locale,
+                            domain, serverPort, protocol );
+
+            if ( !emailSentResponse.isEmailSent() ) {
+
+                return new SaveResponse( false, "Problem sending email" );
+            }
 
             saveResponse = new SaveResponse( true, null );
         }
@@ -107,8 +141,10 @@ public class SendInviteServiceImp implements SendInviteService {
 
     @Transactional
     @Override
-    public SaveResponse sendInvite( SendInviteRequest request ) {
+    public SaveResponse sendInvite( SendInviteRequest request, String domain, Integer serverPort,
+            String protocol ) {
 
+        DomainOrganisation organisation = organisationRepository.findByDomain( domain );
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
         Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         for ( String email : request.getEmails() ) {
@@ -116,11 +152,27 @@ public class SendInviteServiceImp implements SendInviteService {
 
             if ( !emailExists ) {
 
+                String hash = getHashWithBcrypt( invite.getId(), email );
+                String linkHash = hash.replaceAll( "/", "sL4sh" );
+                String token = domain + ":4200/student/exam/" + linkHash;
+
                 ExamToken examToken = new ExamToken();
                 examToken.setEmail( email );
-                examToken.setToken( getHashWithBcrypt( invite.getId(), email ) );
+                examToken.setToken( token );
                 examToken.setInvite( invite );
                 examTokenRepository.save( examToken );
+
+                Locale locale = new Locale( "en" );
+
+                EmailSentResponse emailSentResponse =
+                        emailService.sendInviteToExam( organisation, email, token, invite, locale,
+                                domain, serverPort, protocol );
+
+                if ( !emailSentResponse.isEmailSent() ) {
+
+                    return new SaveResponse( false, "Problem sending email" );
+                }
+
             }
         }
         return new SaveResponse( true, null );

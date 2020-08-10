@@ -22,6 +22,7 @@ import java.time.Duration;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
@@ -38,10 +39,20 @@ import com.joel.examinprogress.service.shared.SaveResponseWithId;
 public class CreateInviteServiceImpl implements CreateInviteService {
 
     @Autowired
-    ExamRepository examRepository;
+    private ExamRepository examRepository;
 
     @Autowired
-    InviteRepository inviteRepository;
+    private InviteRepository inviteRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private String getHashWithBcrypt( Long id, String email ) {
+
+        String hashed = passwordEncoder.encode( id + email );
+        return hashed;
+    }
+
 
     @Transactional
     @Override
@@ -59,6 +70,10 @@ public class CreateInviteServiceImpl implements CreateInviteService {
         invite.setExamEndDate( request.getExamEndDate() );
         invite.setPausable( request.isPausable() );
         invite.setExamStartTime( examStartTime );
+        String inviteCode = getHashWithBcrypt( invite.getId(), exam.getTeacher().getUser()
+                .getEmail() ).replaceAll( "/", "sL4sh" );
+
+        invite.setInviteCode( inviteCode );
         invite.setExam( exam );
         inviteRepository.save( invite );
 

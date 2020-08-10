@@ -23,6 +23,7 @@ package com.joel.examinprogress.service.email;
  */
 import java.util.Locale;
 
+import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.domain.organisation.DomainOrganisation;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.email.EmailSentResponse;
@@ -40,4 +41,9 @@ public interface EmailService {
 
     EmailSentResponse sendForgottenPasswordEmail( ForgottenPasswordRequest request, String domain,
             int serverPort, String protocol );
+
+
+    EmailSentResponse sendInviteToExam( DomainOrganisation organisation, String email,
+            String examToken, Invite invite, Locale locale, String domain, int serverPort,
+            String protocol );
 }

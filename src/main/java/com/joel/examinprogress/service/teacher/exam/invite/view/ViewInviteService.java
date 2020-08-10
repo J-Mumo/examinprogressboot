@@ -25,7 +25,8 @@ import com.joel.examinprogress.service.shared.DeleteResponse;
  */
 public interface ViewInviteService {
 
-    ViewInviteInitialData getInitialData( Long inviteId );
+    ViewInviteInitialData getInitialData( Long inviteId, String domain, Integer serverPort,
+            String protocol );
 
 
     DeleteResponse unsendInvite( Long examTokenId );

@@ -56,10 +56,6 @@ public class Exam extends AbstractPersistentEntity {
     @Column( name = "duration", nullable = true, unique = false )
     private Duration duration;
 
-    @Column( name = "exam_link", nullable = false, unique = false,
-            length = 128 )
-    private String examLink;
-
     @ManyToOne( )
     @JoinColumn( name = "fk_teacher",
             foreignKey = @ForeignKey( name = "exam_fk_teacher" ),
@@ -108,18 +104,6 @@ public class Exam extends AbstractPersistentEntity {
     public void setDuration( Duration duration ) {
 
         this.duration = duration;
-    }
-
-
-    public String getExamLink() {
-
-        return examLink;
-    }
-
-
-    public void setExamLink( String examLink ) {
-
-        this.examLink = examLink;
     }
 
 

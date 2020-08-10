@@ -23,23 +23,23 @@ package com.joel.examinprogress.service.teacher.exam.invite.send;
  */
 public class SendInviteInitialData {
 
-    private String examLink;
+    private String inviteCode;
 
-    public SendInviteInitialData( String examLink ) {
+    public SendInviteInitialData( String inviteCode ) {
 
         super();
-        this.examLink = examLink;
+        this.inviteCode = inviteCode;
     }
 
 
-    public String getExamLink() {
+    public String getInviteCode() {
 
-        return examLink;
+        return inviteCode;
     }
 
 
-    public void setExamLink( String examLink ) {
+    public void setInviteCode( String inviteCode ) {
 
-        this.examLink = examLink;
+        this.inviteCode = inviteCode;
     }
 }

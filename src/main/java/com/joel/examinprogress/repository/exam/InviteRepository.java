@@ -32,4 +32,7 @@ import com.joel.examinprogress.domain.exam.Invite;
 public interface InviteRepository extends JpaRepository<Invite, Long> {
 
     Set<Invite> findByExamId( Long examId );
+
+
+    Invite findByInviteCode( String inviteCode );
 }

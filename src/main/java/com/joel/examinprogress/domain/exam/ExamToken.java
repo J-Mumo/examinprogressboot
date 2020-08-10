@@ -43,7 +43,7 @@ public class ExamToken extends AbstractPersistentEntity {
             length = 256 )
     private String email;
 
-    @Column( name = "token", nullable = false, unique = false,
+    @Column( name = "token", nullable = false, unique = true,
             length = 128 )
     private String token;
 

@@ -30,7 +30,7 @@ public class ViewInviteInitialData {
     private Date examEndDate;
     private boolean pausable;
     private String examStartTime;
-    private String examLink;
+    private String inviteCode;
     private ExamTokenTransfer[] examTokenTransfers;
 
     public ViewInviteInitialData(
@@ -39,7 +39,7 @@ public class ViewInviteInitialData {
             Date examEndDate,
             boolean pausable,
             String examStartTime,
-            String examLink,
+            String inviteCode,
             ExamTokenTransfer[] examTokenTransfers ) {
 
         super();
@@ -48,7 +48,7 @@ public class ViewInviteInitialData {
         this.examEndDate = examEndDate;
         this.pausable = pausable;
         this.examStartTime = examStartTime;
-        this.examLink = examLink;
+        this.inviteCode = inviteCode;
         this.examTokenTransfers = examTokenTransfers;
     }
 
@@ -113,15 +113,15 @@ public class ViewInviteInitialData {
     }
 
 
-    public String getExamLink() {
+    public String getInviteCode() {
 
-        return examLink;
+        return inviteCode;
     }
 
 
-    public void setExamLink( String examLink ) {
+    public void setInviteCode( String inviteCode ) {
 
-        this.examLink = examLink;
+        this.inviteCode = inviteCode;
     }
 
 

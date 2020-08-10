@@ -25,7 +25,8 @@ public enum RoleEnum {
 
     ADMIN( 1l ),
     EMAIL_VALIDATED( 2l ),
-    DEV( 4l );
+    TEACHER( 3l ),
+    STUDENT( 4l );
 
     private Long id;
 

@@ -368,7 +368,12 @@ public class TeacherExamController {
             @RequestBody Long inviteId )
             throws IOException {
 
-        SendInviteInitialData examLink = sendInviteService.getInitialData( inviteId );
+        String domain = ThreadLocals.domainThreadLocal.get();
+        Integer serverPort = ThreadLocals.portThreadLocal.get();
+        String protocol = ThreadLocals.protocolThreadLocal.get();
+        SendInviteInitialData examLink = sendInviteService.getInitialData( inviteId, domain,
+                serverPort, protocol );
+
         return ResponseEntity.status( HttpStatus.OK ).body( examLink );
     }
 
@@ -378,7 +383,12 @@ public class TeacherExamController {
             @RequestBody SendInviteToEmailRequest request )
             throws IOException {
 
-        SaveResponse response = sendInviteService.sendInviteToEmail( request );
+        String domain = ThreadLocals.domainThreadLocal.get();
+        Integer serverPort = ThreadLocals.portThreadLocal.get();
+        String protocol = ThreadLocals.protocolThreadLocal.get();
+        SaveResponse response = sendInviteService.sendInviteToEmail( request, domain, serverPort,
+                protocol );
+
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
@@ -388,7 +398,12 @@ public class TeacherExamController {
             @RequestBody SendInviteRequest request )
             throws IOException {
 
-        SaveResponse response = sendInviteService.sendInvite( request );
+        String domain = ThreadLocals.domainThreadLocal.get();
+        Integer serverPort = ThreadLocals.portThreadLocal.get();
+        String protocol = ThreadLocals.protocolThreadLocal.get();
+        SaveResponse response = sendInviteService.sendInvite( request, domain, serverPort,
+                protocol );
+
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
@@ -398,7 +413,11 @@ public class TeacherExamController {
             @RequestBody Long inviteId )
             throws IOException {
 
-        ViewInviteInitialData examLink = viewInviteService.getInitialData( inviteId );
+        String domain = ThreadLocals.domainThreadLocal.get();
+        Integer serverPort = ThreadLocals.portThreadLocal.get();
+        String protocol = ThreadLocals.protocolThreadLocal.get();
+        ViewInviteInitialData examLink = viewInviteService.getInitialData( inviteId, domain,
+                serverPort, protocol );
         return ResponseEntity.status( HttpStatus.OK ).body( examLink );
     }
 

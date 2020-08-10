@@ -46,17 +46,6 @@ public class Invite extends AbstractPersistentEntity {
             length = 100 )
     private String name;
 
-    public String getName() {
-
-        return name;
-    }
-
-
-    public void setName( String name ) {
-
-        this.name = name;
-    }
-
     @Column( name = "exam_start_date", nullable = false )
     private Date examStartDate;
 
@@ -69,11 +58,27 @@ public class Invite extends AbstractPersistentEntity {
     @Column( name = "pausable", nullable = false )
     private Boolean pausable;
 
+    @Column( name = "invite_code", nullable = false, unique = true,
+            length = 128 )
+    private String inviteCode;
+
     @ManyToOne( )
     @JoinColumn( name = "fk_exam",
             foreignKey = @ForeignKey( name = "invite_fk_exam" ),
             nullable = false )
     private Exam exam;
+
+    public String getName() {
+
+        return name;
+    }
+
+
+    public void setName( String name ) {
+
+        this.name = name;
+    }
+
 
     public Date getExamStartDate() {
 
@@ -120,6 +125,18 @@ public class Invite extends AbstractPersistentEntity {
     public void setPausable( Boolean pausable ) {
 
         this.pausable = pausable;
+    }
+
+
+    public String getInviteCode() {
+
+        return inviteCode;
+    }
+
+
+    public void setInviteCode( String inviteCode ) {
+
+        this.inviteCode = inviteCode;
     }
 
 

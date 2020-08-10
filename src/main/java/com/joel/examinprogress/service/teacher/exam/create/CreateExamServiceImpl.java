@@ -25,7 +25,6 @@ import java.util.TreeSet;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
@@ -61,16 +60,6 @@ public class CreateExamServiceImpl implements CreateExamService {
 
     @Autowired
     private LoggedInCredentialsHelper loggedInCredentialsHelper;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    private String getHashWithBcrypt( Long id, String email ) {
-
-        String hashed = passwordEncoder.encode( id + email );
-        return hashed;
-    }
-
 
     private ExamTimerTypeTransfer createExamTimerTypeTransfer( ExamTimerType examTimerType ) {
 
@@ -129,10 +118,6 @@ public class CreateExamServiceImpl implements CreateExamService {
         exam.setDuration( duration );
         exam.setTeacher( teacher );
         exam.setExamTimerType( examTimerType );
-        String hash = getHashWithBcrypt( exam.getId(), user.getEmail() );
-        String linkHash = hash.replaceAll( "/", "sL4sh" );
-        String examLink = domain + ":4200/student/exam/" + linkHash;
-        exam.setExamLink( examLink );
         examRepository.save( exam );
         return new SaveResponseWithId( true, null, exam.getId() );
     }

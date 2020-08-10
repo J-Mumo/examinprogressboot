@@ -24,6 +24,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.domain.organisation.DomainOrganisation;
 import com.joel.examinprogress.domain.user.ForgottenPassword;
 import com.joel.examinprogress.domain.user.Role;
@@ -32,6 +33,7 @@ import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.email.EmailSentResponse;
 import com.joel.examinprogress.helper.email.forgottenpassword.ForgottenPasswordEmailHelper;
 import com.joel.examinprogress.helper.email.sendactivationlink.SendActivationLinkEmailHelper;
+import com.joel.examinprogress.helper.email.sendexaminvite.SendExamInviteEmailHelper;
 import com.joel.examinprogress.helper.hash.HashHelper;
 import com.joel.examinprogress.repository.organisation.OrganisationRepository;
 import com.joel.examinprogress.repository.user.ForgottenPasswordRepository;
@@ -65,6 +67,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private SendActivationLinkEmailHelper sendActivationLinkEmailHelper;
+
+    @Autowired
+    private SendExamInviteEmailHelper sendExamInviteEmailHelper;
 
     @Override
     public EmailSentResponse sendActivationEmail(
@@ -150,4 +155,16 @@ public class EmailServiceImpl implements EmailService {
         return emailSentResponse;
     }
 
+
+    @Override
+    public EmailSentResponse sendInviteToExam( DomainOrganisation organisation,
+            String email, String examToken, Invite invite, Locale locale, String domain,
+            int serverPort, String protocol ) {
+
+        EmailSentResponse emailSentResponse = sendExamInviteEmailHelper
+                .sendExamInvite( organisation, email, examToken, invite, locale, domain, serverPort,
+                        protocol );
+
+        return emailSentResponse;
+    }
 }
