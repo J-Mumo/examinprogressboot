@@ -76,6 +76,14 @@ public class CreateSectionServiceImpl implements CreateSectionService {
         section.setDuration( duration );
         section.setExam( exam );
         sectionRepository.save( section );
+
+        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
+                .getExamTimerTypeId() ) {
+
+            Long examTime = exam.getDuration().toMinutes() + duration.toMinutes();
+            exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
+            examRepository.save( exam );
+        }
         return new SaveResponseWithId( true, null, section.getId() );
     }
 }

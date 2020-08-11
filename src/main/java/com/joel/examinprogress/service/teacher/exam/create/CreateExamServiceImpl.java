@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.ExamTimerType;
+import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.teacher.Teacher;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
@@ -118,6 +119,8 @@ public class CreateExamServiceImpl implements CreateExamService {
         exam.setDuration( duration );
         exam.setTeacher( teacher );
         exam.setExamTimerType( examTimerType );
+        if ( examTimerType.getId() == ExamTimerTypeEnum.TIMED_PER_EXAM.getExamTimerTypeId() )
+            exam.setTotalExamTime( duration );
         examRepository.save( exam );
         return new SaveResponseWithId( true, null, exam.getId() );
     }

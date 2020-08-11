@@ -35,6 +35,7 @@ import com.joel.examinprogress.domain.exam.section.question.QuestionType;
 import com.joel.examinprogress.domain.exam.section.question.QuestionTypeEnum;
 import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 import com.joel.examinprogress.domain.exam.section.question.answer.AnswerType;
+import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionTypeRepository;
@@ -58,6 +59,9 @@ public class AddQuestionServiceImpl implements AddQuestionService {
 
     @Autowired
     private AnswerTypeRepository answerTypeRepository;
+
+    @Autowired
+    private ExamRepository examRepository;
 
     @Autowired
     private SectionRepository sectionRepository;
@@ -172,6 +176,7 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         }
 
         Section section = sectionRepository.findById( request.getSectionId() ).get();
+        Exam exam = section.getExam();
         Long questionTypeId = QuestionTypeEnum.QUESTION.getQuestionTypeId();
         QuestionType questionType = questionTypeRepository.findById( questionTypeId ).get();
         AnswerType answerType = answerTypeRepository.findById( request.getAnswerTypeId() ).get();
@@ -188,6 +193,14 @@ public class AddQuestionServiceImpl implements AddQuestionService {
             saveQuestionWithMultipleChoiceAnswers( question, answerType, request
                     .getMultipleChoiceQuestionAnswerRequests() );
 
+        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
+                .getExamTimerTypeId() ) {
+
+            Long examTime = exam.getDuration().toMinutes() + duration.toMinutes();
+            exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
+            examRepository.save( exam );
+        }
+
         return new SaveResponse( true, null );
     }
 
@@ -202,6 +215,7 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         }
 
         Section section = sectionRepository.findById( request.getSectionId() ).get();
+        Exam exam = section.getExam();
         Long questionTypeId = QuestionTypeEnum.COMPREHENSION_QUESTION.getQuestionTypeId();
         QuestionType questionType = questionTypeRepository.findById( questionTypeId ).get();
         AnswerType answerType = answerTypeRepository.findById( request.getAnswerTypeId() ).get();
@@ -234,6 +248,14 @@ public class AddQuestionServiceImpl implements AddQuestionService {
             saveQuestionWithMultipleChoiceAnswers( question, answerType, request
                     .getQuestionRequest()
                     .getMultipleChoiceQuestionAnswerRequests() );
+
+        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
+                .getExamTimerTypeId() ) {
+
+            Long examTime = exam.getDuration().toMinutes() + duration.toMinutes();
+            exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
+            examRepository.save( exam );
+        }
 
         return new SaveResponseWithId( true, null, comprehensionQuestion.getId() );
     }

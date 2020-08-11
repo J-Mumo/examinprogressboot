@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
 
@@ -67,6 +68,10 @@ public class EditExamServiceImpl implements EditExamService {
         exam.setName( request.getName() );
         exam.setDescription( request.getDescription() );
         exam.setDuration( examTime );
+        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_EXAM
+                .getExamTimerTypeId() )
+            exam.setTotalExamTime( examTime );
+
         examRepository.save( exam );
         return new SaveResponse( true, null );
     }

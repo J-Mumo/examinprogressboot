@@ -56,6 +56,9 @@ public class Exam extends AbstractPersistentEntity {
     @Column( name = "duration", nullable = true, unique = false )
     private Duration duration;
 
+    @Column( name = "total_exam_time", nullable = false, unique = false )
+    private Duration totalExamTime;
+
     @ManyToOne( )
     @JoinColumn( name = "fk_teacher",
             foreignKey = @ForeignKey( name = "exam_fk_teacher" ),
@@ -104,6 +107,18 @@ public class Exam extends AbstractPersistentEntity {
     public void setDuration( Duration duration ) {
 
         this.duration = duration;
+    }
+
+
+    public Duration getTotalExamTime() {
+
+        return totalExamTime;
+    }
+
+
+    public void setTotalExamTime( Duration totalExamTime ) {
+
+        this.totalExamTime = totalExamTime;
     }
 
 

@@ -24,7 +24,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.section.Section;
+import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
 
@@ -36,7 +39,10 @@ import com.joel.examinprogress.service.shared.SaveResponse;
 public class EditSectionServiceImpl implements EditSectionService {
 
     @Autowired
-    SectionRepository sectionRepository;
+    private SectionRepository sectionRepository;
+
+    @Autowired
+    private ExamRepository examRepository;
 
     @Override
     public EditSectionInitialData getInitialData( Long sectionId ) {
@@ -69,10 +75,24 @@ public class EditSectionServiceImpl implements EditSectionService {
                 : null;
 
         Section section = sectionRepository.findById( request.getSectionId() ).get();
+        Exam exam = section.getExam();
+        Long currentSectionMinutes = section.getDuration() != null ? section.getDuration()
+                .toMinutes() : 0;
+
         section.setName( request.getName() );
         section.setDescription( request.getDescription() );
         section.setDuration( sectionDuration );
         sectionRepository.save( section );
+
+        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
+                .getExamTimerTypeId() ) {
+
+            Long examTime = exam.getDuration().toMinutes() - currentSectionMinutes + sectionDuration
+                    .toMinutes();
+
+            exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
+            examRepository.save( exam );
+        }
 
         return new SaveResponse( true, null );
     }

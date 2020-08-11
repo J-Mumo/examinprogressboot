@@ -33,6 +33,7 @@ import com.joel.examinprogress.domain.exam.section.question.QuestionTypeEnum;
 import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 import com.joel.examinprogress.domain.exam.section.question.answer.AnswerType;
 import com.joel.examinprogress.domain.exam.section.question.answer.AnswerTypeEnum;
+import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
 import com.joel.examinprogress.service.shared.SaveResponseWithId;
@@ -49,6 +50,9 @@ public class EditQuestionServiceImpl implements EditQuestionService {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private ExamRepository examRepository;
 
     @Autowired
     private MultipleChoiceAnswerTransferComparator multipleChoiceAnswerTransferComparator;
@@ -178,6 +182,10 @@ public class EditQuestionServiceImpl implements EditQuestionService {
                 : null;
 
         Question question = questionRepository.findById( request.getQuestionId() ).get();
+        Exam exam = question.getSection().getExam();
+        Long currentQuestionMinutes = question.getDuration() != null ? question.getDuration()
+                .toMinutes() : 0;
+
         question.setQuestionText( request.getQuestionText() );
         question.setScore( request.getScore() );
         question.setDuration( questionDuration );
@@ -187,6 +195,17 @@ public class EditQuestionServiceImpl implements EditQuestionService {
 
             saveMultipleChoiceAnswers( question, request
                     .getMultipleChoiceQuestionAnswerRequests() );
+        }
+
+        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
+                .getExamTimerTypeId() && questionDuration != null ) {
+
+            Long examTime = exam.getDuration().toMinutes() - currentQuestionMinutes
+                    + questionDuration
+                            .toMinutes();
+
+            exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
+            examRepository.save( exam );
         }
 
         Long id = question.getId();
