@@ -80,7 +80,7 @@ public class CreateSectionServiceImpl implements CreateSectionService {
         if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
                 .getExamTimerTypeId() ) {
 
-            Long examTime = exam.getDuration().toMinutes() + duration.toMinutes();
+            Long examTime = exam.getTotalExamTime().toMinutes() + duration.toMinutes();
             exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
             examRepository.save( exam );
         }

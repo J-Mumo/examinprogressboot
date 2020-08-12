@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.view;
 
-import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -83,20 +83,15 @@ public class ViewInviteServiceImpl implements ViewInviteService {
 
         Invite invite = inviteRepository.findById( inviteId ).get();
         String inviteCode = linkHelper.createDomainLink( domain, serverPort, protocol ) +
-                "/student/exam/token?invitecode=" + invite.getInviteCode();
+                "/student/exam/detail?invitecode=" + invite.getInviteCode();
 
-        Duration inviteStartTime = invite.getExamStartTime();
-        String startTime = inviteStartTime != null ? String.format( "%d:%02d:%02d", inviteStartTime
-                .getSeconds() / 3600, ( inviteStartTime.getSeconds() % 3600 ) / 60,
-                ( inviteStartTime
-                        .getSeconds() % 60 ) ) : null;
-
+        LocalTime inviteStartTime = invite.getExamStartTime();
         Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         ExamTokenTransfer[] examTokenTransfers = createExamTokenTransfers( examTokens );
 
         ViewInviteInitialData initialData = new ViewInviteInitialData(
                 invite.getName(), invite.getExamStartDate(), invite.getExamEndDate(),
-                invite.getPausable(), startTime, inviteCode, examTokenTransfers );
+                invite.getPausable(), inviteStartTime.toString(), inviteCode, examTokenTransfers );
 
         return initialData;
     }

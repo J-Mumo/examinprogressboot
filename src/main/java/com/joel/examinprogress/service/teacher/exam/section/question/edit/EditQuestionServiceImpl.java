@@ -200,7 +200,7 @@ public class EditQuestionServiceImpl implements EditQuestionService {
         if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
                 .getExamTimerTypeId() && questionDuration != null ) {
 
-            Long examTime = exam.getDuration().toMinutes() - currentQuestionMinutes
+            Long examTime = exam.getTotalExamTime().toMinutes() - currentQuestionMinutes
                     + questionDuration
                             .toMinutes();
 

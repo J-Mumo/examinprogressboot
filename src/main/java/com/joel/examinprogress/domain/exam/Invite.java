@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.domain.exam;
 
-import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -53,7 +53,7 @@ public class Invite extends AbstractPersistentEntity {
     private Date examEndDate;
 
     @Column( name = "exam_start_time", nullable = true )
-    private Duration examStartTime;
+    private LocalTime examStartTime;
 
     @Column( name = "pausable", nullable = false )
     private Boolean pausable;
@@ -104,13 +104,13 @@ public class Invite extends AbstractPersistentEntity {
     }
 
 
-    public Duration getExamStartTime() {
+    public LocalTime getExamStartTime() {
 
         return examStartTime;
     }
 
 
-    public void setExamStartTime( Duration examStartTime ) {
+    public void setExamStartTime( LocalTime examStartTime ) {
 
         this.examStartTime = examStartTime;
     }

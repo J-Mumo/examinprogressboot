@@ -108,6 +108,7 @@ public class CreateExamServiceImpl implements CreateExamService {
         if ( request.getDuration() != null ) {
             duration = Duration.parse( request.getDuration() );
         }
+        Duration totalExamTime = duration != null ? duration : Duration.ZERO;
         User user = loggedInCredentialsHelper.getLoggedInUser();
         Teacher teacher = teacherRepository.findByUser( user );
         ExamTimerType examTimerType = examTimerTypeRepository.findById( request
@@ -117,6 +118,7 @@ public class CreateExamServiceImpl implements CreateExamService {
         exam.setName( request.getName() );
         exam.setDescription( request.getDescription() );
         exam.setDuration( duration );
+        exam.setTotalExamTime( totalExamTime );
         exam.setTeacher( teacher );
         exam.setExamTimerType( examTimerType );
         if ( examTimerType.getId() == ExamTimerTypeEnum.TIMED_PER_EXAM.getExamTimerTypeId() )

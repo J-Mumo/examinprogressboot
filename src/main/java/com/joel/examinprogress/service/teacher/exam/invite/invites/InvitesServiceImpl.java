@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.invites;
 
-import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -43,14 +43,10 @@ public class InvitesServiceImpl implements InvitesService {
 
     private InviteTransfer createInviteTransfer( Invite invite ) {
 
-        Duration startTime = invite.getExamStartTime();
-        String examStartTime = startTime != null ? String.format( "%d:%02d:%02d", startTime
-                .getSeconds() / 3600,
-                ( startTime.getSeconds() % 3600 ) / 60, ( startTime.getSeconds() % 60 ) )
-                : null;
-
+        LocalTime startTime = invite.getExamStartTime();
         InviteTransfer transfer = new InviteTransfer( invite.getId(), invite.getName(), invite
-                .getExamStartDate(), invite.getExamEndDate(), invite.getPausable(), examStartTime );
+                .getExamStartDate(), invite.getExamEndDate(), invite.getPausable(), startTime
+                        .toString() );
 
         return transfer;
     }

@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.create;
 
-import java.time.Duration;
+import java.time.LocalTime;
 
 import javax.transaction.Transactional;
 
@@ -58,9 +58,10 @@ public class CreateInviteServiceImpl implements CreateInviteService {
     @Override
     public SaveResponseWithId save( CreateInviteRequest request ) {
 
-        Duration examStartTime = null;
+        LocalTime examStartTime = null;
         if ( request.getExamStartTime() != null ) {
-            examStartTime = Duration.parse( request.getExamStartTime() );
+
+            examStartTime = LocalTime.parse( request.getExamStartTime() );
         }
 
         Exam exam = examRepository.findById( request.getExamId() ).get();

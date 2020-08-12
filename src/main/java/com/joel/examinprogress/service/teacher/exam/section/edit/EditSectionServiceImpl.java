@@ -87,8 +87,8 @@ public class EditSectionServiceImpl implements EditSectionService {
         if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
                 .getExamTimerTypeId() ) {
 
-            Long examTime = exam.getDuration().toMinutes() - currentSectionMinutes + sectionDuration
-                    .toMinutes();
+            Long examTime = exam.getTotalExamTime().toMinutes() - currentSectionMinutes
+                    + sectionDuration.toMinutes();
 
             exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
             examRepository.save( exam );

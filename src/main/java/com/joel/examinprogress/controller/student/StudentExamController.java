@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.joel.examinprogress.service.student.exam.detail.ExamDetailInitialData;
+import com.joel.examinprogress.service.student.exam.detail.ExamDetailRequest;
+import com.joel.examinprogress.service.student.exam.detail.ExamDetailService;
 import com.joel.examinprogress.service.student.exam.verifytoken.VerifyExamTokenRequest;
 import com.joel.examinprogress.service.student.exam.verifytoken.VerifyExamTokenResponse;
 import com.joel.examinprogress.service.student.exam.verifytoken.VerifyExamTokenService;
@@ -42,6 +45,9 @@ public class StudentExamController {
     @Autowired
     private VerifyExamTokenService verifyExamTokenService;
 
+    @Autowired
+    private ExamDetailService examDetailService;
+
     @RequestMapping( value = "token/verify", method = RequestMethod.POST )
     public ResponseEntity<VerifyExamTokenResponse> verifyToken(
             @RequestBody VerifyExamTokenRequest request )
@@ -50,6 +56,17 @@ public class StudentExamController {
         VerifyExamTokenResponse response = verifyExamTokenService.verifyToken( request );
 
         return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "detail/initialdata", method = RequestMethod.POST )
+    public ResponseEntity<ExamDetailInitialData> getInitialData(
+            @RequestBody ExamDetailRequest request )
+            throws IOException {
+
+        ExamDetailInitialData initialData = examDetailService.getInitialData( request );
+
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
     }
 
 }

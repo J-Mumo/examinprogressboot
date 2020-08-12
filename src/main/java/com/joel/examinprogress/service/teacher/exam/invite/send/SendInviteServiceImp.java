@@ -88,7 +88,7 @@ public class SendInviteServiceImp implements SendInviteService {
 
         Invite invite = inviteRepository.findById( inviteId ).get();
         String inviteCode = linkHelper.createDomainLink( domain, serverPort, protocol ) +
-                "/student/exam/token?invitecode=" + invite.getInviteCode();
+                "/student/exam/detail?invitecode=" + invite.getInviteCode();
 
         return new SendInviteInitialData( inviteCode );
     }

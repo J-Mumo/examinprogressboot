@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.edit;
 
-import java.time.Duration;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,15 +40,11 @@ public class EditInviteServiceImpl implements EditInviteService {
     public EditInviteInitialData getInitialData( Long inviteId ) {
 
         Invite invite = inviteRepository.findById( inviteId ).get();
-        Duration startTime = invite.getExamStartTime();
-        String examStartTime = startTime != null ? String.format( "%d:%02d:%02d", startTime
-                .getSeconds() / 3600,
-                ( startTime.getSeconds() % 3600 ) / 60, ( startTime.getSeconds() % 60 ) )
-                : null;
+        LocalTime startTime = invite.getExamStartTime();
 
         EditInviteInitialData initialData = new EditInviteInitialData( invite.getName(),
                 invite.getExamStartDate(), invite.getExamEndDate(), invite.getPausable(),
-                examStartTime );
+                startTime.toString() );
 
         return initialData;
     }
@@ -63,8 +59,8 @@ public class EditInviteServiceImpl implements EditInviteService {
 
         String hour = startTime != null ? startTime[0] : "";
         String minute = startTime != null ? startTime[1] : "";
-        String time = "PT" + hour + "H" + minute + "M";
-        Duration examStartTime = request.getExamStartTime() != null ? Duration.parse( time ) : null;
+        LocalTime examStartTime = LocalTime.of( Integer.parseInt( hour ), Integer.parseInt(
+                minute ), 0, 0 );
 
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
         invite.setName( request.getName() );

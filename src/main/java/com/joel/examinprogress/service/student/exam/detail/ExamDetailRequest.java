@@ -21,7 +21,39 @@ package com.joel.examinprogress.service.student.exam.detail;
  * @author Joel Mumo
  * @date   10th Aug, 2020
  */
-public interface ExamDetailService {
+public class ExamDetailRequest {
 
-    ExamDetailInitialData getInitialData( ExamDetailRequest request );
+    private boolean inviteCode;
+    private String code;
+
+    public ExamDetailRequest( boolean inviteCode, String code ) {
+
+        super();
+        this.inviteCode = inviteCode;
+        this.code = code;
+    }
+
+
+    public boolean isInviteCode() {
+
+        return inviteCode;
+    }
+
+
+    public void setInviteCode( boolean inviteCode ) {
+
+        this.inviteCode = inviteCode;
+    }
+
+
+    public String getCode() {
+
+        return code;
+    }
+
+
+    public void setCode( String code ) {
+
+        this.code = code;
+    }
 }

@@ -120,7 +120,7 @@ public class SendExamInviteEmailHelperImpl extends AbstractEmailHelper implement
             String protocol ) {
 
         String token = getFormattedProtocol( protocol ) + domain + ":"
-                + serverPort + "/student/exam/token/?token=" + examToken;
+                + serverPort + "/student/exam/detail/?token=" + examToken;
 
         return token;
     }
