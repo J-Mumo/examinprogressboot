@@ -116,7 +116,7 @@ public class ExamDetailServiceImpl implements ExamDetailService {
         }
 
         ExamDetailInitialData initialData = new ExamDetailInitialData( examExists,
-                studentRegistered, examHasStarted, examHasEnded, exam.getName(),
+                studentRegistered, examHasStarted, examHasEnded, exam.getId(), exam.getName(),
                 exam.getDescription(), invite.getExamStartDate(), invite.getExamEndDate(),
                 invite.getExamStartTime(), exam.getTotalExamTime().toMinutes(),
                 invite.getPausable(), timedPerExam, timedPerSection, timedPerQuestion, email );
