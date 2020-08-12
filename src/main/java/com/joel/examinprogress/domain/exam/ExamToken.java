@@ -47,6 +47,9 @@ public class ExamToken extends AbstractPersistentEntity {
             length = 128 )
     private String token;
 
+    @Column( name = "exam_complete", nullable = false, unique = false )
+    private Boolean examComplete;
+
     @ManyToOne( )
     @JoinColumn( name = "fk_invite",
             foreignKey = @ForeignKey( name = "exam_token_fk_invite" ),
@@ -74,6 +77,18 @@ public class ExamToken extends AbstractPersistentEntity {
     public void setToken( String token ) {
 
         this.token = token;
+    }
+
+
+    public Boolean getExamComplete() {
+
+        return examComplete;
+    }
+
+
+    public void setExamComplete( Boolean examComplete ) {
+
+        this.examComplete = examComplete;
     }
 
 
