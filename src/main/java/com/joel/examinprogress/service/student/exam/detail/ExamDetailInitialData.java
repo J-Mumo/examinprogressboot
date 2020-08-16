@@ -30,7 +30,7 @@ public class ExamDetailInitialData {
     private boolean studentRegistered;
     private boolean examHasStarted;
     private boolean examHasEnded;
-    private Long examId;
+    private Long examTokenId;
     private String examName;
     private String examDescription;
     private Date startDate;
@@ -48,7 +48,7 @@ public class ExamDetailInitialData {
             boolean studentRegistered,
             boolean examHasStarted,
             boolean examHasEnded,
-            Long examId,
+            Long examTokenId,
             String examName,
             String examDescription,
             Date startDate,
@@ -66,7 +66,7 @@ public class ExamDetailInitialData {
         this.studentRegistered = studentRegistered;
         this.examHasStarted = examHasStarted;
         this.examHasEnded = examHasEnded;
-        this.examId = examId;
+        this.examTokenId = examTokenId;
         this.examName = examName;
         this.examDescription = examDescription;
         this.startDate = startDate;
@@ -129,15 +129,15 @@ public class ExamDetailInitialData {
     }
 
 
-    public Long getExamId() {
+    public Long getExamTokenId() {
 
-        return examId;
+        return examTokenId;
     }
 
 
-    public void setExamId( Long examId ) {
+    public void setExamTokenId( Long examTokenId ) {
 
-        this.examId = examId;
+        this.examTokenId = examTokenId;
     }
 
 

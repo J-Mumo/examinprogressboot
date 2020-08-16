@@ -82,7 +82,7 @@ public class EditQuestionServiceImpl implements EditQuestionService {
         SortedSet<MultipleChoiceAnswerTransfer> multipleChoiceAnswerTransfers =
                 new TreeSet<>( multipleChoiceAnswerTransferComparator );
 
-        Set<Answer> correctAnswers = question.getAnswers();
+        Set<Answer> correctAnswers = question.getCorrectAnswers();
         for ( Answer answer : answers ) {
 
             multipleChoiceAnswerTransfers.add( createMultipleChoiceAnswerTransfer(
@@ -117,7 +117,7 @@ public class EditQuestionServiceImpl implements EditQuestionService {
             }
         }
 
-        question.setAnswers( correctMultipleChoiceAnswers );
+        question.setCorrectAnswers( correctMultipleChoiceAnswers );
         questionRepository.save( question );
     }
 

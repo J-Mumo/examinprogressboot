@@ -17,10 +17,20 @@
 */
 package com.joel.examinprogress.service.student.exam.examinprogress;
 
+import java.util.Comparator;
+
+import org.springframework.stereotype.Component;
+
 /**
  * @author Joel Mumo
  * @date   12th Aug, 2020
  */
-public class ExaminprogressInitialData {
+@Component
+public class AnswerTransferComparator implements Comparator<AnswerTransfer> {
 
+    @Override
+    public int compare( AnswerTransfer o1, AnswerTransfer o2 ) {
+
+        return 1 * o1.getAnswerId().compareTo( o2.getAnswerId() );
+    }
 }

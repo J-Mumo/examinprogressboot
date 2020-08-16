@@ -19,9 +19,13 @@ package com.joel.examinprogress.domain.student;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
+import com.joel.examinprogress.domain.exam.section.question.Question;
 
 /**
  * @author Joel Mumo
@@ -38,6 +42,18 @@ public class QuestionComplete extends AbstractPersistentEntity {
     @Column( name = "complete", nullable = false, unique = false )
     private Boolean complete;
 
+    @ManyToOne( )
+    @JoinColumn( name = "fk_question",
+            foreignKey = @ForeignKey( name = "question_complete_fk_question" ),
+            nullable = false )
+    private Question question;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_student",
+            foreignKey = @ForeignKey( name = "question_complete_fk_student" ),
+            nullable = false )
+    private Student student;
+
     public Boolean getComplete() {
 
         return complete;
@@ -49,4 +65,27 @@ public class QuestionComplete extends AbstractPersistentEntity {
         this.complete = complete;
     }
 
+
+    public Question getQuestion() {
+
+        return question;
+    }
+
+
+    public void setQuestion( Question question ) {
+
+        this.question = question;
+    }
+
+
+    public Student getStudent() {
+
+        return student;
+    }
+
+
+    public void setStudent( Student student ) {
+
+        this.student = student;
+    }
 }

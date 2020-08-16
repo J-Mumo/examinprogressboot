@@ -30,6 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joel.examinprogress.service.student.exam.detail.ExamDetailInitialData;
 import com.joel.examinprogress.service.student.exam.detail.ExamDetailRequest;
 import com.joel.examinprogress.service.student.exam.detail.ExamDetailService;
+import com.joel.examinprogress.service.student.exam.examinprogress.ExaminprogressResponse;
+import com.joel.examinprogress.service.student.exam.examinprogress.ExaminprogressService;
+import com.joel.examinprogress.service.student.exam.examinprogress.MultipleChoiceAnswerRequest;
 
 /**
  * @author Joel Mumo
@@ -42,6 +45,9 @@ public class StudentExamController {
     @Autowired
     private ExamDetailService examDetailService;
 
+    @Autowired
+    private ExaminprogressService examinprogressService;
+
     @RequestMapping( value = "detail/initialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamDetailInitialData> getInitialData(
             @RequestBody ExamDetailRequest request )
@@ -52,4 +58,25 @@ public class StudentExamController {
         return ResponseEntity.status( HttpStatus.OK ).body( initialData );
     }
 
+
+    @RequestMapping( value = "examinprogress/getexamprogress", method = RequestMethod.POST )
+    public ResponseEntity<ExaminprogressResponse> getExamProgress(
+            @RequestBody Long examTokenId )
+            throws IOException {
+
+        ExaminprogressResponse response = examinprogressService.getExamProgress( examTokenId );
+
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "examinprogress/save/multiplechoice", method = RequestMethod.POST )
+    public ResponseEntity<ExaminprogressResponse> saveMultipleChoiceAnswer(
+            @RequestBody MultipleChoiceAnswerRequest request )
+            throws IOException {
+
+        ExaminprogressResponse response = examinprogressService.saveMultipleChoiceAnswer( request );
+
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
 }

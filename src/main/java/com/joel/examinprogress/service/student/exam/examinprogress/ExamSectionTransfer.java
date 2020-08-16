@@ -23,4 +23,80 @@ package com.joel.examinprogress.service.student.exam.examinprogress;
  */
 public class ExamSectionTransfer {
 
+    private Long sectionId;
+    private String sectionName;
+    private String description;
+    private boolean sectionComplete;
+    private ExamQuestionTransfer examQuestionTransfer;
+
+    public ExamSectionTransfer( Long sectionId, String sectionName, String description,
+            boolean sectionComplete, ExamQuestionTransfer examQuestionTransfer ) {
+
+        super();
+        this.sectionId = sectionId;
+        this.sectionName = sectionName;
+        this.description = description;
+        this.sectionComplete = sectionComplete;
+        this.examQuestionTransfer = examQuestionTransfer;
+    }
+
+
+    public Long getSectionId() {
+
+        return sectionId;
+    }
+
+
+    public void setSectionId( Long sectionId ) {
+
+        this.sectionId = sectionId;
+    }
+
+
+    public String getSectionName() {
+
+        return sectionName;
+    }
+
+
+    public void setSectionName( String sectionName ) {
+
+        this.sectionName = sectionName;
+    }
+
+
+    public String getDescription() {
+
+        return description;
+    }
+
+
+    public void setDescription( String description ) {
+
+        this.description = description;
+    }
+
+
+    public boolean isSectionComplete() {
+
+        return sectionComplete;
+    }
+
+
+    public void setSectionComplete( boolean sectionComplete ) {
+
+        this.sectionComplete = sectionComplete;
+    }
+
+
+    public ExamQuestionTransfer getExamQuestionTransfer() {
+
+        return examQuestionTransfer;
+    }
+
+
+    public void setExamQuestionTransfer( ExamQuestionTransfer examQuestionTransfer ) {
+
+        this.examQuestionTransfer = examQuestionTransfer;
+    }
 }

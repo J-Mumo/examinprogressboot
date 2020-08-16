@@ -21,39 +21,39 @@ package com.joel.examinprogress.service.student.exam.examinprogress;
  * @author Joel Mumo
  * @date   12th Aug, 2020
  */
-public class ExaminprogressResponse {
+public class AnswerTransfer {
 
-    private ExamSectionTransfer examSectionTransfer;
-    private boolean examComplete;
+    private Long answerId;
+    private String answer;
 
-    public ExaminprogressResponse( ExamSectionTransfer examSectionTransfer, boolean examComplete ) {
+    public AnswerTransfer( Long answerId, String answer ) {
 
         super();
-        this.examSectionTransfer = examSectionTransfer;
-        this.examComplete = examComplete;
+        this.answerId = answerId;
+        this.answer = answer;
     }
 
 
-    public ExamSectionTransfer getExamSectionTransfer() {
+    public Long getAnswerId() {
 
-        return examSectionTransfer;
+        return answerId;
     }
 
 
-    public void setExamSectionTransfer( ExamSectionTransfer examSectionTransfer ) {
+    public void setAnswerId( Long answerId ) {
 
-        this.examSectionTransfer = examSectionTransfer;
+        this.answerId = answerId;
     }
 
 
-    public boolean isExamComplete() {
+    public String getAnswer() {
 
-        return examComplete;
+        return answer;
     }
 
 
-    public void setExamComplete( boolean examComplete ) {
+    public void setAnswer( String answer ) {
 
-        this.examComplete = examComplete;
+        this.answer = answer;
     }
 }

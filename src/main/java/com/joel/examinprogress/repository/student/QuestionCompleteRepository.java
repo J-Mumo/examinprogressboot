@@ -15,16 +15,21 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.student.exam.examinprogress;
+package com.joel.examinprogress.repository.student;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.joel.examinprogress.domain.exam.section.question.Question;
+import com.joel.examinprogress.domain.student.QuestionComplete;
+import com.joel.examinprogress.domain.student.Student;
 
 /**
  * @author Joel Mumo
  * @date   12th Aug, 2020
  */
-public interface ExaminprogressService {
+@Repository
+public interface QuestionCompleteRepository extends JpaRepository<QuestionComplete, Long> {
 
-    ExaminprogressResponse getExamProgress( Long examTokenId );
-
-
-    ExaminprogressResponse saveMultipleChoiceAnswer( MultipleChoiceAnswerRequest request );
+    QuestionComplete findByQuestionAndStudent( Question question, Student student );
 }

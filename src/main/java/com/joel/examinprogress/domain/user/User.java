@@ -28,11 +28,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
 import com.joel.examinprogress.domain.organisation.DomainOrganisation;
+import com.joel.examinprogress.domain.student.Student;
+import com.joel.examinprogress.domain.teacher.Teacher;
 
 /**
  * @author Joel Mumo
@@ -90,6 +93,12 @@ public class User extends AbstractPersistentEntity {
             foreignKey = @ForeignKey( name = "user_fk_domain_organization" ),
             nullable = false )
     private DomainOrganisation domainOrganisation;
+
+    @OneToOne( fetch = FetchType.LAZY, mappedBy = "user" )
+    private Teacher teacher;
+
+    @OneToOne( fetch = FetchType.LAZY, mappedBy = "user" )
+    private Student student;
 
     public Boolean getEnabled() {
 
@@ -184,6 +193,30 @@ public class User extends AbstractPersistentEntity {
     public void setDomainOrganisation( DomainOrganisation domainOrganisation ) {
 
         this.domainOrganisation = domainOrganisation;
+    }
+
+
+    public Teacher getTeacher() {
+
+        return teacher;
+    }
+
+
+    public void setTeacher( Teacher teacher ) {
+
+        this.teacher = teacher;
+    }
+
+
+    public Student getStudent() {
+
+        return student;
+    }
+
+
+    public void setStudent( Student student ) {
+
+        this.student = student;
     }
 
 

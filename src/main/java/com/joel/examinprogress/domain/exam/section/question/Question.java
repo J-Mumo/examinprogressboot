@@ -86,7 +86,7 @@ public class Question extends AbstractPersistentEntity {
     @JoinColumn( name = "fk_answer",
             foreignKey = @ForeignKey( name = "question_fk_answer" ),
             nullable = true )
-    private Set<Answer> answers;
+    private Set<Answer> correctAnswers;
 
     // Questions in a comprehension question
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "question" )
@@ -176,15 +176,15 @@ public class Question extends AbstractPersistentEntity {
     }
 
 
-    public Set<Answer> getAnswers() {
+    public Set<Answer> getCorrectAnswers() {
 
-        return answers;
+        return correctAnswers;
     }
 
 
-    public void setAnswers( Set<Answer> answers ) {
+    public void setCorrectAnswers( Set<Answer> correctAnswers ) {
 
-        this.answers = answers;
+        this.correctAnswers = correctAnswers;
     }
 
 

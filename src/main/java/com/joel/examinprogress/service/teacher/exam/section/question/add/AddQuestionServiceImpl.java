@@ -139,7 +139,7 @@ public class AddQuestionServiceImpl implements AddQuestionService {
             }
         }
 
-        question.setAnswers( multipleChoiceAnswers );
+        question.setCorrectAnswers( multipleChoiceAnswers );
         questionRepository.save( question );
     }
 
@@ -249,7 +249,7 @@ public class AddQuestionServiceImpl implements AddQuestionService {
                     .getQuestionRequest()
                     .getMultipleChoiceQuestionAnswerRequests() );
 
-        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
+        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_QUESTION
                 .getExamTimerTypeId() ) {
 
             Long examTime = exam.getTotalExamTime().toMinutes() + duration.toMinutes();

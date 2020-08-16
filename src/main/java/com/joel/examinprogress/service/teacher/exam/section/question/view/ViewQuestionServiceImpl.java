@@ -92,7 +92,7 @@ public class ViewQuestionServiceImpl implements ViewQuestionService {
     private QuestionTransfer createQuestionTransfer(
             Question question ) {
 
-        Set<Answer> correctAnswers = question.getAnswers();
+        Set<Answer> correctAnswers = question.getCorrectAnswers();
         Set<Answer> answers = answerRepository.findByQuestion( question );
 
         MultipleChoiceAnswerTransfer[] multipleChoiceAnswerTransfers =

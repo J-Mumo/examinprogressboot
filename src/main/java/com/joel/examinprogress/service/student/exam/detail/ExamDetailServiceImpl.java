@@ -54,6 +54,7 @@ public class ExamDetailServiceImpl implements ExamDetailService {
         boolean studentRegistered = false;
         String email = null;
         Exam exam = null;
+        ExamToken examToken = null;
         Invite invite = null;
         boolean examHasStarted = false;
         boolean examHasEnded = false;
@@ -71,7 +72,7 @@ public class ExamDetailServiceImpl implements ExamDetailService {
             }
         }
         else {
-            ExamToken examToken = examTokenRepository.findByToken( request.getCode() );
+            examToken = examTokenRepository.findByToken( request.getCode() );
             if ( examToken != null ) {
                 examExists = true;
                 email = examToken.getEmail();
@@ -116,12 +117,11 @@ public class ExamDetailServiceImpl implements ExamDetailService {
         }
 
         ExamDetailInitialData initialData = new ExamDetailInitialData( examExists,
-                studentRegistered, examHasStarted, examHasEnded, exam.getId(), exam.getName(),
+                studentRegistered, examHasStarted, examHasEnded, examToken.getId(), exam.getName(),
                 exam.getDescription(), invite.getExamStartDate(), invite.getExamEndDate(),
                 invite.getExamStartTime(), exam.getTotalExamTime().toMinutes(),
                 invite.getPausable(), timedPerExam, timedPerSection, timedPerQuestion, email );
 
         return initialData;
     }
-
 }

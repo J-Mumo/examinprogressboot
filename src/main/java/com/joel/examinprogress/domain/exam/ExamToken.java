@@ -19,12 +19,15 @@ package com.joel.examinprogress.domain.exam;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
+import com.joel.examinprogress.domain.student.Student;
 
 /**
  * @author Joel Mumo
@@ -55,6 +58,9 @@ public class ExamToken extends AbstractPersistentEntity {
             foreignKey = @ForeignKey( name = "exam_token_fk_invite" ),
             nullable = false )
     private Invite invite;
+
+    @OneToOne( fetch = FetchType.LAZY, mappedBy = "examToken" )
+    private Student student;
 
     public String getEmail() {
 
@@ -101,5 +107,17 @@ public class ExamToken extends AbstractPersistentEntity {
     public void setInvite( Invite invite ) {
 
         this.invite = invite;
+    }
+
+
+    public Student getStudent() {
+
+        return student;
+    }
+
+
+    public void setStudent( Student student ) {
+
+        this.student = student;
     }
 }

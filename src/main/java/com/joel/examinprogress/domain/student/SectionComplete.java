@@ -19,9 +19,13 @@ package com.joel.examinprogress.domain.student;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
+import com.joel.examinprogress.domain.exam.section.Section;
 
 /**
  * @author Joel Mumo
@@ -39,6 +43,18 @@ public class SectionComplete extends AbstractPersistentEntity {
     @Column( name = "complete", nullable = false, unique = false )
     private Boolean complete;
 
+    @ManyToOne( )
+    @JoinColumn( name = "fk_section",
+            foreignKey = @ForeignKey( name = "section_complete_fk_section" ),
+            nullable = false )
+    private Section section;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_student",
+            foreignKey = @ForeignKey( name = "section_complete_fk_student" ),
+            nullable = false )
+    private Student student;
+
     public Boolean getComplete() {
 
         return complete;
@@ -48,5 +64,29 @@ public class SectionComplete extends AbstractPersistentEntity {
     public void setComplete( Boolean complete ) {
 
         this.complete = complete;
+    }
+
+
+    public Section getSection() {
+
+        return section;
+    }
+
+
+    public void setSection( Section section ) {
+
+        this.section = section;
+    }
+
+
+    public Student getStudent() {
+
+        return student;
+    }
+
+
+    public void setStudent( Student student ) {
+
+        this.student = student;
     }
 }
