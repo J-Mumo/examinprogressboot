@@ -248,16 +248,41 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
     @Transactional
     @Override
-    public ExaminprogressResponse saveMultipleChoiceAnswer( MultipleChoiceAnswerRequest request ) {
+    public ExaminprogressResponse saveAnswer( AnswerRequest request ) {
 
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
+        Question question = questionRepository.findById( request.getQuestionId() ).get();
         for ( Long answerId : request.getAnswerIds() ) {
             Answer answer = answerRepository.findById( answerId ).get();
             answer.setStudent( student );
             answerRepository.save( answer );
         }
+        if ( request.getAnswerText() != null ) {
+            Answer answer = new Answer();
+            answer.setAnswerText( request.getAnswerText() );
+            answer.setAnswerType( question.getAnswerType() );
+            answer.setQuestion( question );
+            answer.setStudent( student );
+            answerRepository.save( answer );
+        }
 
+        QuestionComplete questionComplete = questionCompleteRepository.findByQuestionAndStudent(
+                question, student );
+
+        questionComplete.setComplete( Boolean.TRUE );
+        questionCompleteRepository.save( questionComplete );
+
+        ExaminprogressResponse response = getExamProgress( request.getExamTokenId() );
+        return response;
+    }
+
+
+    @Override
+    public ExaminprogressResponse skipQuestion( SkipQuestionRequest request ) {
+
+        Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         Question question = questionRepository.findById( request.getQuestionId() ).get();
+
         QuestionComplete questionComplete = questionCompleteRepository.findByQuestionAndStudent(
                 question, student );
 

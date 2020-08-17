@@ -21,18 +21,20 @@ package com.joel.examinprogress.service.student.exam.examinprogress;
  * @author Joel Mumo
  * @date   16th Aug, 2020
  */
-public class MultipleChoiceAnswerRequest {
+public class AnswerRequest {
 
     private Long examTokenId;
     private Long questionId;
     private Long[] answerIds;
+    private String answerText;
 
-    public MultipleChoiceAnswerRequest( Long examTokenId, Long questionId, Long[] answerIds ) {
+    public AnswerRequest( Long examTokenId, Long questionId, Long[] answerIds, String answerText ) {
 
         super();
         this.examTokenId = examTokenId;
         this.questionId = questionId;
         this.answerIds = answerIds;
+        this.answerText = answerText;
     }
 
 
@@ -69,5 +71,17 @@ public class MultipleChoiceAnswerRequest {
     public void setAnswerIds( Long[] answerIds ) {
 
         this.answerIds = answerIds;
+    }
+
+
+    public String getAnswerText() {
+
+        return answerText;
+    }
+
+
+    public void setAnswerText( String answerText ) {
+
+        this.answerText = answerText;
     }
 }

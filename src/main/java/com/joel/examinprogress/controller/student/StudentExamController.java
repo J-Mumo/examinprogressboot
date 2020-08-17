@@ -30,9 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joel.examinprogress.service.student.exam.detail.ExamDetailInitialData;
 import com.joel.examinprogress.service.student.exam.detail.ExamDetailRequest;
 import com.joel.examinprogress.service.student.exam.detail.ExamDetailService;
+import com.joel.examinprogress.service.student.exam.examinprogress.AnswerRequest;
 import com.joel.examinprogress.service.student.exam.examinprogress.ExaminprogressResponse;
 import com.joel.examinprogress.service.student.exam.examinprogress.ExaminprogressService;
-import com.joel.examinprogress.service.student.exam.examinprogress.MultipleChoiceAnswerRequest;
+import com.joel.examinprogress.service.student.exam.examinprogress.SkipQuestionRequest;
 
 /**
  * @author Joel Mumo
@@ -70,12 +71,23 @@ public class StudentExamController {
     }
 
 
-    @RequestMapping( value = "examinprogress/save/multiplechoice", method = RequestMethod.POST )
-    public ResponseEntity<ExaminprogressResponse> saveMultipleChoiceAnswer(
-            @RequestBody MultipleChoiceAnswerRequest request )
+    @RequestMapping( value = "examinprogress/save/answer", method = RequestMethod.POST )
+    public ResponseEntity<ExaminprogressResponse> saveAnswer(
+            @RequestBody AnswerRequest request )
             throws IOException {
 
-        ExaminprogressResponse response = examinprogressService.saveMultipleChoiceAnswer( request );
+        ExaminprogressResponse response = examinprogressService.saveAnswer( request );
+
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "examinprogress/skipquestion", method = RequestMethod.POST )
+    public ResponseEntity<ExaminprogressResponse> skipQuestion(
+            @RequestBody SkipQuestionRequest request )
+            throws IOException {
+
+        ExaminprogressResponse response = examinprogressService.skipQuestion( request );
 
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }

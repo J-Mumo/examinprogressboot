@@ -19,15 +19,41 @@ package com.joel.examinprogress.service.student.exam.examinprogress;
 
 /**
  * @author Joel Mumo
- * @date   12th Aug, 2020
+ * @date   17th Aug, 2020
  */
-public interface ExaminprogressService {
+public class SkipQuestionRequest {
 
-    ExaminprogressResponse getExamProgress( Long examTokenId );
+    private Long examTokenId;
+    private Long questionId;
+
+    public SkipQuestionRequest( Long examTokenId, Long questionId ) {
+
+        super();
+        this.examTokenId = examTokenId;
+        this.questionId = questionId;
+    }
 
 
-    ExaminprogressResponse saveAnswer( AnswerRequest request );
+    public Long getExamTokenId() {
+
+        return examTokenId;
+    }
 
 
-    ExaminprogressResponse skipQuestion( SkipQuestionRequest request );
+    public void setExamTokenId( Long examTokenId ) {
+
+        this.examTokenId = examTokenId;
+    }
+
+
+    public Long getQuestionId() {
+
+        return questionId;
+    }
+
+
+    public void setQuestionId( Long questionId ) {
+
+        this.questionId = questionId;
+    }
 }
