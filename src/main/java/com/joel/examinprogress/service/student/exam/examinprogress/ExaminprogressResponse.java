@@ -25,12 +25,22 @@ public class ExaminprogressResponse {
 
     private ExamSectionTransfer examSectionTransfer;
     private boolean examComplete;
+    private boolean timedPerExam;
+    private boolean timedPerSection;
+    private boolean timedPerQuestion;
+    private Long examTime;
 
-    public ExaminprogressResponse( ExamSectionTransfer examSectionTransfer, boolean examComplete ) {
+    public ExaminprogressResponse( ExamSectionTransfer examSectionTransfer, boolean examComplete,
+            boolean timedPerExam, boolean timedPerSection, boolean timedPerQuestion,
+            Long examTime ) {
 
         super();
         this.examSectionTransfer = examSectionTransfer;
         this.examComplete = examComplete;
+        this.timedPerExam = timedPerExam;
+        this.timedPerSection = timedPerSection;
+        this.timedPerQuestion = timedPerQuestion;
+        this.examTime = examTime;
     }
 
 
@@ -55,5 +65,53 @@ public class ExaminprogressResponse {
     public void setExamComplete( boolean examComplete ) {
 
         this.examComplete = examComplete;
+    }
+
+
+    public boolean isTimedPerExam() {
+
+        return timedPerExam;
+    }
+
+
+    public void setTimedPerExam( boolean timedPerExam ) {
+
+        this.timedPerExam = timedPerExam;
+    }
+
+
+    public boolean isTimedPerSection() {
+
+        return timedPerSection;
+    }
+
+
+    public void setTimedPerSection( boolean timedPerSection ) {
+
+        this.timedPerSection = timedPerSection;
+    }
+
+
+    public boolean isTimedPerQuestion() {
+
+        return timedPerQuestion;
+    }
+
+
+    public void setTimedPerQuestion( boolean timedPerQuestion ) {
+
+        this.timedPerQuestion = timedPerQuestion;
+    }
+
+
+    public Long getExamTime() {
+
+        return examTime;
+    }
+
+
+    public void setExamTime( Long examTime ) {
+
+        this.examTime = examTime;
     }
 }

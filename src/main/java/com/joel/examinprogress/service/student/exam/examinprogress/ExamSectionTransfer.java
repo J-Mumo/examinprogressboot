@@ -26,16 +26,18 @@ public class ExamSectionTransfer {
     private Long sectionId;
     private String sectionName;
     private String description;
+    private Long sectionTime;
     private boolean sectionComplete;
     private ExamQuestionTransfer examQuestionTransfer;
 
     public ExamSectionTransfer( Long sectionId, String sectionName, String description,
-            boolean sectionComplete, ExamQuestionTransfer examQuestionTransfer ) {
+            Long sectionTime, boolean sectionComplete, ExamQuestionTransfer examQuestionTransfer ) {
 
         super();
         this.sectionId = sectionId;
         this.sectionName = sectionName;
         this.description = description;
+        this.sectionTime = sectionTime;
         this.sectionComplete = sectionComplete;
         this.examQuestionTransfer = examQuestionTransfer;
     }
@@ -74,6 +76,18 @@ public class ExamSectionTransfer {
     public void setDescription( String description ) {
 
         this.description = description;
+    }
+
+
+    public Long getSectionTime() {
+
+        return sectionTime;
+    }
+
+
+    public void setSectionTime( Long sectionTime ) {
+
+        this.sectionTime = sectionTime;
     }
 
 

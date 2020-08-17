@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.ExamTimerType;
+import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.Question;
@@ -37,6 +39,7 @@ import com.joel.examinprogress.domain.student.SectionComplete;
 import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
+import com.joel.examinprogress.repository.exam.ExamTimerTypeRepository;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
@@ -52,6 +55,9 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
     @Autowired
     private ExamTokenRepository examTokenRepository;
+
+    @Autowired
+    private ExamTimerTypeRepository examTimerTypeRepository;
 
     @Autowired
     private AnswerRepository answerRepository;
@@ -118,6 +124,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     private ExamQuestionTransfer createComprehensionSubQuestionTransfer( Question question,
             Student student ) {
 
+        Long questionTime = question.getDuration().toSeconds();
         QuestionComplete questionComplete = questionCompleteRepository
                 .findByQuestionAndStudent( question, student );
 
@@ -134,14 +141,17 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         ExamQuestionTransfer questionTransfer = null;
 
         ExamQuestionTransfer examQuestionTransfer = new ExamQuestionTransfer( question.getId(),
-                Boolean.FALSE, question.getQuestionText(), questionTransfer, question
-                        .getAnswerType().getName(), answerTransfers );
+                Boolean.FALSE, question.getQuestionText(), questionTime, questionTransfer,
+                question.getAnswerType().getName(), answerTransfers );
 
         return examQuestionTransfer;
     }
 
 
     private ExamQuestionTransfer createQuestionTransfer( Question question, Student student ) {
+
+        Long questionTime = question.getDuration() != null ? question.getDuration().toSeconds()
+                : null;
 
         QuestionComplete questionComplete = questionCompleteRepository
                 .findByQuestionAndStudent( question, student );
@@ -168,8 +178,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 questionTransfer = createComprehensionSubQuestionTransfer( subQuestion, student );
         }
         ExamQuestionTransfer examQuestionTransfer = new ExamQuestionTransfer( question.getId(),
-                comprehensionQuestion, question.getQuestionText(), questionTransfer, question
-                        .getAnswerType().getName(), answerTransfers );
+                comprehensionQuestion, question.getQuestionText(), questionTime, questionTransfer,
+                question.getAnswerType().getName(), answerTransfers );
 
         return examQuestionTransfer;
     }
@@ -201,6 +211,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         ExamQuestionTransfer questionTransfer = null;
         boolean sectionIsComplete = false;
+        Long sectionTime = section.getDuration() != null ? section.getDuration().toSeconds() : null;
         SectionComplete sectionComplete = sectionCompleteRepository
                 .findBySectionAndStudent( section, student );
 
@@ -244,7 +255,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         }
 
         ExamSectionTransfer sectionTransfer = new ExamSectionTransfer( section.getId(), section
-                .getName(), section.getDescription(), sectionIsComplete, questionTransfer );
+                .getName(), section.getDescription(), sectionTime, sectionIsComplete,
+                questionTransfer );
 
         return sectionTransfer;
     }
@@ -275,6 +287,9 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         ExaminprogressResponse response = null;
         boolean examComplete = false;
+        boolean timedPerExam = false;
+        boolean timedPerSection = false;
+        boolean timedPerQuestion = false;
         ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
         if ( examToken == null )
             return response;
@@ -283,13 +298,30 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         if ( exam == null )
             return response;
 
+        ExamTimerType examTimer = examTimerTypeRepository.findById( ExamTimerTypeEnum.TIMED_PER_EXAM
+                .getExamTimerTypeId() ).get();
+        ExamTimerType sectionTimer = examTimerTypeRepository.findById(
+                ExamTimerTypeEnum.TIMED_PER_SECTION.getExamTimerTypeId() ).get();
+        ExamTimerType questionTimer = examTimerTypeRepository.findById(
+                ExamTimerTypeEnum.TIMED_PER_QUESTION.getExamTimerTypeId() ).get();
+
+        if ( exam.getExamTimerType() == examTimer )
+            timedPerExam = Boolean.TRUE;
+        else if ( exam.getExamTimerType() == sectionTimer )
+            timedPerSection = Boolean.TRUE;
+        else if ( exam.getExamTimerType() == questionTimer )
+            timedPerQuestion = Boolean.TRUE;
+
+        Long examTime = exam.getDuration() != null ? exam.getDuration().toSeconds() : null;
+
         // Check if the token belongs to the logged in user
         User user = loggedInCredentialsHelper.getLoggedInUser();
         if ( !user.getEmail().equals( examToken.getEmail() ) )
             return response;
 
         if ( examToken.getExamComplete() )
-            return new ExaminprogressResponse( null, true );
+            return new ExaminprogressResponse( null, true, timedPerExam, timedPerSection,
+                    timedPerQuestion, examTime );
         else {
             Student student = examToken.getStudent();
             Section section = getNextSection( examToken, student );
@@ -299,7 +331,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 examToken.setExamComplete( Boolean.TRUE );
                 examTokenRepository.save( examToken );
 
-                return new ExaminprogressResponse( null, examComplete );
+                return new ExaminprogressResponse( null, examComplete, timedPerExam,
+                        timedPerSection, timedPerQuestion, examTime );
             }
             else {
                 ExamSectionTransfer sectionTransfer = createSectionTransfer( section, student );
@@ -312,13 +345,15 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                         examToken.setExamComplete( Boolean.TRUE );
                         examTokenRepository.save( examToken );
 
-                        return new ExaminprogressResponse( null, examComplete );
+                        return new ExaminprogressResponse( null, examComplete, timedPerExam,
+                                timedPerSection, timedPerQuestion, examTime );
                     }
                     else {
                         sectionTransfer = createSectionTransfer( section, student );
                     }
                 }
-                return new ExaminprogressResponse( sectionTransfer, examComplete );
+                return new ExaminprogressResponse( sectionTransfer, examComplete, timedPerExam,
+                        timedPerSection, timedPerQuestion, examTime );
             }
         }
     }
