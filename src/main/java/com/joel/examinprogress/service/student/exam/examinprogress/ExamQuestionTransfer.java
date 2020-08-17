@@ -26,16 +26,19 @@ public class ExamQuestionTransfer {
     private Long questionId;
     private boolean comprehensionQuestion;
     private String question;
+    private ExamQuestionTransfer questionTransfer;
     private String answerType;
     private AnswerTransfer[] answerTransfers;
 
     public ExamQuestionTransfer( Long questionId, boolean comprehensionQuestion, String question,
-            String answerType, AnswerTransfer[] answerTransfers ) {
+            ExamQuestionTransfer questionTransfer, String answerType,
+            AnswerTransfer[] answerTransfers ) {
 
         super();
         this.questionId = questionId;
         this.comprehensionQuestion = comprehensionQuestion;
         this.question = question;
+        this.questionTransfer = questionTransfer;
         this.answerType = answerType;
         this.answerTransfers = answerTransfers;
     }
@@ -74,6 +77,18 @@ public class ExamQuestionTransfer {
     public void setQuestion( String question ) {
 
         this.question = question;
+    }
+
+
+    public ExamQuestionTransfer getQuestionTransfer() {
+
+        return questionTransfer;
+    }
+
+
+    public void setQuestionTransfer( ExamQuestionTransfer questionTransfer ) {
+
+        this.questionTransfer = questionTransfer;
     }
 
 

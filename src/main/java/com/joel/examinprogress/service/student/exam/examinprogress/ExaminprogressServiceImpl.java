@@ -94,13 +94,29 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     }
 
 
-    private ExamQuestionTransfer createQuestionTransfer( Question question, Student student ) {
+    private Question getNextComprehensionSubQuestion( Question question, Student student ) {
 
-        AnswerTransfer[] answerTransfers = createAnswerTransfers( question );
-        boolean comprehensionQuestion = question.getQuestions().size() > 0 ? true : false;
-        ExamQuestionTransfer examQuestionTransfer = new ExamQuestionTransfer( question.getId(),
-                comprehensionQuestion, question.getQuestionText(), question.getAnswerType()
-                        .getName(), answerTransfers );
+        Set<Question> allQuestions = question.getQuestions();
+        Set<Question> incompleteQuestions = new HashSet<>();
+
+        for ( Question subQuestion : allQuestions ) {
+
+            QuestionComplete questionComplete = questionCompleteRepository
+                    .findByQuestionAndStudent( subQuestion, student );
+
+            if ( questionComplete == null || !questionComplete.getComplete() )
+                incompleteQuestions.add( subQuestion );
+
+            if ( incompleteQuestions.size() > 0 )
+                return incompleteQuestions.iterator().next();
+
+        }
+        return null;
+    }
+
+
+    private ExamQuestionTransfer createComprehensionSubQuestionTransfer( Question question,
+            Student student ) {
 
         QuestionComplete questionComplete = questionCompleteRepository
                 .findByQuestionAndStudent( question, student );
@@ -113,6 +129,47 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         questionComplete.setComplete( Boolean.FALSE );
         questionCompleteRepository.save( questionComplete );
+
+        AnswerTransfer[] answerTransfers = createAnswerTransfers( question );
+        ExamQuestionTransfer questionTransfer = null;
+
+        ExamQuestionTransfer examQuestionTransfer = new ExamQuestionTransfer( question.getId(),
+                Boolean.FALSE, question.getQuestionText(), questionTransfer, question
+                        .getAnswerType().getName(), answerTransfers );
+
+        return examQuestionTransfer;
+    }
+
+
+    private ExamQuestionTransfer createQuestionTransfer( Question question, Student student ) {
+
+        QuestionComplete questionComplete = questionCompleteRepository
+                .findByQuestionAndStudent( question, student );
+
+        if ( questionComplete == null ) {
+            questionComplete = new QuestionComplete();
+            questionComplete.setQuestion( question );
+            questionComplete.setStudent( student );
+        }
+
+        questionComplete.setComplete( Boolean.FALSE );
+        questionCompleteRepository.save( questionComplete );
+
+        AnswerTransfer[] answerTransfers = createAnswerTransfers( question );
+        boolean comprehensionQuestion = question.getQuestions().size() > 0 ? true : false;
+        ExamQuestionTransfer questionTransfer = null;
+        if ( comprehensionQuestion ) {
+            Question subQuestion = getNextComprehensionSubQuestion( question, student );
+            if ( subQuestion == null ) {
+                questionComplete.setComplete( Boolean.TRUE );
+                questionCompleteRepository.save( questionComplete );
+            }
+            else
+                questionTransfer = createComprehensionSubQuestionTransfer( subQuestion, student );
+        }
+        ExamQuestionTransfer examQuestionTransfer = new ExamQuestionTransfer( question.getId(),
+                comprehensionQuestion, question.getQuestionText(), questionTransfer, question
+                        .getAnswerType().getName(), answerTransfers );
 
         return examQuestionTransfer;
     }
@@ -144,13 +201,13 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         ExamQuestionTransfer questionTransfer = null;
         boolean sectionIsComplete = false;
+        SectionComplete sectionComplete = sectionCompleteRepository
+                .findBySectionAndStudent( section, student );
+
         if ( section != null ) {
             Question question = getNextQuestion( section, student );
             // if question null section is complete
             if ( question == null ) {
-                SectionComplete sectionComplete = sectionCompleteRepository
-                        .findBySectionAndStudent( section, student );
-
                 if ( sectionComplete == null ) {
                     sectionComplete = new SectionComplete();
                     sectionComplete.setSection( section );
@@ -161,8 +218,29 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 sectionCompleteRepository.save( sectionComplete );
                 sectionIsComplete = true;
             }
-            else
+            else {
                 questionTransfer = createQuestionTransfer( question, student );
+                /** Check if the question after getting transfer you realized the 
+                 * question is complete. This happens for comprehension question.
+                 */
+                if ( questionTransfer.isComprehensionQuestion() && questionTransfer
+                        .getQuestionTransfer() == null ) {
+
+                    QuestionComplete questionComplete = questionCompleteRepository
+                            .findByQuestionAndStudent( question, student );
+
+                    questionComplete.setComplete( Boolean.TRUE );
+                    questionCompleteRepository.save( questionComplete );
+                    question = getNextQuestion( section, student );
+                    if ( question == null ) {
+                        sectionComplete.setComplete( Boolean.TRUE );
+                        sectionCompleteRepository.save( sectionComplete );
+                        sectionIsComplete = true;
+                    }
+                    else
+                        questionTransfer = createQuestionTransfer( question, student );
+                }
+            }
         }
 
         ExamSectionTransfer sectionTransfer = new ExamSectionTransfer( section.getId(), section
