@@ -15,26 +15,19 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.student;
+package com.joel.examinprogress.helper.time;
 
-import java.util.Set;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.exam.section.question.Question;
-import com.joel.examinprogress.domain.student.QuestionComplete;
-import com.joel.examinprogress.domain.student.Student;
+import java.util.Calendar;
 
 /**
  * @author Joel Mumo
- * @date   12th Aug, 2020
+ * @date   29th Aug, 2020
  */
-@Repository
-public interface QuestionCompleteRepository extends JpaRepository<QuestionComplete, Long> {
+public interface TimeHelper {
 
-    QuestionComplete findByQuestionAndStudent( Question question, Student student );
+    Integer getRemainingTimeInSeconds( Calendar startTime, Integer maxTimeSeconds );
 
 
-    Set<QuestionComplete> findByQuestion( Question question );
+    Boolean hasExpired( Calendar startTime, Integer maxTimeSeconds );
+
 }

@@ -17,6 +17,7 @@
 */
 package com.joel.examinprogress.service.student.exam.examinprogress;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -39,6 +40,7 @@ import com.joel.examinprogress.domain.student.SectionComplete;
 import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
+import com.joel.examinprogress.helper.time.TimeHelper;
 import com.joel.examinprogress.repository.exam.ExamTimerTypeRepository;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
@@ -76,6 +78,9 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
     @Autowired
     private AnswerTransferComparator answerTransferComparator;
+
+    @Autowired
+    private TimeHelper timeHelper;
 
     private AnswerTransfer createAnswerTransfer( Answer answer ) {
 
@@ -124,7 +129,9 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     private ExamQuestionTransfer createComprehensionSubQuestionTransfer( Question question,
             Student student ) {
 
-        Long questionTime = question.getDuration().toSeconds();
+        Long questionTime = question.getDuration() != null ? question.getDuration().toSeconds()
+                : null;
+
         QuestionComplete questionComplete = questionCompleteRepository
                 .findByQuestionAndStudent( question, student );
 
@@ -244,6 +251,12 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                     questionCompleteRepository.save( questionComplete );
                     question = getNextQuestion( section, student );
                     if ( question == null ) {
+                        if ( sectionComplete == null ) {
+                            sectionComplete = new SectionComplete();
+                            sectionComplete.setSection( section );
+                            sectionComplete.setStudent( student );
+                        }
+
                         sectionComplete.setComplete( Boolean.TRUE );
                         sectionCompleteRepository.save( sectionComplete );
                         sectionIsComplete = true;
@@ -281,27 +294,18 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     }
 
 
-    @Transactional
-    @Override
-    public ExaminprogressResponse getExamProgress( Long examTokenId ) {
+    private ExamTimedPer getExamTimedPer( Exam exam ) {
 
-        ExaminprogressResponse response = null;
-        boolean examComplete = false;
         boolean timedPerExam = false;
         boolean timedPerSection = false;
         boolean timedPerQuestion = false;
-        ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
-        if ( examToken == null )
-            return response;
-
-        Exam exam = examToken.getInvite().getExam();
-        if ( exam == null )
-            return response;
 
         ExamTimerType examTimer = examTimerTypeRepository.findById( ExamTimerTypeEnum.TIMED_PER_EXAM
                 .getExamTimerTypeId() ).get();
+
         ExamTimerType sectionTimer = examTimerTypeRepository.findById(
                 ExamTimerTypeEnum.TIMED_PER_SECTION.getExamTimerTypeId() ).get();
+
         ExamTimerType questionTimer = examTimerTypeRepository.findById(
                 ExamTimerTypeEnum.TIMED_PER_QUESTION.getExamTimerTypeId() ).get();
 
@@ -310,6 +314,39 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         else if ( exam.getExamTimerType() == sectionTimer )
             timedPerSection = Boolean.TRUE;
         else if ( exam.getExamTimerType() == questionTimer )
+            timedPerQuestion = Boolean.TRUE;
+
+        return new ExamTimedPer( timedPerExam, timedPerSection, timedPerQuestion );
+    }
+
+
+    @Transactional
+    @Override
+    public ExaminprogressResponse getExamProgress( Long examTokenId ) {
+
+        ExaminprogressResponse response = null;
+        ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
+        if ( examToken == null )
+            return response;
+        else if ( examToken.getStartedExamAt() == null ) {
+            examToken.setStartedExamAt( Calendar.getInstance() );
+            examTokenRepository.save( examToken );
+        }
+
+        Exam exam = examToken.getInvite().getExam();
+        if ( exam == null )
+            return response;
+
+        Boolean examComplete = false;
+        Boolean timedPerExam = false;
+        Boolean timedPerSection = false;
+        Boolean timedPerQuestion = false;
+        ExamTimedPer examTimedPer = getExamTimedPer( exam );
+        if ( examTimedPer.timedPerExam )
+            timedPerExam = Boolean.TRUE;
+        else if ( examTimedPer.timedPerSection )
+            timedPerSection = Boolean.TRUE;
+        else if ( examTimedPer.timedPerQuestion )
             timedPerQuestion = Boolean.TRUE;
 
         Long examTime = exam.getDuration() != null ? exam.getDuration().toSeconds() : null;
@@ -365,22 +402,62 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         Question question = questionRepository.findById( request.getQuestionId() ).get();
-        for ( Long answerId : request.getAnswerIds() ) {
-            Answer answer = answerRepository.findById( answerId ).get();
-            answer.setStudent( student );
-            answerRepository.save( answer );
-        }
-        if ( request.getAnswerText() != null ) {
-            Answer answer = new Answer();
-            answer.setAnswerText( request.getAnswerText() );
-            answer.setAnswerType( question.getAnswerType() );
-            answer.setQuestion( question );
-            answer.setStudent( student );
-            answerRepository.save( answer );
-        }
+        Section section = question.getSection();
+        Exam exam = section.getExam();
 
         QuestionComplete questionComplete = questionCompleteRepository.findByQuestionAndStudent(
                 question, student );
+
+        ExamTimedPer examTimedPer = getExamTimedPer( exam );
+        Boolean hasExpired = true;
+
+        if ( examTimedPer.timedPerExam ) {
+
+            ExamToken examToken = examTokenRepository.findById( request.getExamTokenId() ).get();
+            Calendar startTime = examToken.getStartedExamAt();
+            Integer maxTimeSeconds = ( int )exam.getDuration().getSeconds();
+            hasExpired = timeHelper.hasExpired( startTime, maxTimeSeconds );
+
+            if ( hasExpired ) {
+                examToken.setExamComplete( Boolean.TRUE );
+                examTokenRepository.save( examToken );
+            }
+        }
+        else if ( examTimedPer.timedPerSection ) {
+
+            SectionComplete sectionComplete = sectionCompleteRepository.findBySectionAndStudent(
+                    section, student );
+
+            Calendar startTime = sectionComplete.getCreatedAt();
+            Integer maxTimeSeconds = ( int )section.getDuration().getSeconds();
+            hasExpired = timeHelper.hasExpired( startTime, maxTimeSeconds );
+
+            if ( hasExpired ) {
+                sectionComplete.setComplete( Boolean.TRUE );
+                sectionCompleteRepository.save( sectionComplete );
+            }
+        }
+        else {
+            Calendar startTime = questionComplete.getCreatedAt();
+            Integer maxTimeSeconds = ( int )question.getDuration().getSeconds();
+            hasExpired = timeHelper.hasExpired( startTime, maxTimeSeconds );
+        }
+
+        if ( !hasExpired ) {
+            for ( Long answerId : request.getAnswerIds() ) {
+                Answer answer = answerRepository.findById( answerId ).get();
+                answer.setStudent( student );
+                answerRepository.save( answer );
+            }
+            if ( request.getAnswerText() != null ) {
+                Answer answer = new Answer();
+                answer.setAnswerText( request.getAnswerText() );
+                answer.setAnswerType( question.getAnswerType() );
+                answer.setQuestion( question );
+                answer.setStudent( student );
+                answerRepository.save( answer );
+            }
+        }
 
         questionComplete.setComplete( Boolean.TRUE );
         questionCompleteRepository.save( questionComplete );
@@ -391,6 +468,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
 
     @Override
+    @Transactional
     public ExaminprogressResponse skipQuestion( SkipQuestionRequest request ) {
 
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
@@ -404,5 +482,59 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         ExaminprogressResponse response = getExamProgress( request.getExamTokenId() );
         return response;
+    }
+}
+
+class ExamTimedPer {
+
+    boolean timedPerExam;
+    boolean timedPerSection;
+    boolean timedPerQuestion;
+
+    public ExamTimedPer(
+            boolean timedPerExam,
+            boolean timedPerSection,
+            boolean timedPerQuestion ) {
+
+        super();
+        this.timedPerExam = timedPerExam;
+        this.timedPerSection = timedPerSection;
+        this.timedPerQuestion = timedPerQuestion;
+    }
+
+
+    public boolean isTimedPerExam() {
+
+        return timedPerExam;
+    }
+
+
+    public void setTimedPerExam( boolean timedPerExam ) {
+
+        this.timedPerExam = timedPerExam;
+    }
+
+
+    public boolean isTimedPerSection() {
+
+        return timedPerSection;
+    }
+
+
+    public void setTimedPerSection( boolean timedPerSection ) {
+
+        this.timedPerSection = timedPerSection;
+    }
+
+
+    public boolean isTimedPerQuestion() {
+
+        return timedPerQuestion;
+    }
+
+
+    public void setTimedPerQuestion( boolean timedPerQuestion ) {
+
+        this.timedPerQuestion = timedPerQuestion;
     }
 }

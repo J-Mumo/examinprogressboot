@@ -26,8 +26,10 @@ import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
+import com.joel.examinprogress.domain.student.QuestionComplete;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
+import com.joel.examinprogress.repository.student.QuestionCompleteRepository;
 import com.joel.examinprogress.service.shared.DeleteResponse;
 
 /**
@@ -41,6 +43,9 @@ public class DeleteQuestionServiceImpl implements DeleteQuestionService {
     private QuestionRepository questionRepository;
 
     @Autowired
+    private QuestionCompleteRepository questionCompleteRepository;
+
+    @Autowired
     private AnswerRepository answerRepository;
 
     @Transactional
@@ -48,6 +53,11 @@ public class DeleteQuestionServiceImpl implements DeleteQuestionService {
     public DeleteResponse deleteQuestion( Long questionId ) {
 
         Question question = questionRepository.findById( questionId ).get();
+        Set<QuestionComplete> questionCompletes = questionCompleteRepository.findByQuestion(
+                question );
+
+        questionCompleteRepository.deleteAll( questionCompletes );
+
         Set<Question> questions = question.getQuestions();
         for ( Question aQuestion : questions ) {
             Set<Answer> answers = answerRepository.findByQuestion( aQuestion );

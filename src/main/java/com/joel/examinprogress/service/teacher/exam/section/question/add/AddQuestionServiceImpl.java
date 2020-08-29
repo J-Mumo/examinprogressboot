@@ -209,11 +209,6 @@ public class AddQuestionServiceImpl implements AddQuestionService {
     @Override
     public SaveResponseWithId saveComprehensionQuestion( AddComprehensionQuestionRequest request ) {
 
-        Duration duration = null;
-        if ( request.getDuration() != null ) {
-            duration = Duration.parse( request.getDuration() );
-        }
-
         Section section = sectionRepository.findById( request.getSectionId() ).get();
         Exam exam = section.getExam();
         Long questionTypeId = QuestionTypeEnum.COMPREHENSION_QUESTION.getQuestionTypeId();
@@ -227,7 +222,6 @@ public class AddQuestionServiceImpl implements AddQuestionService {
 
         comprehensionQuestion.setQuestionText( request.getComprehension() );
         comprehensionQuestion.setQuestionType( questionType );
-        comprehensionQuestion.setDuration( duration );
         comprehensionQuestion.setAnswerType( answerType );
         comprehensionQuestion.setSection( section );
         questionRepository.save( comprehensionQuestion );
@@ -235,9 +229,16 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         Long normalQuestionTypeId = QuestionTypeEnum.QUESTION.getQuestionTypeId();
         QuestionType normalQuestionType = questionTypeRepository.findById( normalQuestionTypeId )
                 .get();
+
+        Duration duration = null;
+        if ( request.getQuestionRequest().getDuration() != null ) {
+            duration = Duration.parse( request.getQuestionRequest().getDuration() );
+        }
+
         Question question = new Question();
         question.setQuestionText( request.getQuestionRequest().getQuestionText() );
         question.setScore( request.getQuestionRequest().getScore() );
+        question.setDuration( duration );
         question.setAnswerType( answerType );
         question.setQuestion( comprehensionQuestion );
         question.setSection( section );

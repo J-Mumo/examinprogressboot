@@ -27,16 +27,19 @@ public class QuestionRequest {
 
     private String questionText;
     private Integer score;
+    private String duration;
     private MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests;
 
     public QuestionRequest(
             String questionText,
             Integer score,
+            String duration,
             MultipleChoiceQuestionAnswerRequest[] multipleChoiceQuestionAnswerRequests ) {
 
         super();
         this.questionText = questionText;
         this.score = score;
+        this.duration = duration;
         this.multipleChoiceQuestionAnswerRequests = multipleChoiceQuestionAnswerRequests;
     }
 
@@ -62,6 +65,18 @@ public class QuestionRequest {
     public void setScore( Integer score ) {
 
         this.score = score;
+    }
+
+
+    public String getDuration() {
+
+        return duration;
+    }
+
+
+    public void setDuration( String duration ) {
+
+        this.duration = duration;
     }
 
 

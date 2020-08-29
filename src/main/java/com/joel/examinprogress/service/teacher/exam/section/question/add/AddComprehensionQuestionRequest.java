@@ -27,7 +27,6 @@ public class AddComprehensionQuestionRequest {
     private Long comprehensionQuestionId;
     private Long answerTypeId;
     private String comprehension;
-    private String duration;
     private QuestionRequest questionRequest;
 
     public AddComprehensionQuestionRequest(
@@ -35,7 +34,6 @@ public class AddComprehensionQuestionRequest {
             Long comprehensionQuestionId,
             Long answerTypeId,
             String comprehension,
-            String duration,
             QuestionRequest questionRequest ) {
 
         super();
@@ -43,7 +41,6 @@ public class AddComprehensionQuestionRequest {
         this.comprehensionQuestionId = comprehensionQuestionId;
         this.answerTypeId = answerTypeId;
         this.comprehension = comprehension;
-        this.duration = duration;
         this.questionRequest = questionRequest;
     }
 
@@ -93,18 +90,6 @@ public class AddComprehensionQuestionRequest {
     public void setComprehension( String comprehension ) {
 
         this.comprehension = comprehension;
-    }
-
-
-    public String getDuration() {
-
-        return duration;
-    }
-
-
-    public void setDuration( String duration ) {
-
-        this.duration = duration;
     }
 
 
