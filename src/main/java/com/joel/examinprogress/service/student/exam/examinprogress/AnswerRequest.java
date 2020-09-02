@@ -24,14 +24,17 @@ package com.joel.examinprogress.service.student.exam.examinprogress;
 public class AnswerRequest {
 
     private Long examTokenId;
+    private Boolean pause;
     private Long questionId;
     private Long[] answerIds;
     private String answerText;
 
-    public AnswerRequest( Long examTokenId, Long questionId, Long[] answerIds, String answerText ) {
+    public AnswerRequest( Long examTokenId, Boolean pause, Long questionId, Long[] answerIds,
+            String answerText ) {
 
         super();
         this.examTokenId = examTokenId;
+        this.pause = pause;
         this.questionId = questionId;
         this.answerIds = answerIds;
         this.answerText = answerText;
@@ -47,6 +50,18 @@ public class AnswerRequest {
     public void setExamTokenId( Long examTokenId ) {
 
         this.examTokenId = examTokenId;
+    }
+
+
+    public Boolean getPause() {
+
+        return pause;
+    }
+
+
+    public void setPause( Boolean pause ) {
+
+        this.pause = pause;
     }
 
 

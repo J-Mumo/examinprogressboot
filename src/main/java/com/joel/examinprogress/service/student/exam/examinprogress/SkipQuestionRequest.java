@@ -24,12 +24,14 @@ package com.joel.examinprogress.service.student.exam.examinprogress;
 public class SkipQuestionRequest {
 
     private Long examTokenId;
+    private Boolean pause;
     private Long questionId;
 
-    public SkipQuestionRequest( Long examTokenId, Long questionId ) {
+    public SkipQuestionRequest( Long examTokenId, Boolean pause, Long questionId ) {
 
         super();
         this.examTokenId = examTokenId;
+        this.pause = pause;
         this.questionId = questionId;
     }
 
@@ -43,6 +45,18 @@ public class SkipQuestionRequest {
     public void setExamTokenId( Long examTokenId ) {
 
         this.examTokenId = examTokenId;
+    }
+
+
+    public Boolean getPause() {
+
+        return pause;
+    }
+
+
+    public void setPause( Boolean pause ) {
+
+        this.pause = pause;
     }
 
 

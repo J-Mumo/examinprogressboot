@@ -85,13 +85,14 @@ public class ViewInviteServiceImpl implements ViewInviteService {
         String inviteCode = linkHelper.createDomainLink( domain, serverPort, protocol ) +
                 "/student/exam/detail?invitecode=" + invite.getInviteCode();
 
-        LocalTime inviteStartTime = invite.getExamStartTime();
+        LocalTime startTime = invite.getExamStartTime();
+        String inviteStartTime = startTime != null ? startTime.toString() : null;
         Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         ExamTokenTransfer[] examTokenTransfers = createExamTokenTransfers( examTokens );
 
         ViewInviteInitialData initialData = new ViewInviteInitialData(
                 invite.getName(), invite.getExamStartDate(), invite.getExamEndDate(),
-                invite.getPausable(), inviteStartTime.toString(), inviteCode, examTokenTransfers );
+                invite.getPausable(), inviteStartTime, inviteCode, examTokenTransfers );
 
         return initialData;
     }

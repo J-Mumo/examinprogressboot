@@ -44,9 +44,10 @@ public class InvitesServiceImpl implements InvitesService {
     private InviteTransfer createInviteTransfer( Invite invite ) {
 
         LocalTime startTime = invite.getExamStartTime();
+        String examStartTime = startTime != null ? startTime.toString() : null;
+
         InviteTransfer transfer = new InviteTransfer( invite.getId(), invite.getName(), invite
-                .getExamStartDate(), invite.getExamEndDate(), invite.getPausable(), startTime
-                        .toString() );
+                .getExamStartDate(), invite.getExamEndDate(), invite.getPausable(), examStartTime );
 
         return transfer;
     }

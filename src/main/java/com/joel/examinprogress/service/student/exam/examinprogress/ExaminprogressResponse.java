@@ -29,10 +29,12 @@ public class ExaminprogressResponse {
     private boolean timedPerSection;
     private boolean timedPerQuestion;
     private Long examTime;
+    private boolean pausable;
+    private boolean paused;
 
     public ExaminprogressResponse( ExamSectionTransfer examSectionTransfer, boolean examComplete,
             boolean timedPerExam, boolean timedPerSection, boolean timedPerQuestion,
-            Long examTime ) {
+            Long examTime, boolean pausable, boolean paused ) {
 
         super();
         this.examSectionTransfer = examSectionTransfer;
@@ -41,6 +43,8 @@ public class ExaminprogressResponse {
         this.timedPerSection = timedPerSection;
         this.timedPerQuestion = timedPerQuestion;
         this.examTime = examTime;
+        this.pausable = pausable;
+        this.paused = paused;
     }
 
 
@@ -113,5 +117,29 @@ public class ExaminprogressResponse {
     public void setExamTime( Long examTime ) {
 
         this.examTime = examTime;
+    }
+
+
+    public boolean isPausable() {
+
+        return pausable;
+    }
+
+
+    public void setPausable( boolean pausable ) {
+
+        this.pausable = pausable;
+    }
+
+
+    public boolean isPaused() {
+
+        return paused;
+    }
+
+
+    public void setPaused( boolean paused ) {
+
+        this.paused = paused;
     }
 }

@@ -41,10 +41,11 @@ public class EditInviteServiceImpl implements EditInviteService {
 
         Invite invite = inviteRepository.findById( inviteId ).get();
         LocalTime startTime = invite.getExamStartTime();
+        String inviteStartTime = startTime != null ? startTime.toString() : null;
 
         EditInviteInitialData initialData = new EditInviteInitialData( invite.getName(),
                 invite.getExamStartDate(), invite.getExamEndDate(), invite.getPausable(),
-                startTime.toString() );
+                inviteStartTime );
 
         return initialData;
     }
@@ -59,8 +60,12 @@ public class EditInviteServiceImpl implements EditInviteService {
 
         String hour = startTime != null ? startTime[0] : "";
         String minute = startTime != null ? startTime[1] : "";
-        LocalTime examStartTime = LocalTime.of( Integer.parseInt( hour ), Integer.parseInt(
-                minute ), 0, 0 );
+        LocalTime examStartTime = null;
+
+        if ( startTime != null ) {
+            examStartTime = LocalTime.of( Integer.parseInt( hour ), Integer.parseInt(
+                    minute ), 0, 0 );
+        }
 
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
         invite.setName( request.getName() );

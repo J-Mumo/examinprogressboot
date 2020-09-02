@@ -39,6 +39,7 @@ import com.joel.examinprogress.domain.student.QuestionComplete;
 import com.joel.examinprogress.domain.student.SectionComplete;
 import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.user.User;
+import com.joel.examinprogress.helper.exam.expired.ExamExpiredHelper;
 import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
 import com.joel.examinprogress.helper.time.TimeHelper;
 import com.joel.examinprogress.repository.exam.ExamTimerTypeRepository;
@@ -81,6 +82,9 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
     @Autowired
     private TimeHelper timeHelper;
+
+    @Autowired
+    private ExamExpiredHelper examExpiredHelper;
 
     private AnswerTransfer createAnswerTransfer( Answer answer ) {
 
@@ -326,6 +330,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         ExaminprogressResponse response = null;
         ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
+        Boolean examHasExpired = examExpiredHelper.examHasExpired( examToken.getInvite() );
+
         if ( examToken == null )
             return response;
         else if ( examToken.getStartedExamAt() == null ) {
@@ -341,7 +347,9 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         Boolean timedPerExam = false;
         Boolean timedPerSection = false;
         Boolean timedPerQuestion = false;
+        Boolean pausable = examToken.getInvite().getPausable();
         ExamTimedPer examTimedPer = getExamTimedPer( exam );
+
         if ( examTimedPer.timedPerExam )
             timedPerExam = Boolean.TRUE;
         else if ( examTimedPer.timedPerSection )
@@ -358,7 +366,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         if ( examToken.getExamComplete() )
             return new ExaminprogressResponse( null, true, timedPerExam, timedPerSection,
-                    timedPerQuestion, examTime );
+                    timedPerQuestion, examTime, pausable, false );
+
         else {
             Student student = examToken.getStudent();
             Section section = getNextSection( examToken, student );
@@ -369,7 +378,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 examTokenRepository.save( examToken );
 
                 return new ExaminprogressResponse( null, examComplete, timedPerExam,
-                        timedPerSection, timedPerQuestion, examTime );
+                        timedPerSection, timedPerQuestion, examTime, pausable, false );
             }
             else {
                 ExamSectionTransfer sectionTransfer = createSectionTransfer( section, student );
@@ -383,14 +392,14 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                         examTokenRepository.save( examToken );
 
                         return new ExaminprogressResponse( null, examComplete, timedPerExam,
-                                timedPerSection, timedPerQuestion, examTime );
+                                timedPerSection, timedPerQuestion, examTime, pausable, false );
                     }
                     else {
                         sectionTransfer = createSectionTransfer( section, student );
                     }
                 }
                 return new ExaminprogressResponse( sectionTransfer, examComplete, timedPerExam,
-                        timedPerSection, timedPerQuestion, examTime );
+                        timedPerSection, timedPerQuestion, examTime, pausable, false );
             }
         }
     }
@@ -461,8 +470,25 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         questionComplete.setComplete( Boolean.TRUE );
         questionCompleteRepository.save( questionComplete );
+        ExaminprogressResponse response;
 
-        ExaminprogressResponse response = getExamProgress( request.getExamTokenId() );
+        if ( request.getPause() ) {
+            ExamToken examToken = examTokenRepository.findById( request.getExamTokenId() ).get();
+            Boolean examPausable = examToken.getInvite().getPausable();
+
+            if ( examPausable ) {
+
+                response = new ExaminprogressResponse( null, false, false, false, false, null, true,
+                        true );
+            }
+            else {
+                response = getExamProgress( request.getExamTokenId() );
+            }
+        }
+        else {
+            response = getExamProgress( request.getExamTokenId() );
+        }
+
         return response;
     }
 
@@ -479,8 +505,25 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         questionComplete.setComplete( Boolean.TRUE );
         questionCompleteRepository.save( questionComplete );
+        ExaminprogressResponse response;
 
-        ExaminprogressResponse response = getExamProgress( request.getExamTokenId() );
+        if ( request.getPause() ) {
+            ExamToken examToken = examTokenRepository.findById( request.getExamTokenId() ).get();
+            Boolean examPausable = examToken.getInvite().getPausable();
+
+            if ( examPausable ) {
+
+                response = new ExaminprogressResponse( null, false, false, false, false, null, true,
+                        true );
+            }
+            else {
+                response = getExamProgress( request.getExamTokenId() );
+            }
+        }
+        else {
+            response = getExamProgress( request.getExamTokenId() );
+        }
+
         return response;
     }
 }
