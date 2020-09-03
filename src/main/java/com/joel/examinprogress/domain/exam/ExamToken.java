@@ -17,8 +17,6 @@
 */
 package com.joel.examinprogress.domain.exam;
 
-import java.util.Calendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,12 +50,6 @@ public class ExamToken extends AbstractPersistentEntity {
             length = 128 )
     private String token;
 
-    @Column( name = "exam_complete", nullable = false, unique = false )
-    private Boolean examComplete;
-
-    @Column( name = "started_exam_at", nullable = true )
-    private Calendar startedExamAt;
-
     @ManyToOne( )
     @JoinColumn( name = "fk_invite",
             foreignKey = @ForeignKey( name = "exam_token_fk_invite" ),
@@ -90,29 +82,6 @@ public class ExamToken extends AbstractPersistentEntity {
         this.token = token;
     }
 
-
-    public Boolean getExamComplete() {
-
-        return examComplete;
-    }
-
-
-    public void setExamComplete( Boolean examComplete ) {
-
-        this.examComplete = examComplete;
-    }
-
-
-    public Calendar getStartedExamAt() {
-
-        return startedExamAt;
-    }
-
-
-    public void setStartedExamAt( Calendar startedExamAt ) {
-
-        this.startedExamAt = startedExamAt;
-    }
 
 
     public Invite getInvite() {

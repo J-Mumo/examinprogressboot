@@ -17,11 +17,13 @@
 */
 package com.joel.examinprogress.repository.student;
 
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.joel.examinprogress.domain.exam.section.Section;
-import com.joel.examinprogress.domain.student.SectionComplete;
+import com.joel.examinprogress.domain.exam.section.question.Question;
+import com.joel.examinprogress.domain.student.QuestionStatus;
 import com.joel.examinprogress.domain.student.Student;
 
 /**
@@ -29,7 +31,10 @@ import com.joel.examinprogress.domain.student.Student;
  * @date   12th Aug, 2020
  */
 @Repository
-public interface SectionCompleteRepository extends JpaRepository<SectionComplete, Long> {
+public interface QuestionStatusRepository extends JpaRepository<QuestionStatus, Long> {
 
-    SectionComplete findBySectionAndStudent( Section section, Student student );
+    QuestionStatus findByQuestionAndStudent( Question question, Student student );
+
+
+    Set<QuestionStatus> findByQuestion( Question question );
 }

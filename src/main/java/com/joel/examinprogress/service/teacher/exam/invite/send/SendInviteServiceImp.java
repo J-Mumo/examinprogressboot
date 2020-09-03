@@ -120,7 +120,6 @@ public class SendInviteServiceImp implements SendInviteService {
             examToken.setEmail( request.getEmail() );
             examToken.setToken( token );
             examToken.setInvite( invite );
-            examToken.setExamComplete( Boolean.FALSE );
             examTokenRepository.save( examToken );
 
             Locale locale = new Locale( "en" );

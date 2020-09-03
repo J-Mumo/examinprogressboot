@@ -25,33 +25,36 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
-import com.joel.examinprogress.domain.exam.section.Section;
+import com.joel.examinprogress.domain.exam.section.question.Question;
 
 /**
  * @author Joel Mumo
- * @date   12th Aug, 2020
+ * @date   3rd Sep, 2020
  */
 @Entity
-@Table( name = "section_complete" )
-public class SectionComplete extends AbstractPersistentEntity {
+@Table( name = "question_status" )
+public class QuestionStatus extends AbstractPersistentEntity {
 
     /**
      * 
      */
-    private static final long serialVersionUID = -7966882574907572067L;
+    private static final long serialVersionUID = 5815563770622095002L;
 
     @Column( name = "complete", nullable = false, unique = false )
     private Boolean complete;
 
+    @Column( name = "fetched", nullable = false, unique = false )
+    private Boolean fetched;
+
     @ManyToOne( )
-    @JoinColumn( name = "fk_section",
-            foreignKey = @ForeignKey( name = "section_complete_fk_section" ),
+    @JoinColumn( name = "fk_question",
+            foreignKey = @ForeignKey( name = "question_complete_fk_question" ),
             nullable = false )
-    private Section section;
+    private Question question;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_student",
-            foreignKey = @ForeignKey( name = "section_complete_fk_student" ),
+            foreignKey = @ForeignKey( name = "question_complete_fk_student" ),
             nullable = false )
     private Student student;
 
@@ -61,21 +64,33 @@ public class SectionComplete extends AbstractPersistentEntity {
     }
 
 
+    public Boolean getFetched() {
+
+        return fetched;
+    }
+
+
+    public void setFetched( Boolean fetched ) {
+
+        this.fetched = fetched;
+    }
+
+
     public void setComplete( Boolean complete ) {
 
         this.complete = complete;
     }
 
 
-    public Section getSection() {
+    public Question getQuestion() {
 
-        return section;
+        return question;
     }
 
 
-    public void setSection( Section section ) {
+    public void setQuestion( Question question ) {
 
-        this.section = section;
+        this.question = question;
     }
 
 

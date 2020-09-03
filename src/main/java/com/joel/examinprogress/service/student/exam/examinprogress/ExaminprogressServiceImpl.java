@@ -35,8 +35,9 @@ import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
-import com.joel.examinprogress.domain.student.QuestionComplete;
-import com.joel.examinprogress.domain.student.SectionComplete;
+import com.joel.examinprogress.domain.student.ExamStatus;
+import com.joel.examinprogress.domain.student.QuestionStatus;
+import com.joel.examinprogress.domain.student.SectionStatus;
 import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.exam.expired.ExamExpiredHelper;
@@ -46,8 +47,9 @@ import com.joel.examinprogress.repository.exam.ExamTimerTypeRepository;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
-import com.joel.examinprogress.repository.student.QuestionCompleteRepository;
-import com.joel.examinprogress.repository.student.SectionCompleteRepository;
+import com.joel.examinprogress.repository.student.ExamStatusRepository;
+import com.joel.examinprogress.repository.student.QuestionStatusRepository;
+import com.joel.examinprogress.repository.student.SectionStatusRepository;
 
 /**
  * @author Joel Mumo
@@ -69,10 +71,13 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private SectionCompleteRepository sectionCompleteRepository;
+    private ExamStatusRepository examStatusRepository;
 
     @Autowired
-    private QuestionCompleteRepository questionCompleteRepository;
+    private SectionStatusRepository sectionStatusRepository;
+
+    @Autowired
+    private QuestionStatusRepository questionStatusRepository;
 
     @Autowired
     private LoggedInCredentialsHelper loggedInCredentialsHelper;
@@ -116,10 +121,11 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         for ( Question subQuestion : allQuestions ) {
 
-            QuestionComplete questionComplete = questionCompleteRepository
+            QuestionStatus questionStatus =
+                    questionStatusRepository
                     .findByQuestionAndStudent( subQuestion, student );
 
-            if ( questionComplete == null || !questionComplete.getComplete() )
+            if ( questionStatus == null || !questionStatus.getComplete() )
                 incompleteQuestions.add( subQuestion );
 
             if ( incompleteQuestions.size() > 0 )
@@ -136,17 +142,19 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         Long questionTime = question.getDuration() != null ? question.getDuration().toSeconds()
                 : null;
 
-        QuestionComplete questionComplete = questionCompleteRepository
+        QuestionStatus questionStatus =
+                questionStatusRepository
                 .findByQuestionAndStudent( question, student );
 
-        if ( questionComplete == null ) {
-            questionComplete = new QuestionComplete();
-            questionComplete.setQuestion( question );
-            questionComplete.setStudent( student );
+        if ( questionStatus == null ) {
+            questionStatus = new QuestionStatus();
+            questionStatus.setQuestion( question );
+            questionStatus.setStudent( student );
         }
 
-        questionComplete.setComplete( Boolean.FALSE );
-        questionCompleteRepository.save( questionComplete );
+        questionStatus.setFetched( Boolean.FALSE );
+        questionStatus.setComplete( Boolean.FALSE );
+        questionStatusRepository.save( questionStatus );
 
         AnswerTransfer[] answerTransfers = createAnswerTransfers( question );
         ExamQuestionTransfer questionTransfer = null;
@@ -164,30 +172,36 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         Long questionTime = question.getDuration() != null ? question.getDuration().toSeconds()
                 : null;
 
-        QuestionComplete questionComplete = questionCompleteRepository
+        QuestionStatus questionStatus =
+                questionStatusRepository
                 .findByQuestionAndStudent( question, student );
 
-        if ( questionComplete == null ) {
-            questionComplete = new QuestionComplete();
-            questionComplete.setQuestion( question );
-            questionComplete.setStudent( student );
+        if ( questionStatus == null ) {
+            questionStatus = new QuestionStatus();
+            questionStatus.setQuestion( question );
+            questionStatus.setStudent( student );
         }
 
-        questionComplete.setComplete( Boolean.FALSE );
-        questionCompleteRepository.save( questionComplete );
+        questionStatus.setFetched( Boolean.TRUE );
+        questionStatus.setComplete( Boolean.FALSE );
+        questionStatusRepository.save( questionStatus );
 
         AnswerTransfer[] answerTransfers = createAnswerTransfers( question );
         boolean comprehensionQuestion = question.getQuestions().size() > 0 ? true : false;
         ExamQuestionTransfer questionTransfer = null;
+
         if ( comprehensionQuestion ) {
             Question subQuestion = getNextComprehensionSubQuestion( question, student );
+
             if ( subQuestion == null ) {
-                questionComplete.setComplete( Boolean.TRUE );
-                questionCompleteRepository.save( questionComplete );
+                questionStatus.setFetched( Boolean.TRUE );
+                questionStatus.setComplete( Boolean.TRUE );
+                questionStatusRepository.save( questionStatus );
             }
             else
                 questionTransfer = createComprehensionSubQuestionTransfer( subQuestion, student );
         }
+
         ExamQuestionTransfer examQuestionTransfer = new ExamQuestionTransfer( question.getId(),
                 comprehensionQuestion, question.getQuestionText(), questionTime, questionTransfer,
                 question.getAnswerType().getName(), answerTransfers );
@@ -203,10 +217,12 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         for ( Question question : allQuestions ) {
             if ( question.getQuestion() == null ) {
-                QuestionComplete questionComplete = questionCompleteRepository
+
+                QuestionStatus questionStatus =
+                        questionStatusRepository
                         .findByQuestionAndStudent( question, student );
 
-                if ( questionComplete == null || !questionComplete.getComplete() )
+                if ( questionStatus == null || !questionStatus.getComplete() )
                     incompleteQuestions.add( question );
 
                 if ( incompleteQuestions.size() > 0 )
@@ -223,21 +239,24 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         ExamQuestionTransfer questionTransfer = null;
         boolean sectionIsComplete = false;
         Long sectionTime = section.getDuration() != null ? section.getDuration().toSeconds() : null;
-        SectionComplete sectionComplete = sectionCompleteRepository
+        SectionStatus sectionStatus =
+                sectionStatusRepository
                 .findBySectionAndStudent( section, student );
 
         if ( section != null ) {
             Question question = getNextQuestion( section, student );
             // if question null section is complete
             if ( question == null ) {
-                if ( sectionComplete == null ) {
-                    sectionComplete = new SectionComplete();
-                    sectionComplete.setSection( section );
-                    sectionComplete.setStudent( student );
+                if ( sectionStatus == null ) {
+                    sectionStatus = new SectionStatus();
+                    sectionStatus.setSection( section );
+                    sectionStatus.setStudent( student );
+                    sectionStatus.setStarted( Boolean.TRUE );
+                    sectionStatus.setPaused( Boolean.TRUE );
                 }
 
-                sectionComplete.setComplete( Boolean.TRUE );
-                sectionCompleteRepository.save( sectionComplete );
+                sectionStatus.setComplete( Boolean.TRUE );
+                sectionStatusRepository.save( sectionStatus );
                 sectionIsComplete = true;
             }
             else {
@@ -248,21 +267,25 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 if ( questionTransfer.isComprehensionQuestion() && questionTransfer
                         .getQuestionTransfer() == null ) {
 
-                    QuestionComplete questionComplete = questionCompleteRepository
+                    QuestionStatus questionStatus =
+                            questionStatusRepository
                             .findByQuestionAndStudent( question, student );
 
-                    questionComplete.setComplete( Boolean.TRUE );
-                    questionCompleteRepository.save( questionComplete );
+                    questionStatus.setComplete( Boolean.TRUE );
+                    questionStatusRepository.save( questionStatus );
                     question = getNextQuestion( section, student );
+
                     if ( question == null ) {
-                        if ( sectionComplete == null ) {
-                            sectionComplete = new SectionComplete();
-                            sectionComplete.setSection( section );
-                            sectionComplete.setStudent( student );
+                        if ( sectionStatus == null ) {
+                            sectionStatus = new SectionStatus();
+                            sectionStatus.setSection( section );
+                            sectionStatus.setStudent( student );
+                            sectionStatus.setStarted( Boolean.TRUE );
+                            sectionStatus.setPaused( Boolean.TRUE );
                         }
 
-                        sectionComplete.setComplete( Boolean.TRUE );
-                        sectionCompleteRepository.save( sectionComplete );
+                        sectionStatus.setComplete( Boolean.TRUE );
+                        sectionStatusRepository.save( sectionStatus );
                         sectionIsComplete = true;
                     }
                     else
@@ -283,11 +306,14 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         Set<Section> allSections = examToken.getInvite().getExam().getSections();
         Set<Section> incompleteSections = new HashSet<>();
+
         for ( Section section : allSections ) {
-            SectionComplete sectionComplete = sectionCompleteRepository
+
+            SectionStatus sectionStatus =
+                    sectionStatusRepository
                     .findBySectionAndStudent( section, student );
 
-            if ( sectionComplete == null || !sectionComplete.getComplete() )
+            if ( sectionStatus == null || !sectionStatus.getComplete() )
                 incompleteSections.add( section );
         }
 
@@ -330,19 +356,16 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         ExaminprogressResponse response = null;
         ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
-        Boolean examHasExpired = examExpiredHelper.examHasExpired( examToken.getInvite() );
+        Student student = examToken.getStudent();
 
         if ( examToken == null )
             return response;
-        else if ( examToken.getStartedExamAt() == null ) {
-            examToken.setStartedExamAt( Calendar.getInstance() );
-            examTokenRepository.save( examToken );
-        }
 
         Exam exam = examToken.getInvite().getExam();
         if ( exam == null )
             return response;
 
+        ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
         Boolean examComplete = false;
         Boolean timedPerExam = false;
         Boolean timedPerSection = false;
@@ -364,18 +387,27 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         if ( !user.getEmail().equals( examToken.getEmail() ) )
             return response;
 
-        if ( examToken.getExamComplete() )
+        if ( examStatus != null && examStatus.getComplete() ) {
+
             return new ExaminprogressResponse( null, true, timedPerExam, timedPerSection,
                     timedPerQuestion, examTime, pausable, false );
-
+        }
         else {
-            Student student = examToken.getStudent();
+
+            if ( examStatus == null ) {
+                examStatus = new ExamStatus();
+                examStatus.setComplete( Boolean.FALSE );
+                examStatus.setStarted( Boolean.TRUE );
+                examStatus.setPaused( Boolean.FALSE );
+                examStatusRepository.save( examStatus );
+            }
+
             Section section = getNextSection( examToken, student );
 
             if ( section == null ) {
                 examComplete = true;
-                examToken.setExamComplete( Boolean.TRUE );
-                examTokenRepository.save( examToken );
+                examStatus.setComplete( Boolean.TRUE );
+                examStatusRepository.save( examStatus );
 
                 return new ExaminprogressResponse( null, examComplete, timedPerExam,
                         timedPerSection, timedPerQuestion, examTime, pausable, false );
@@ -388,8 +420,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
                     if ( section == null ) {
                         examComplete = true;
-                        examToken.setExamComplete( Boolean.TRUE );
-                        examTokenRepository.save( examToken );
+                        examStatus.setComplete( Boolean.TRUE );
+                        examStatusRepository.save( examStatus );
 
                         return new ExaminprogressResponse( null, examComplete, timedPerExam,
                                 timedPerSection, timedPerQuestion, examTime, pausable, false );
@@ -413,8 +445,10 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         Question question = questionRepository.findById( request.getQuestionId() ).get();
         Section section = question.getSection();
         Exam exam = section.getExam();
+        ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
 
-        QuestionComplete questionComplete = questionCompleteRepository.findByQuestionAndStudent(
+        QuestionStatus questionStatus = questionStatusRepository
+                .findByQuestionAndStudent(
                 question, student );
 
         ExamTimedPer examTimedPer = getExamTimedPer( exam );
@@ -422,32 +456,32 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         if ( examTimedPer.timedPerExam ) {
 
-            ExamToken examToken = examTokenRepository.findById( request.getExamTokenId() ).get();
-            Calendar startTime = examToken.getStartedExamAt();
+            Calendar startTime = examStatus.getCreatedAt();
             Integer maxTimeSeconds = ( int )exam.getDuration().getSeconds();
             hasExpired = timeHelper.hasExpired( startTime, maxTimeSeconds );
 
             if ( hasExpired ) {
-                examToken.setExamComplete( Boolean.TRUE );
-                examTokenRepository.save( examToken );
+                examStatus.setComplete( Boolean.TRUE );
+                examStatusRepository.save( examStatus );
             }
         }
         else if ( examTimedPer.timedPerSection ) {
 
-            SectionComplete sectionComplete = sectionCompleteRepository.findBySectionAndStudent(
+            SectionStatus sectionStatus = sectionStatusRepository
+                    .findBySectionAndStudent(
                     section, student );
 
-            Calendar startTime = sectionComplete.getCreatedAt();
+            Calendar startTime = sectionStatus.getCreatedAt();
             Integer maxTimeSeconds = ( int )section.getDuration().getSeconds();
             hasExpired = timeHelper.hasExpired( startTime, maxTimeSeconds );
 
             if ( hasExpired ) {
-                sectionComplete.setComplete( Boolean.TRUE );
-                sectionCompleteRepository.save( sectionComplete );
+                sectionStatus.setComplete( Boolean.TRUE );
+                sectionStatusRepository.save( sectionStatus );
             }
         }
         else {
-            Calendar startTime = questionComplete.getCreatedAt();
+            Calendar startTime = questionStatus.getCreatedAt();
             Integer maxTimeSeconds = ( int )question.getDuration().getSeconds();
             hasExpired = timeHelper.hasExpired( startTime, maxTimeSeconds );
         }
@@ -468,8 +502,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             }
         }
 
-        questionComplete.setComplete( Boolean.TRUE );
-        questionCompleteRepository.save( questionComplete );
+        questionStatus.setComplete( Boolean.TRUE );
+        questionStatusRepository.save( questionStatus );
         ExaminprogressResponse response;
 
         if ( request.getPause() ) {
@@ -500,11 +534,12 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         Question question = questionRepository.findById( request.getQuestionId() ).get();
 
-        QuestionComplete questionComplete = questionCompleteRepository.findByQuestionAndStudent(
+        QuestionStatus questionStatus = questionStatusRepository
+                .findByQuestionAndStudent(
                 question, student );
 
-        questionComplete.setComplete( Boolean.TRUE );
-        questionCompleteRepository.save( questionComplete );
+        questionStatus.setComplete( Boolean.TRUE );
+        questionStatusRepository.save( questionStatus );
         ExaminprogressResponse response;
 
         if ( request.getPause() ) {
