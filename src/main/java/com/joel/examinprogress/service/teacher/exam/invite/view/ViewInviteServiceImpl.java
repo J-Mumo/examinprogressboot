@@ -29,9 +29,11 @@ import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
+import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.helper.link.LinkHelper;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
 import com.joel.examinprogress.repository.exam.InviteRepository;
+import com.joel.examinprogress.repository.student.StudentRepository;
 import com.joel.examinprogress.service.shared.DeleteResponse;
 
 /**
@@ -46,6 +48,9 @@ public class ViewInviteServiceImpl implements ViewInviteService {
 
     @Autowired
     private ExamTokenRepository examTokenRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
 
     @Autowired
     private ExamTokenTransferComparator examTokenTransferComparator;
@@ -103,6 +108,9 @@ public class ViewInviteServiceImpl implements ViewInviteService {
     public DeleteResponse unsendInvite( Long examTokenId ) {
 
         ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
+        Student student = examToken.getStudent();
+        student.setExamToken( null );
+        studentRepository.save( student );
         examTokenRepository.delete( examToken );
 
         return new DeleteResponse( true, null );

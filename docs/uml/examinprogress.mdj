@@ -3876,12 +3876,12 @@
 										"$ref": "AAAAAAFymCA9KOEZ+WY="
 									},
 									"font": "Arial;13;0",
-									"left": 612,
-									"top": 355,
+									"left": 624,
+									"top": 360,
 									"width": 113.80712890625,
 									"height": 13,
-									"alpha": 1.5707963267948966,
-									"distance": 15,
+									"alpha": 0.6405057029072859,
+									"distance": 12.806248474865697,
 									"hostEdge": {
 										"$ref": "AAAAAAFymCA9KOEd5cg="
 									},

@@ -117,7 +117,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     private Question getNextComprehensionSubQuestion( Question question, Student student ) {
 
         Set<Question> allQuestions = question.getQuestions();
-        Set<Question> incompleteQuestions = new HashSet<>();
+        Set<Question> notFetchedQuestions = new HashSet<>();
 
         for ( Question subQuestion : allQuestions ) {
 
@@ -125,11 +125,11 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                     questionStatusRepository
                     .findByQuestionAndStudent( subQuestion, student );
 
-            if ( questionStatus == null || !questionStatus.getComplete() )
-                incompleteQuestions.add( subQuestion );
+            if ( questionStatus == null || !questionStatus.getFetched() )
+                notFetchedQuestions.add( subQuestion );
 
-            if ( incompleteQuestions.size() > 0 )
-                return incompleteQuestions.iterator().next();
+            if ( notFetchedQuestions.size() > 0 )
+                return notFetchedQuestions.iterator().next();
 
         }
         return null;
@@ -152,7 +152,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             questionStatus.setStudent( student );
         }
 
-        questionStatus.setFetched( Boolean.FALSE );
+        questionStatus.setFetched( Boolean.TRUE );
         questionStatus.setComplete( Boolean.FALSE );
         questionStatusRepository.save( questionStatus );
 
@@ -182,15 +182,13 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             questionStatus.setStudent( student );
         }
 
-        questionStatus.setFetched( Boolean.TRUE );
-        questionStatus.setComplete( Boolean.FALSE );
-        questionStatusRepository.save( questionStatus );
-
         AnswerTransfer[] answerTransfers = createAnswerTransfers( question );
         boolean comprehensionQuestion = question.getQuestions().size() > 0 ? true : false;
         ExamQuestionTransfer questionTransfer = null;
 
         if ( comprehensionQuestion ) {
+
+            questionStatus.setFetched( Boolean.FALSE );
             Question subQuestion = getNextComprehensionSubQuestion( question, student );
 
             if ( subQuestion == null ) {
@@ -201,6 +199,12 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             else
                 questionTransfer = createComprehensionSubQuestionTransfer( subQuestion, student );
         }
+        else {
+            questionStatus.setFetched( Boolean.TRUE );
+        }
+
+        questionStatus.setComplete( Boolean.FALSE );
+        questionStatusRepository.save( questionStatus );
 
         ExamQuestionTransfer examQuestionTransfer = new ExamQuestionTransfer( question.getId(),
                 comprehensionQuestion, question.getQuestionText(), questionTime, questionTransfer,
@@ -213,7 +217,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     private Question getNextQuestion( Section section, Student student ) {
 
         Set<Question> allQuestions = section.getQuestions();
-        Set<Question> incompleteQuestions = new HashSet<>();
+        Set<Question> notFetchedQuestions = new HashSet<>();
 
         for ( Question question : allQuestions ) {
             if ( question.getQuestion() == null ) {
@@ -222,11 +226,11 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                         questionStatusRepository
                         .findByQuestionAndStudent( question, student );
 
-                if ( questionStatus == null || !questionStatus.getComplete() )
-                    incompleteQuestions.add( question );
+                if ( questionStatus == null || !questionStatus.getFetched() )
+                    notFetchedQuestions.add( question );
 
-                if ( incompleteQuestions.size() > 0 )
-                    return incompleteQuestions.iterator().next();
+                if ( notFetchedQuestions.size() > 0 )
+                    return notFetchedQuestions.iterator().next();
 
             }
         }
@@ -252,7 +256,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                     sectionStatus.setSection( section );
                     sectionStatus.setStudent( student );
                     sectionStatus.setStarted( Boolean.TRUE );
-                    sectionStatus.setPaused( Boolean.TRUE );
+                    sectionStatus.setPaused( Boolean.FALSE );
                 }
 
                 sectionStatus.setComplete( Boolean.TRUE );
@@ -281,7 +285,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                             sectionStatus.setSection( section );
                             sectionStatus.setStudent( student );
                             sectionStatus.setStarted( Boolean.TRUE );
-                            sectionStatus.setPaused( Boolean.TRUE );
+                            sectionStatus.setPaused( Boolean.FALSE );
                         }
 
                         sectionStatus.setComplete( Boolean.TRUE );
@@ -399,6 +403,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 examStatus.setComplete( Boolean.FALSE );
                 examStatus.setStarted( Boolean.TRUE );
                 examStatus.setPaused( Boolean.FALSE );
+                examStatus.setExam( exam );
+                examStatus.setStudent( student );
                 examStatusRepository.save( examStatus );
             }
 

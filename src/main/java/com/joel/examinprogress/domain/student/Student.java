@@ -47,7 +47,7 @@ public class Student extends AbstractPersistentEntity {
 
     @OneToOne( )
     @JoinColumn( name = "fk_exam_token", foreignKey = @ForeignKey(
-            name = "student_fk_exam_token" ), nullable = false )
+            name = "student_fk_exam_token" ), nullable = true )
     private ExamToken examToken;
 
     public User getUser() {
