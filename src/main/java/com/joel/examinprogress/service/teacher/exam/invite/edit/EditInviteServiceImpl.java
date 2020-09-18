@@ -22,6 +22,8 @@ import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.repository.exam.InviteRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
@@ -42,10 +44,22 @@ public class EditInviteServiceImpl implements EditInviteService {
         Invite invite = inviteRepository.findById( inviteId ).get();
         LocalTime startTime = invite.getExamStartTime();
         String inviteStartTime = startTime != null ? startTime.toString() : null;
+        Exam exam = invite.getExam();
+        Long examTimerTypeId = exam.getExamTimerType().getId();
+        Boolean timedPerExam = Boolean.FALSE;
+        Boolean timedPerSection = Boolean.FALSE;
+        Boolean timedPerQuestion = Boolean.FALSE;
+
+        if ( examTimerTypeId == ExamTimerTypeEnum.TIMED_PER_EXAM.getExamTimerTypeId() )
+            timedPerExam = Boolean.TRUE;
+        else if ( examTimerTypeId == ExamTimerTypeEnum.TIMED_PER_SECTION.getExamTimerTypeId() )
+            timedPerSection = Boolean.TRUE;
+        else
+            timedPerQuestion = Boolean.TRUE;
 
         EditInviteInitialData initialData = new EditInviteInitialData( invite.getName(),
                 invite.getExamStartDate(), invite.getExamEndDate(), invite.getPausable(),
-                inviteStartTime );
+                inviteStartTime, timedPerExam, timedPerSection, timedPerQuestion );
 
         return initialData;
     }
@@ -55,8 +69,7 @@ public class EditInviteServiceImpl implements EditInviteService {
     public SaveResponse save( EditInviteRequest request ) {
 
         String startTime[] = request.getExamStartTime() != null ? request.getExamStartTime().split(
-                ":" )
-                : null;
+                ":" ) : null;
 
         String hour = startTime != null ? startTime[0] : "";
         String minute = startTime != null ? startTime[1] : "";
@@ -68,6 +81,13 @@ public class EditInviteServiceImpl implements EditInviteService {
         }
 
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
+        Long examTimerTypeId = invite.getExam().getExamTimerType().getId();
+
+        if ( examTimerTypeId == ExamTimerTypeEnum.TIMED_PER_QUESTION.getExamTimerTypeId() ) {
+
+            request.setPausable( true );
+        }
+
         invite.setName( request.getName() );
         invite.setExamStartDate( request.getExamStartDate() );
         invite.setExamEndDate( request.getExamEndDate() );

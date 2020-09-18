@@ -22,6 +22,7 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.student.QuestionStatus;
 import com.joel.examinprogress.domain.student.Student;
@@ -37,4 +38,7 @@ public interface QuestionStatusRepository extends JpaRepository<QuestionStatus, 
 
 
     Set<QuestionStatus> findByQuestion( Question question );
+
+
+    Set<QuestionStatus> findByStudentAndQuestionSectionExam( Student student, Exam exam );
 }

@@ -17,9 +17,12 @@
 */
 package com.joel.examinprogress.domain.student;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -45,10 +48,8 @@ public class Student extends AbstractPersistentEntity {
             name = "student_fk_user" ), nullable = false )
     private User user;
 
-    @OneToOne( )
-    @JoinColumn( name = "fk_exam_token", foreignKey = @ForeignKey(
-            name = "student_fk_exam_token" ), nullable = true )
-    private ExamToken examToken;
+    @OneToMany( mappedBy = "student" )
+    private Set<ExamToken> examTokens;
 
     public User getUser() {
 
@@ -62,14 +63,14 @@ public class Student extends AbstractPersistentEntity {
     }
 
 
-    public ExamToken getExamToken() {
+    public Set<ExamToken> getExamTokens() {
 
-        return examToken;
+        return examTokens;
     }
 
 
-    public void setExamToken( ExamToken examToken ) {
+    public void setExamTokens( Set<ExamToken> examTokens ) {
 
-        this.examToken = examToken;
+        this.examTokens = examTokens;
     }
 }

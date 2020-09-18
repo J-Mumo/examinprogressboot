@@ -183,8 +183,8 @@ public class EditQuestionServiceImpl implements EditQuestionService {
 
         Question question = questionRepository.findById( request.getQuestionId() ).get();
         Exam exam = question.getSection().getExam();
-        Long currentQuestionMinutes = question.getDuration() != null ? question.getDuration()
-                .toMinutes() : 0;
+        Long currentQuestionSeconds = question.getDuration() != null ? question.getDuration()
+                .toSeconds() : 0;
 
         question.setQuestionText( request.getQuestionText() );
         question.setScore( request.getScore() );
@@ -197,14 +197,14 @@ public class EditQuestionServiceImpl implements EditQuestionService {
                     .getMultipleChoiceQuestionAnswerRequests() );
         }
 
-        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
-                .getExamTimerTypeId() && questionDuration != null ) {
+        if ( exam.getExamTimerType()
+                .getId() == ExamTimerTypeEnum.TIMED_PER_QUESTION.getExamTimerTypeId()
+                && questionDuration != null ) {
 
-            Long examTime = exam.getTotalExamTime().toMinutes() - currentQuestionMinutes
-                    + questionDuration
-                            .toMinutes();
+            Long examTime = exam.getTotalExamTime().toSeconds() - currentQuestionSeconds
+                    + questionDuration.toSeconds();
 
-            exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
+            exam.setTotalExamTime( Duration.parse( "PT" + examTime + "S" ) );
             examRepository.save( exam );
         }
 

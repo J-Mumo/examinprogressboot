@@ -17,8 +17,8 @@
 */
 package com.joel.examinprogress.service.student.exam.detail;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 /**
  * @author Joel Mumo
@@ -33,8 +33,8 @@ public class ExamDetailInitialData {
     private Long examTokenId;
     private String examName;
     private String examDescription;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private LocalTime startTime;
     private Long examTotalTime;
     private boolean pausable;
@@ -51,8 +51,8 @@ public class ExamDetailInitialData {
             Long examTokenId,
             String examName,
             String examDescription,
-            Date startDate,
-            Date endDate,
+            LocalDate startDate,
+            LocalDate endDate,
             LocalTime startTime,
             Long examTotalTime,
             boolean pausable,
@@ -165,25 +165,25 @@ public class ExamDetailInitialData {
     }
 
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
 
         return startDate;
     }
 
 
-    public void setStartDate( Date startDate ) {
+    public void setStartDate( LocalDate startDate ) {
 
         this.startDate = startDate;
     }
 
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
 
         return endDate;
     }
 
 
-    public void setEndDate( Date endDate ) {
+    public void setEndDate( LocalDate endDate ) {
 
         this.endDate = endDate;
     }

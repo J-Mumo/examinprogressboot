@@ -17,9 +17,12 @@
 */
 package com.joel.examinprogress.repository.student;
 
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.student.SectionStatus;
 import com.joel.examinprogress.domain.student.Student;
@@ -32,4 +35,8 @@ import com.joel.examinprogress.domain.student.Student;
 public interface SectionStatusRepository extends JpaRepository<SectionStatus, Long> {
 
     SectionStatus findBySectionAndStudent( Section section, Student student );
+
+
+    Set<SectionStatus> findByStudentAndSectionExam( Student student, Exam exam );
+
 }

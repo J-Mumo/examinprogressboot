@@ -17,6 +17,8 @@
 */
 package com.joel.examinprogress.service.student.exam.examinprogress;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +34,7 @@ import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.ExamTimerType;
 import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.ExamToken;
+import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
@@ -40,11 +43,11 @@ import com.joel.examinprogress.domain.student.QuestionStatus;
 import com.joel.examinprogress.domain.student.SectionStatus;
 import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.user.User;
-import com.joel.examinprogress.helper.exam.expired.ExamExpiredHelper;
 import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
 import com.joel.examinprogress.helper.time.TimeHelper;
 import com.joel.examinprogress.repository.exam.ExamTimerTypeRepository;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
+import com.joel.examinprogress.repository.exam.section.SectionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
 import com.joel.examinprogress.repository.student.ExamStatusRepository;
@@ -71,6 +74,9 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     private QuestionRepository questionRepository;
 
     @Autowired
+    private SectionRepository sectionRepository;
+
+    @Autowired
     private ExamStatusRepository examStatusRepository;
 
     @Autowired
@@ -87,9 +93,6 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
     @Autowired
     private TimeHelper timeHelper;
-
-    @Autowired
-    private ExamExpiredHelper examExpiredHelper;
 
     private AnswerTransfer createAnswerTransfer( Answer answer ) {
 
@@ -238,26 +241,44 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     }
 
 
-    private ExamSectionTransfer createSectionTransfer( Section section, Student student ) {
+    private ExamSectionTransfer createSectionTransfer( Section section, Student student,
+            Invite invite ) {
 
         ExamQuestionTransfer questionTransfer = null;
         boolean sectionIsComplete = false;
-        Long sectionTime = section.getDuration() != null ? section.getDuration().toSeconds() : null;
+        Long sectionTime = null;
+        Integer maxTimeSeconds = ( int )section.getDuration().toSeconds();
+
         SectionStatus sectionStatus =
                 sectionStatusRepository
                 .findBySectionAndStudent( section, student );
+
+        if ( sectionStatus == null ) {
+            sectionStatus = new SectionStatus();
+            sectionStatus.setSection( section );
+            sectionStatus.setStudent( student );
+            sectionStatus.setTimeSpent( 0l );
+            sectionStatus.setComplete( Boolean.FALSE );
+            sectionStatusRepository.save( sectionStatus );
+        }
+
+        if ( invite.getPausable() ) {
+
+            Long sectionTimeSpent = sectionStatus.getTimeSpent();
+            sectionTime = maxTimeSeconds - sectionTimeSpent;
+        }
+        else {
+
+            Calendar startTime = sectionStatus.getCreatedAt() == null ? Calendar.getInstance()
+                    : sectionStatus.getCreatedAt();
+
+            sectionTime = timeHelper.getRemainingTimeInSeconds( startTime, maxTimeSeconds );
+        }
 
         if ( section != null ) {
             Question question = getNextQuestion( section, student );
             // if question null section is complete
             if ( question == null ) {
-                if ( sectionStatus == null ) {
-                    sectionStatus = new SectionStatus();
-                    sectionStatus.setSection( section );
-                    sectionStatus.setStudent( student );
-                    sectionStatus.setStarted( Boolean.TRUE );
-                    sectionStatus.setPaused( Boolean.FALSE );
-                }
 
                 sectionStatus.setComplete( Boolean.TRUE );
                 sectionStatusRepository.save( sectionStatus );
@@ -280,13 +301,6 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                     question = getNextQuestion( section, student );
 
                     if ( question == null ) {
-                        if ( sectionStatus == null ) {
-                            sectionStatus = new SectionStatus();
-                            sectionStatus.setSection( section );
-                            sectionStatus.setStudent( student );
-                            sectionStatus.setStarted( Boolean.TRUE );
-                            sectionStatus.setPaused( Boolean.FALSE );
-                        }
 
                         sectionStatus.setComplete( Boolean.TRUE );
                         sectionStatusRepository.save( sectionStatus );
@@ -354,37 +368,259 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     }
 
 
+    private ExaminprogressResponse fetchNextSectionAndQuestion( ExamToken examToken,
+            ExamTimedPer examTimedPer ) {
+
+        boolean examTokenNotFound = false;
+        boolean examNotFound = false;
+        boolean examHasStarted = true;
+        boolean examComplete = false;
+        boolean examExpired = false;
+        boolean timedPerExam = false;
+        boolean timedPerSection = false;
+        boolean timedPerQuestion = false;
+        boolean pausable = false;
+        boolean paused = false;
+        Long examTime = null;
+        LocalDate examStartDate = null;
+        LocalTime examStartTime = null;
+        ExamSectionTransfer examSectionTransfer = null;
+        Exam exam = examToken.getInvite().getExam();
+        Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
+        ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
+        Invite invite = examToken.getInvite();
+        examStartDate = invite.getExamStartDate();
+        examStartTime = invite.getExamStartTime();
+        pausable = invite.getPausable();
+
+        if ( examTimedPer.timedPerExam ) {
+
+            timedPerExam = Boolean.TRUE;
+            Integer maxTimeSeconds = ( int )exam.getDuration().toSeconds();
+
+            if ( !invite.getPausable() ) {
+                Calendar startTime = Calendar.getInstance();
+
+                startTime.set( examStartDate.getYear(), examStartDate.getMonthValue() - 1,
+                        examStartDate.getDayOfMonth(), examStartTime.getHour(),
+                        examStartTime.getMinute(), examStartTime.getSecond() );
+
+                examTime = timeHelper.getRemainingTimeInSeconds( startTime, maxTimeSeconds );
+            }
+            else {
+
+                Long examTimeSpent = examStatus.getTimeSpent();
+                examTime = maxTimeSeconds - examTimeSpent;
+            }
+        }
+        else if ( examTimedPer.timedPerSection ) {
+            timedPerSection = Boolean.TRUE;
+        }
+        else if ( examTimedPer.timedPerQuestion )
+            timedPerQuestion = Boolean.TRUE;
+
+        Section section = getNextSection( examToken, student );
+
+        if ( section == null ) {
+            examComplete = true;
+            examStatus.setComplete( Boolean.TRUE );
+            examStatusRepository.save( examStatus );
+
+            return new ExaminprogressResponse(
+                    examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                    timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                    examStartDate, examStartTime, examSectionTransfer );
+        }
+        else {
+
+            examSectionTransfer = createSectionTransfer( section, student, invite );
+
+            if ( examSectionTransfer.isSectionComplete() ) {
+                section = getNextSection( examToken, student );
+
+                if ( section == null ) {
+                    examComplete = true;
+                    examStatus.setComplete( Boolean.TRUE );
+                    examStatusRepository.save( examStatus );
+
+                    return new ExaminprogressResponse(
+                            examTokenNotFound, examNotFound, examHasStarted, examComplete,
+                            examExpired,
+                            timedPerExam, timedPerSection, timedPerQuestion, pausable, paused,
+                            examTime,
+                            examStartDate, examStartTime, examSectionTransfer );
+                }
+                else {
+                    examSectionTransfer = createSectionTransfer( section, student, invite );
+                }
+            }
+
+            return new ExaminprogressResponse(
+                    examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                    timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                    examStartDate, examStartTime, examSectionTransfer );
+        }
+    }
+
+
+    private boolean checkIfExamHasExpired( ExamToken examToken,
+            ExamStatus examStatus,
+            ExamTimedPer examTimedPer ) {
+
+        boolean expired = false;
+        Invite invite = examToken.getInvite();
+        Exam exam = invite.getExam();
+        Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
+        Integer maxTimeSeconds = ( int )exam.getTotalExamTime().getSeconds();
+
+        if ( invite.getExamStartTime() != null ) {
+
+            LocalDate startDate = invite.getExamStartDate();
+            Calendar startTime = Calendar.getInstance();
+            LocalTime examStartTime = invite.getExamStartTime();
+
+            startTime.set( startDate.getYear(), startDate.getMonthValue() - 1,
+                    startDate.getDayOfMonth(), examStartTime.getHour(),
+                    examStartTime.getMinute(), examStartTime.getSecond() );
+
+            expired = timeHelper.hasExpired( startTime, maxTimeSeconds );
+        }
+        else {
+
+            if ( examTimedPer.timedPerExam ) {
+
+                Calendar startTime = examStatus.getCreatedAt();
+                expired = timeHelper.hasExpired( startTime, maxTimeSeconds );
+            }
+            else if ( examTimedPer.timedPerSection ) {
+
+                Calendar startTime = Calendar.getInstance();
+                Set<SectionStatus> sectionStatuses = sectionStatusRepository
+                        .findByStudentAndSectionExam( student, exam );
+
+                for ( SectionStatus sectionStatus : sectionStatuses ) {
+
+                    if ( sectionStatus.getCreatedAt().compareTo( startTime ) < 0 ) {
+
+                        startTime = sectionStatus.getCreatedAt();
+                    }
+                }
+
+                expired = timeHelper.hasExpired( startTime, maxTimeSeconds );
+            }
+            else {
+
+                Calendar startTime = Calendar.getInstance();
+                Set<QuestionStatus> questionStatuses = questionStatusRepository
+                        .findByStudentAndQuestionSectionExam( student, exam );
+
+                for ( QuestionStatus questionStatus : questionStatuses ) {
+
+                    if ( questionStatus.getCreatedAt().compareTo( startTime ) < 0 ) {
+
+                        startTime = questionStatus.getCreatedAt();
+                    }
+                }
+
+                expired = timeHelper.hasExpired( startTime, maxTimeSeconds );
+            }
+        }
+
+        return expired;
+    }
+
+
+    private boolean checkIfPausableExamExpired( Invite invite ) {
+
+        LocalDate endDate = invite.getExamEndDate();
+        LocalDate today = LocalDate.now();
+
+        if ( today.isAfter( endDate ) ) {
+            return true;
+        }
+        return false;
+    }
+
+
     @Transactional
     @Override
     public ExaminprogressResponse getExamProgress( Long examTokenId ) {
 
-        ExaminprogressResponse response = null;
+        boolean examTokenNotFound = false;
+        boolean examNotFound = false;
+        boolean examHasStarted = true;
+        boolean examComplete = false;
+        boolean examExpired = false;
+        boolean timedPerExam = false;
+        boolean timedPerSection = false;
+        boolean timedPerQuestion = false;
+        boolean pausable = false;
+        boolean paused = false;
+        Long examTime = null;
+        LocalDate examStartDate = null;
+        LocalTime examStartTime = null;
+        ExamSectionTransfer examSectionTransfer = null;
+
+        ExaminprogressResponse response = new ExaminprogressResponse(
+                examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                examStartDate, examStartTime, examSectionTransfer );
+
         ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
-        Student student = examToken.getStudent();
 
-        if ( examToken == null )
+        if ( examToken == null ) {
+            examTokenNotFound = true;
             return response;
+        }
 
-        Exam exam = examToken.getInvite().getExam();
-        if ( exam == null )
+        Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
+        Invite invite = examToken.getInvite();
+        Exam exam = invite.getExam();
+
+        if ( exam == null ) {
+            examNotFound = true;
             return response;
+        }
+
+        examStartDate = invite.getExamStartDate();
+        examStartTime = invite.getExamStartTime();
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        if ( examStartTime != null && examStartTime.isAfter( now ) &&
+                ( examStartDate.isEqual( today ) || examStartDate.isAfter( today ) ) ) {
+
+            examHasStarted = false;
+
+            return new ExaminprogressResponse(
+                    examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                    timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                    examStartDate, examStartTime, examSectionTransfer );
+        }
+        else if ( examStartTime == null && examStartDate.isAfter( today ) ) {
+
+            examHasStarted = false;
+
+            return new ExaminprogressResponse(
+                    examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                    timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                    examStartDate, examStartTime, examSectionTransfer );
+        }
 
         ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
-        Boolean examComplete = false;
-        Boolean timedPerExam = false;
-        Boolean timedPerSection = false;
-        Boolean timedPerQuestion = false;
-        Boolean pausable = examToken.getInvite().getPausable();
+        pausable = examToken.getInvite().getPausable();
+        examTime = exam.getDuration() != null ? exam.getDuration().toSeconds() : null;
         ExamTimedPer examTimedPer = getExamTimedPer( exam );
 
-        if ( examTimedPer.timedPerExam )
-            timedPerExam = Boolean.TRUE;
-        else if ( examTimedPer.timedPerSection )
-            timedPerSection = Boolean.TRUE;
-        else if ( examTimedPer.timedPerQuestion )
-            timedPerQuestion = Boolean.TRUE;
-
-        Long examTime = exam.getDuration() != null ? exam.getDuration().toSeconds() : null;
+        if ( examTimedPer.timedPerExam ) {
+            timedPerExam = true;
+        }
+        else if ( examTimedPer.timedPerQuestion ) {
+            timedPerQuestion = true;
+        }
+        else {
+            timedPerSection = true;
+        }
 
         // Check if the token belongs to the logged in user
         User user = loggedInCredentialsHelper.getLoggedInUser();
@@ -393,8 +629,12 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         if ( examStatus != null && examStatus.getComplete() ) {
 
-            return new ExaminprogressResponse( null, true, timedPerExam, timedPerSection,
-                    timedPerQuestion, examTime, pausable, false );
+            examComplete = true;
+
+            return new ExaminprogressResponse(
+                    examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                    timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                    examStartDate, examStartTime, examSectionTransfer );
         }
         else {
 
@@ -403,59 +643,118 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 examStatus.setComplete( Boolean.FALSE );
                 examStatus.setStarted( Boolean.TRUE );
                 examStatus.setPaused( Boolean.FALSE );
+                examStatus.setTimeSpent( 0l );
                 examStatus.setExam( exam );
                 examStatus.setStudent( student );
                 examStatusRepository.save( examStatus );
             }
 
-            Section section = getNextSection( examToken, student );
+            /**
+             * Check if exam was paused previously
+             */
+            if ( examStatus.getPaused() ) {
 
-            if ( section == null ) {
-                examComplete = true;
-                examStatus.setComplete( Boolean.TRUE );
-                examStatusRepository.save( examStatus );
+                boolean expired = checkIfPausableExamExpired( invite );
 
-                return new ExaminprogressResponse( null, examComplete, timedPerExam,
-                        timedPerSection, timedPerQuestion, examTime, pausable, false );
+                if ( expired ) {
+
+                    examExpired = true;
+                    examStatus.setComplete( Boolean.TRUE );
+                    examStatusRepository.save( examStatus );
+
+                    return new ExaminprogressResponse( examTokenNotFound, examNotFound,
+                            examHasStarted, examComplete, examExpired,
+                            timedPerExam, timedPerSection, timedPerQuestion, pausable, paused,
+                            examTime,
+                            examStartDate, examStartTime, examSectionTransfer );
+                }
+                else {
+
+                    examStatus.setResumedAt( Calendar.getInstance() );
+                    examStatusRepository.save( examStatus );
+                    response = fetchNextSectionAndQuestion( examToken, examTimedPer );
+                    return response;
+                }
             }
             else {
-                ExamSectionTransfer sectionTransfer = createSectionTransfer( section, student );
 
-                if ( sectionTransfer.isSectionComplete() ) {
-                    section = getNextSection( examToken, student );
+                if ( !invite.getPausable() ) {
+                    boolean expired = checkIfExamHasExpired( examToken, examStatus, examTimedPer );
 
-                    if ( section == null ) {
-                        examComplete = true;
+                    if ( expired ) {
+
+                        examExpired = true;
                         examStatus.setComplete( Boolean.TRUE );
                         examStatusRepository.save( examStatus );
 
-                        return new ExaminprogressResponse( null, examComplete, timedPerExam,
-                                timedPerSection, timedPerQuestion, examTime, pausable, false );
+                        return new ExaminprogressResponse( examTokenNotFound, examNotFound,
+                                examHasStarted, examComplete, examExpired,
+                                timedPerExam, timedPerSection, timedPerQuestion, pausable, paused,
+                                examTime, examStartDate, examStartTime, examSectionTransfer );
                     }
                     else {
-                        sectionTransfer = createSectionTransfer( section, student );
+
+                        response = fetchNextSectionAndQuestion( examToken, examTimedPer );
+                        return response;
                     }
                 }
-                return new ExaminprogressResponse( sectionTransfer, examComplete, timedPerExam,
-                        timedPerSection, timedPerQuestion, examTime, pausable, false );
+                else {
+
+                    boolean expired = checkIfPausableExamExpired( invite );
+
+                    if ( expired ) {
+
+                        examExpired = true;
+                        examStatus.setComplete( Boolean.TRUE );
+                        examStatusRepository.save( examStatus );
+
+                        return new ExaminprogressResponse( examTokenNotFound, examNotFound,
+                                examHasStarted, examComplete, examExpired, timedPerExam,
+                                timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                                examStartDate, examStartTime, examSectionTransfer );
+                    }
+                    else {
+
+                        response = fetchNextSectionAndQuestion( examToken, examTimedPer );
+                        return response;
+                    }
+                }
+
             }
         }
     }
+
 
 
     @Transactional
     @Override
     public ExaminprogressResponse saveAnswer( AnswerRequest request ) {
 
+        boolean examTokenNotFound = false;
+        boolean examNotFound = false;
+        boolean examHasStarted = true;
+        boolean examComplete = false;
+        boolean examExpired = false;
+        boolean timedPerExam = false;
+        boolean timedPerSection = false;
+        boolean timedPerQuestion = false;
+        boolean pausable = false;
+        boolean paused = false;
+        Long examTime = null;
+        LocalDate examStartDate = null;
+        LocalTime examStartTime = null;
+        ExamSectionTransfer examSectionTransfer = null;
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         Question question = questionRepository.findById( request.getQuestionId() ).get();
         Section section = question.getSection();
         Exam exam = section.getExam();
         ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
 
+        SectionStatus sectionStatus = sectionStatusRepository
+                .findBySectionAndStudent( section, student );
+
         QuestionStatus questionStatus = questionStatusRepository
-                .findByQuestionAndStudent(
-                question, student );
+                .findByQuestionAndStudent( question, student );
 
         ExamTimedPer examTimedPer = getExamTimedPer( exam );
         Boolean hasExpired = true;
@@ -472,10 +771,6 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             }
         }
         else if ( examTimedPer.timedPerSection ) {
-
-            SectionStatus sectionStatus = sectionStatusRepository
-                    .findBySectionAndStudent(
-                    section, student );
 
             Calendar startTime = sectionStatus.getCreatedAt();
             Integer maxTimeSeconds = ( int )section.getDuration().getSeconds();
@@ -510,6 +805,15 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         questionStatus.setComplete( Boolean.TRUE );
         questionStatusRepository.save( questionStatus );
+
+        Long now = Calendar.getInstance().getTimeInMillis() / 1000;
+        Long createdAt = questionStatus.getCreatedAt().getTimeInMillis() / 1000;
+        Long timeSpent = now - createdAt;
+        Long examTimeSpent = examStatus.getTimeSpent() + timeSpent;
+        examStatus.setTimeSpent( examTimeSpent );
+        examStatusRepository.save( examStatus );
+        sectionStatus.setTimeSpent( examTimeSpent );
+        sectionStatusRepository.save( sectionStatus );
         ExaminprogressResponse response;
 
         if ( request.getPause() ) {
@@ -518,8 +822,16 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
             if ( examPausable ) {
 
-                response = new ExaminprogressResponse( null, false, false, false, false, null, true,
-                        true );
+                pausable = true;
+                paused = true;
+                examStatus.setPaused( Boolean.TRUE );
+                examStatus.setPausedAt( Calendar.getInstance() );
+                examStatusRepository.save( examStatus );
+
+                response = new ExaminprogressResponse(
+                        examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                        timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                        examStartDate, examStartTime, examSectionTransfer );
             }
             else {
                 response = getExamProgress( request.getExamTokenId() );
@@ -537,12 +849,27 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     @Transactional
     public ExaminprogressResponse skipQuestion( SkipQuestionRequest request ) {
 
+        boolean examTokenNotFound = false;
+        boolean examNotFound = false;
+        boolean examHasStarted = true;
+        boolean examComplete = false;
+        boolean examExpired = false;
+        boolean timedPerExam = false;
+        boolean timedPerSection = false;
+        boolean timedPerQuestion = false;
+        boolean pausable = false;
+        boolean paused = false;
+        Long examTime = null;
+        LocalDate examStartDate = null;
+        LocalTime examStartTime = null;
+        ExamSectionTransfer examSectionTransfer = null;
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         Question question = questionRepository.findById( request.getQuestionId() ).get();
+        Exam exam = question.getSection().getExam();
+        ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
 
         QuestionStatus questionStatus = questionStatusRepository
-                .findByQuestionAndStudent(
-                question, student );
+                .findByQuestionAndStudent( question, student );
 
         questionStatus.setComplete( Boolean.TRUE );
         questionStatusRepository.save( questionStatus );
@@ -554,8 +881,16 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
             if ( examPausable ) {
 
-                response = new ExaminprogressResponse( null, false, false, false, false, null, true,
-                        true );
+                pausable = true;
+                paused = true;
+                examStatus.setPaused( Boolean.TRUE );
+                examStatus.setPausedAt( Calendar.getInstance() );
+                examStatusRepository.save( examStatus );
+
+                response = new ExaminprogressResponse(
+                        examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                        timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                        examStartDate, examStartTime, examSectionTransfer );
             }
             else {
                 response = getExamProgress( request.getExamTokenId() );
@@ -566,6 +901,97 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         }
 
         return response;
+    }
+
+
+    @Transactional
+    @Override
+    public ExaminprogressResponse skipSection( SkipSectionRequest request ) {
+
+        boolean examTokenNotFound = false;
+        boolean examNotFound = false;
+        boolean examHasStarted = true;
+        boolean examComplete = false;
+        boolean examExpired = false;
+        boolean timedPerExam = false;
+        boolean timedPerSection = false;
+        boolean timedPerQuestion = false;
+        boolean pausable = false;
+        boolean paused = false;
+        Long examTime = null;
+        LocalDate examStartDate = null;
+        LocalTime examStartTime = null;
+        ExamSectionTransfer examSectionTransfer = null;
+        Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
+        Section section = sectionRepository.findById( request.getSectionId() ).get();
+        Exam exam = section.getExam();
+        ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
+
+        SectionStatus sectionStatus = sectionStatusRepository.findBySectionAndStudent( section,
+                student );
+
+        sectionStatus.setComplete( Boolean.TRUE );
+        sectionStatusRepository.save( sectionStatus );
+        ExaminprogressResponse response;
+
+        if ( request.getPause() ) {
+            ExamToken examToken = examTokenRepository.findById( request.getExamTokenId() ).get();
+            Boolean examPausable = examToken.getInvite().getPausable();
+
+            if ( examPausable ) {
+
+                pausable = true;
+                paused = true;
+                examStatus.setPaused( Boolean.TRUE );
+                examStatus.setPausedAt( Calendar.getInstance() );
+                examStatusRepository.save( examStatus );
+
+                response = new ExaminprogressResponse(
+                        examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                        timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                        examStartDate, examStartTime, examSectionTransfer );
+            }
+            else {
+                response = getExamProgress( request.getExamTokenId() );
+            }
+        }
+        else {
+            response = getExamProgress( request.getExamTokenId() );
+        }
+
+        return response;
+    }
+
+
+    @Override
+    public ExaminprogressResponse terminateExam( Long examTokenId ) {
+
+        boolean examTokenNotFound = false;
+        boolean examNotFound = false;
+        boolean examHasStarted = true;
+        boolean examComplete = true;
+        boolean examExpired = true;
+        boolean timedPerExam = false;
+        boolean timedPerSection = false;
+        boolean timedPerQuestion = false;
+        boolean pausable = false;
+        boolean paused = false;
+        Long examTime = null;
+        LocalDate examStartDate = null;
+        LocalTime examStartTime = null;
+        ExamSectionTransfer examSectionTransfer = null;
+
+        Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
+        ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
+        Exam exam = examToken.getInvite().getExam();
+        ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
+        examStatus.setComplete( Boolean.TRUE );
+        examStatusRepository.save( examStatus );
+
+        return new ExaminprogressResponse(
+                examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
+                timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
+                examStartDate, examStartTime, examSectionTransfer );
     }
 }
 

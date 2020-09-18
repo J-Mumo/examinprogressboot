@@ -25,7 +25,7 @@ import java.util.Calendar;
  */
 public interface TimeHelper {
 
-    Integer getRemainingTimeInSeconds( Calendar startTime, Integer maxTimeSeconds );
+    Long getRemainingTimeInSeconds( Calendar startTime, Integer maxTimeSeconds );
 
 
     Boolean hasExpired( Calendar startTime, Integer maxTimeSeconds );

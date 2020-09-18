@@ -34,6 +34,7 @@ import com.joel.examinprogress.service.student.exam.examinprogress.AnswerRequest
 import com.joel.examinprogress.service.student.exam.examinprogress.ExaminprogressResponse;
 import com.joel.examinprogress.service.student.exam.examinprogress.ExaminprogressService;
 import com.joel.examinprogress.service.student.exam.examinprogress.SkipQuestionRequest;
+import com.joel.examinprogress.service.student.exam.examinprogress.SkipSectionRequest;
 
 /**
  * @author Joel Mumo
@@ -88,6 +89,28 @@ public class StudentExamController {
             throws IOException {
 
         ExaminprogressResponse response = examinprogressService.skipQuestion( request );
+
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "examinprogress/skipsection", method = RequestMethod.POST )
+    public ResponseEntity<ExaminprogressResponse> skipSection(
+            @RequestBody SkipSectionRequest request )
+            throws IOException {
+
+        ExaminprogressResponse response = examinprogressService.skipSection( request );
+
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "examinprogress/terminate", method = RequestMethod.POST )
+    public ResponseEntity<ExaminprogressResponse> terminateExam(
+            @RequestBody Long examTokenId )
+            throws IOException {
+
+        ExaminprogressResponse response = examinprogressService.terminateExam( examTokenId );
 
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }

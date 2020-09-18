@@ -17,11 +17,14 @@
 */
 package com.joel.examinprogress.repository.student;
 
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.student.Student;
+import com.joel.examinprogress.domain.user.User;
 
 /**
  * @author Joel Mumo
@@ -30,5 +33,9 @@ import com.joel.examinprogress.domain.student.Student;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    Student findByExamToken( ExamToken examToken );
+    Student findByExamTokensIn( Set<ExamToken> examTokens );
+
+
+    Student findByUser( User user );
+
 }

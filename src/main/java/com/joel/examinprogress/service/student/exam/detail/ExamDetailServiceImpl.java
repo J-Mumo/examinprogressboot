@@ -17,8 +17,10 @@
 */
 package com.joel.examinprogress.service.student.exam.detail;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +29,12 @@ import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
+import com.joel.examinprogress.domain.student.Student;
+import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
 import com.joel.examinprogress.repository.exam.InviteRepository;
 import com.joel.examinprogress.repository.student.StudentRepository;
+import com.joel.examinprogress.repository.user.UserRepository;
 
 /**
  * @author Joel Mumo
@@ -45,6 +50,9 @@ public class ExamDetailServiceImpl implements ExamDetailService {
     private ExamTokenRepository examTokenRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private StudentRepository studentRepository;
 
     @Override
@@ -58,8 +66,8 @@ public class ExamDetailServiceImpl implements ExamDetailService {
         Invite invite = null;
         boolean examHasStarted = false;
         boolean examHasEnded = false;
-        Date startDate = null;
-        Date endDate = null;
+        LocalDate startDate = null;
+        LocalDate endDate = null;
         boolean timedPerExam = false;
         boolean timedPerSection = false;
         boolean timedPerQuestion = false;
@@ -73,19 +81,25 @@ public class ExamDetailServiceImpl implements ExamDetailService {
         }
         else {
             examToken = examTokenRepository.findByToken( request.getCode() );
+            Set<ExamToken> examTokens = new HashSet<>();
+            examTokens.add( examToken );
+
             if ( examToken != null ) {
                 examExists = true;
                 email = examToken.getEmail();
                 invite = examToken.getInvite();
                 exam = invite.getExam();
 
-                if ( studentRepository.findByExamToken( examToken ) != null )
+                User user = userRepository.findByEmail( examToken.getEmail() );
+                Student student = studentRepository.findByUser( user );
+                
+                if ( student != null )
                     studentRegistered = true;
             }
         }
 
         if ( exam != null ) {
-            Date today = new Date();
+            LocalDate today = LocalDate.now();
             startDate = invite.getExamStartDate();
             endDate = invite.getExamEndDate();
             LocalTime examStartTime = invite.getExamStartTime();
@@ -94,7 +108,9 @@ public class ExamDetailServiceImpl implements ExamDetailService {
             if ( endDate != null && today.compareTo( endDate ) > 0 ) {
                 examHasEnded = true;
             }
-            else if ( endDate != null && today.compareTo( endDate ) == 0 ) {
+            else if ( endDate != null && today.compareTo( endDate ) == 0
+                    && examStartTime != null ) {
+
                 if ( now.isAfter( examStartTime ) ) {
                     examHasEnded = true;
                 }

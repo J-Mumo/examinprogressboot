@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.invites;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author Joel Mumo
@@ -27,15 +27,15 @@ public class InviteTransfer {
 
     private Long inviteId;
     private String name;
-    private Date examStartDate;
-    private Date examEndDate;
+    private LocalDate examStartDate;
+    private LocalDate examEndDate;
     private boolean pausable;
     private String examStartTime;
 
     public InviteTransfer( Long inviteId,
             String name,
-            Date examStartDate,
-            Date examEndDate,
+            LocalDate examStartDate,
+            LocalDate examEndDate,
             boolean pausable,
             String examStartTime ) {
 
@@ -73,26 +73,27 @@ public class InviteTransfer {
     }
 
 
-    public Date getExamStartDate() {
+    public LocalDate getExamStartDate() {
 
         return examStartDate;
     }
 
 
-    public void setExamStartDate( Date examStartDate ) {
+    public void setExamStartDate( LocalDate examStartDate ) {
 
         this.examStartDate = examStartDate;
     }
 
-
-    public Date getExamEndDate() {
-
+    
+    public LocalDate getExamEndDate() {
+    
         return examEndDate;
     }
 
 
-    public void setExamEndDate( Date examEndDate ) {
-
+    
+    public void setExamEndDate( LocalDate examEndDate ) {
+    
         this.examEndDate = examEndDate;
     }
 

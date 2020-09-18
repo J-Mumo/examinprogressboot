@@ -17,7 +17,7 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.view;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author Joel Mumo
@@ -26,8 +26,8 @@ import java.util.Date;
 public class ViewInviteInitialData {
 
     private String name;
-    private Date examStartDate;
-    private Date examEndDate;
+    private LocalDate examStartDate;
+    private LocalDate examEndDate;
     private boolean pausable;
     private String examStartTime;
     private String inviteCode;
@@ -35,8 +35,8 @@ public class ViewInviteInitialData {
 
     public ViewInviteInitialData(
             String name,
-            Date examStartDate,
-            Date examEndDate,
+            LocalDate examStartDate,
+            LocalDate examEndDate,
             boolean pausable,
             String examStartTime,
             String inviteCode,
@@ -65,25 +65,25 @@ public class ViewInviteInitialData {
     }
 
 
-    public Date getExamStartDate() {
+    public LocalDate getExamStartDate() {
 
         return examStartDate;
     }
 
 
-    public void setExamStartDate( Date examStartDate ) {
+    public void setExamStartDate( LocalDate examStartDate ) {
 
         this.examStartDate = examStartDate;
     }
 
 
-    public Date getExamEndDate() {
+    public LocalDate getExamEndDate() {
 
         return examEndDate;
     }
 
 
-    public void setExamEndDate( Date examEndDate ) {
+    public void setExamEndDate( LocalDate examEndDate ) {
 
         this.examEndDate = examEndDate;
     }

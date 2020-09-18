@@ -26,4 +26,7 @@ import com.joel.examinprogress.service.shared.SaveResponseWithId;
 public interface CreateInviteService {
 
     SaveResponseWithId save( CreateInviteRequest request );
+
+
+    CreateInviteInitialData getInitialData( Long examId );
 }

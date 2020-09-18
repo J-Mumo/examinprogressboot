@@ -59,6 +59,9 @@ public class ExamStatus extends AbstractPersistentEntity {
             columnDefinition = "TIMESTAMP WITH TIME ZONE" )
     private Calendar resumedAt;
 
+    @Column( name = "time_spent", updatable = true, nullable = false )
+    private Long timeSpent;
+
     @ManyToOne( )
     @JoinColumn( name = "fk_exam",
             foreignKey = @ForeignKey(
@@ -129,6 +132,18 @@ public class ExamStatus extends AbstractPersistentEntity {
     public void setResumedAt( Calendar resumedAt ) {
 
         this.resumedAt = resumedAt;
+    }
+
+
+    public Long getTimeSpent() {
+
+        return timeSpent;
+    }
+
+
+    public void setTimeSpent( Long timeSpent ) {
+
+        this.timeSpent = timeSpent;
     }
 
 

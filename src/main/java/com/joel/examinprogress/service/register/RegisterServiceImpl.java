@@ -133,7 +133,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     private void registerStudent( User user, RegisterRequest request ) {
 
-        ExamToken examToken = examTokenRepository.findByEmail( user.getEmail() );
+        ExamToken examToken = examTokenRepository.findByToken( request.getCode() );
         if ( examToken == null ) {
 
             Invite invite = inviteRepository.findByInviteCode( request.getCode() );
@@ -149,8 +149,10 @@ public class RegisterServiceImpl implements RegisterService {
         }
         Student student = new Student();
         student.setUser( user );
-        student.setExamToken( examToken );
         studentRepository.save( student );
+
+        examToken.setStudent( student );
+        examTokenRepository.save( examToken );
 
         Role role = roleRepository.findById( RoleEnum.STUDENT.getId() ).get();
         Set<Role> roles = new HashSet<>();
@@ -190,15 +192,25 @@ public class RegisterServiceImpl implements RegisterService {
         DomainOrganisation organisation = organisationRepository.findByDomain( domain );
         String email = request.getEmail();
         boolean emailExists = emailExists( email );
-        SaveResponse saveResponse;
+        SaveResponse saveResponse = null;
+        User user;
 
         if ( emailExists ) {
 
-            saveResponse = new SaveResponse( false, EMAIL_ERROR_RBKEY );
+            if ( request.getCode() != null ) {
+
+                user = userRepository.findByEmail( email );
+                registerStudent( user, request );
+            }
+            else {
+
+                saveResponse = new SaveResponse( false, EMAIL_ERROR_RBKEY );
+            }
         }
         else {
 
-            User user = register( request, organisation,
+            user = register( request,
+                    organisation,
                     email );
 
             if ( request.getCode() != null )

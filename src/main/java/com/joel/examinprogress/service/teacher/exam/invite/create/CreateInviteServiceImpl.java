@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.InviteRepository;
@@ -59,12 +60,20 @@ public class CreateInviteServiceImpl implements CreateInviteService {
     public SaveResponseWithId save( CreateInviteRequest request ) {
 
         LocalTime examStartTime = null;
+
         if ( request.getExamStartTime() != null ) {
 
             examStartTime = LocalTime.parse( request.getExamStartTime() );
         }
 
         Exam exam = examRepository.findById( request.getExamId() ).get();
+        Long examTimerTypeId = exam.getExamTimerType().getId();
+
+        if ( examTimerTypeId == ExamTimerTypeEnum.TIMED_PER_QUESTION.getExamTimerTypeId() ) {
+
+            request.setPausable( true );
+        }
+
         Invite invite = new Invite();
         invite.setName( request.getName() );
         invite.setExamStartDate( request.getExamStartDate() );
@@ -79,6 +88,29 @@ public class CreateInviteServiceImpl implements CreateInviteService {
         inviteRepository.save( invite );
 
         return new SaveResponseWithId( true, null, invite.getId() );
+    }
+
+
+    @Override
+    public CreateInviteInitialData getInitialData( Long examId ) {
+
+        Exam exam = examRepository.findById( examId ).get();
+        Long examTimerTypeId = exam.getExamTimerType().getId();
+        Boolean timedPerExam = Boolean.FALSE;
+        Boolean timedPerSection = Boolean.FALSE;
+        Boolean timedPerQuestion = Boolean.FALSE;
+
+        if ( examTimerTypeId == ExamTimerTypeEnum.TIMED_PER_EXAM.getExamTimerTypeId() )
+            timedPerExam = Boolean.TRUE;
+        else if ( examTimerTypeId == ExamTimerTypeEnum.TIMED_PER_SECTION.getExamTimerTypeId() )
+            timedPerSection = Boolean.TRUE;
+        else
+            timedPerQuestion = Boolean.TRUE;
+
+        CreateInviteInitialData initialData = new CreateInviteInitialData( timedPerExam,
+                timedPerSection, timedPerQuestion );
+
+        return initialData;
     }
 
 }

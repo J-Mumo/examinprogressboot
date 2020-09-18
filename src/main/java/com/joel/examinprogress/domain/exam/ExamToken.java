@@ -19,11 +19,9 @@ package com.joel.examinprogress.domain.exam;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
@@ -42,7 +40,8 @@ public class ExamToken extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 3910693378116108040L;
 
-    @Column( name = "email", nullable = false, unique = true,
+    @Column( name = "email", nullable = false,
+            unique = false,
             length = 256 )
     private String email;
 
@@ -56,7 +55,9 @@ public class ExamToken extends AbstractPersistentEntity {
             nullable = false )
     private Invite invite;
 
-    @OneToOne( fetch = FetchType.LAZY, mappedBy = "examToken" )
+    @ManyToOne( )
+    @JoinColumn( name = "fk_student",
+            foreignKey = @ForeignKey( name = "exam_token_fk_student" ), nullable = true )
     private Student student;
 
     public String getEmail() {

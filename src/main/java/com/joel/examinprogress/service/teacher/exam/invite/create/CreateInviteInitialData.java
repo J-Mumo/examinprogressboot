@@ -15,104 +15,27 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.teacher.exam.invite.edit;
-
-import java.time.LocalDate;
+package com.joel.examinprogress.service.teacher.exam.invite.create;
 
 /**
  * @author Joel Mumo
- * @date   28th July, 2020
+ * @date   18th Sept, 2020
  */
-public class EditInviteInitialData {
+public class CreateInviteInitialData {
 
-    private String name;
-    private LocalDate examStartDate;
-    private LocalDate examEndDate;
-    private boolean pausable;
-    private String examStartTime;
     private Boolean timedPerExam;
     private Boolean timedPerSection;
     private Boolean timedPerQuestion;
 
-    public EditInviteInitialData(
-            String name,
-            LocalDate examStartDate,
-            LocalDate examEndDate,
-            boolean pausable,
-            String examStartTime,
+    public CreateInviteInitialData(
             Boolean timedPerExam,
             Boolean timedPerSection,
             Boolean timedPerQuestion ) {
 
         super();
-        this.name = name;
-        this.examStartDate = examStartDate;
-        this.examEndDate = examEndDate;
-        this.pausable = pausable;
-        this.examStartTime = examStartTime;
         this.timedPerExam = timedPerExam;
         this.timedPerSection = timedPerSection;
         this.timedPerQuestion = timedPerQuestion;
-    }
-
-
-    public String getName() {
-
-        return name;
-    }
-
-
-    public void setName( String name ) {
-
-        this.name = name;
-    }
-
-
-    public LocalDate getExamStartDate() {
-
-        return examStartDate;
-    }
-
-
-    public void setExamStartDate( LocalDate examStartDate ) {
-
-        this.examStartDate = examStartDate;
-    }
-
-
-    public LocalDate getExamEndDate() {
-
-        return examEndDate;
-    }
-
-
-    public void setExamEndDate( LocalDate examEndDate ) {
-
-        this.examEndDate = examEndDate;
-    }
-
-
-    public boolean isPausable() {
-
-        return pausable;
-    }
-
-
-    public void setPausable( boolean pausable ) {
-
-        this.pausable = pausable;
-    }
-
-
-    public String getExamStartTime() {
-
-        return examStartTime;
-    }
-
-
-    public void setExamStartTime( String examStartTime ) {
-
-        this.examStartTime = examStartTime;
     }
 
 

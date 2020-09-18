@@ -40,6 +40,7 @@ import com.joel.examinprogress.service.teacher.exam.edit.EditExamRequest;
 import com.joel.examinprogress.service.teacher.exam.edit.EditExamService;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamsService;
+import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteInitialData;
 import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteRequest;
 import com.joel.examinprogress.service.teacher.exam.invite.create.CreateInviteService;
 import com.joel.examinprogress.service.teacher.exam.invite.delete.DeleteInviteService;
@@ -350,6 +351,15 @@ public class TeacherExamController {
 
         DeleteResponse response = deleteQuestionService.deleteQuestion( questionId );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "invite/create/getinitialdata", method = RequestMethod.POST )
+    public ResponseEntity<CreateInviteInitialData> getCreateInviteInitialData(
+            @RequestBody Long examId ) throws IOException {
+
+        CreateInviteInitialData initialData = createInviteService.getInitialData( examId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
     }
 
 

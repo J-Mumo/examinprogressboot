@@ -30,4 +30,10 @@ public interface ExaminprogressService {
 
 
     ExaminprogressResponse skipQuestion( SkipQuestionRequest request );
+
+
+    ExaminprogressResponse skipSection( SkipSectionRequest request );
+
+
+    ExaminprogressResponse terminateExam( Long examTokenId );
 }

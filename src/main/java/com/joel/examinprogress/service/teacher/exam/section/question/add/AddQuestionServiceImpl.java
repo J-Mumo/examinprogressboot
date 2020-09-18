@@ -193,11 +193,12 @@ public class AddQuestionServiceImpl implements AddQuestionService {
             saveQuestionWithMultipleChoiceAnswers( question, answerType, request
                     .getMultipleChoiceQuestionAnswerRequests() );
 
-        if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_SECTION
+        if ( exam.getExamTimerType()
+                .getId() == ExamTimerTypeEnum.TIMED_PER_QUESTION
                 .getExamTimerTypeId() ) {
 
-            Long examTime = exam.getTotalExamTime().toMinutes() + duration.toMinutes();
-            exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
+            Long examTime = exam.getTotalExamTime().toSeconds() + duration.toSeconds();
+            exam.setTotalExamTime( Duration.parse( "PT" + examTime + "S" ) );
             examRepository.save( exam );
         }
 
@@ -253,8 +254,8 @@ public class AddQuestionServiceImpl implements AddQuestionService {
         if ( exam.getExamTimerType().getId() == ExamTimerTypeEnum.TIMED_PER_QUESTION
                 .getExamTimerTypeId() ) {
 
-            Long examTime = exam.getTotalExamTime().toMinutes() + duration.toMinutes();
-            exam.setTotalExamTime( Duration.ofMinutes( examTime ) );
+            Long examTime = exam.getTotalExamTime().toSeconds() + duration.toSeconds();
+            exam.setTotalExamTime( Duration.parse( "PT" + examTime + "S" ) );
             examRepository.save( exam );
         }
 
