@@ -40,11 +40,14 @@ public class QuestionStatus extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 5815563770622095002L;
 
-    @Column( name = "complete", nullable = false, unique = false )
+    @Column( name = "complete", nullable = false )
     private Boolean complete;
 
-    @Column( name = "fetched", nullable = false, unique = false )
+    @Column( name = "fetched", nullable = false )
     private Boolean fetched;
+
+    @Column( name = "text_answer", nullable = true, columnDefinition = "TEXT" )
+    private String textAnswer;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_question",
@@ -73,6 +76,18 @@ public class QuestionStatus extends AbstractPersistentEntity {
     public void setFetched( Boolean fetched ) {
 
         this.fetched = fetched;
+    }
+
+
+    public String getTextAnswer() {
+
+        return textAnswer;
+    }
+
+
+    public void setTextAnswer( String textAnswer ) {
+
+        this.textAnswer = textAnswer;
     }
 
 

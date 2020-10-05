@@ -25,6 +25,16 @@ VALUES (2, 'Timed per Section', current_timestamp, current_timestamp);
 INSERT INTO exam_timer_type (id, name, created_at, updated_at)
 VALUES (3, 'Timed per Question', current_timestamp, current_timestamp);
 
+-- result_type -----------------------------------------------------------------------------
+INSERT INTO result_type (id, name,created_at, updated_at)
+VALUES (1, 'Exam result', current_timestamp, current_timestamp);
+
+INSERT INTO result_type (id, name,created_at, updated_at)
+VALUES (2, 'Section result', current_timestamp, current_timestamp);
+
+INSERT INTO result_type (id, name, created_at, updated_at)
+VALUES (3, 'Question result', current_timestamp, current_timestamp);
+
 -- question_type -----------------------------------------------------------------------------
 INSERT INTO question_type (id, name,created_at, updated_at)
 VALUES (1, 'Question', current_timestamp, current_timestamp);

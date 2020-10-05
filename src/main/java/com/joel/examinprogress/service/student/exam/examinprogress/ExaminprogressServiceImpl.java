@@ -19,8 +19,10 @@ package com.joel.examinprogress.service.student.exam.examinprogress;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -35,6 +37,7 @@ import com.joel.examinprogress.domain.exam.ExamTimerType;
 import com.joel.examinprogress.domain.exam.ExamTimerTypeEnum;
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
+import com.joel.examinprogress.domain.exam.result.Result;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
@@ -44,9 +47,11 @@ import com.joel.examinprogress.domain.student.SectionStatus;
 import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
+import com.joel.examinprogress.helper.result.ResultHelper;
 import com.joel.examinprogress.helper.time.TimeHelper;
 import com.joel.examinprogress.repository.exam.ExamTimerTypeRepository;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
+import com.joel.examinprogress.repository.exam.results.ResultRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
@@ -93,6 +98,12 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
     @Autowired
     private TimeHelper timeHelper;
+
+    @Autowired
+    private ResultHelper resultHelper;
+
+    @Autowired
+    private ResultRepository resultRepository;
 
     private AnswerTransfer createAnswerTransfer( Answer answer ) {
 
@@ -242,12 +253,11 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
 
     private ExamSectionTransfer createSectionTransfer( Section section, Student student,
-            Invite invite ) {
+            Invite invite, ExamTimedPer examTimedPer ) {
 
         ExamQuestionTransfer questionTransfer = null;
         boolean sectionIsComplete = false;
         Long sectionTime = null;
-        Integer maxTimeSeconds = ( int )section.getDuration().toSeconds();
 
         SectionStatus sectionStatus =
                 sectionStatusRepository
@@ -262,17 +272,22 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             sectionStatusRepository.save( sectionStatus );
         }
 
-        if ( invite.getPausable() ) {
+        if ( examTimedPer.timedPerSection ) {
 
-            Long sectionTimeSpent = sectionStatus.getTimeSpent();
-            sectionTime = maxTimeSeconds - sectionTimeSpent;
-        }
-        else {
+            Integer maxTimeSeconds = ( int )section.getDuration().toSeconds();
 
-            Calendar startTime = sectionStatus.getCreatedAt() == null ? Calendar.getInstance()
-                    : sectionStatus.getCreatedAt();
+            if ( invite.getPausable() ) {
 
-            sectionTime = timeHelper.getRemainingTimeInSeconds( startTime, maxTimeSeconds );
+                Long sectionTimeSpent = sectionStatus.getTimeSpent();
+                sectionTime = maxTimeSeconds - sectionTimeSpent;
+            }
+            else {
+
+                Calendar startTime = sectionStatus.getCreatedAt() == null ? Calendar.getInstance()
+                        : sectionStatus.getCreatedAt();
+
+                sectionTime = timeHelper.getRemainingTimeInSeconds( startTime, maxTimeSeconds );
+            }
         }
 
         if ( section != null ) {
@@ -385,6 +400,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         LocalDate examStartDate = null;
         LocalTime examStartTime = null;
         ExamSectionTransfer examSectionTransfer = null;
+        ExamResult examResult = null;
         Exam exam = examToken.getInvite().getExam();
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
@@ -423,42 +439,50 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         if ( section == null ) {
             examComplete = true;
+            examResult = getExamResult( student, exam );
             examStatus.setComplete( Boolean.TRUE );
             examStatusRepository.save( examStatus );
 
             return new ExaminprogressResponse(
                     examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                     timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                    examStartDate, examStartTime, examSectionTransfer );
+                    examStartDate, examStartTime, examSectionTransfer, examResult );
         }
         else {
 
-            examSectionTransfer = createSectionTransfer( section, student, invite );
+            examSectionTransfer = createSectionTransfer( section, student, invite, examTimedPer );
 
             if ( examSectionTransfer.isSectionComplete() ) {
+                
                 section = getNextSection( examToken, student );
 
                 if ( section == null ) {
                     examComplete = true;
+                    examResult = getExamResult( student, exam );
                     examStatus.setComplete( Boolean.TRUE );
                     examStatusRepository.save( examStatus );
 
                     return new ExaminprogressResponse(
                             examTokenNotFound, examNotFound, examHasStarted, examComplete,
-                            examExpired,
-                            timedPerExam, timedPerSection, timedPerQuestion, pausable, paused,
-                            examTime,
-                            examStartDate, examStartTime, examSectionTransfer );
+                            examExpired, timedPerExam, timedPerSection, timedPerQuestion, pausable,
+                            paused, examTime, examStartDate, examStartTime, examSectionTransfer,
+                            examResult );
                 }
                 else {
-                    examSectionTransfer = createSectionTransfer( section, student, invite );
+                    examSectionTransfer = createSectionTransfer( section, student, invite,
+                            examTimedPer );
                 }
+            }
+
+            if ( examSectionTransfer.getExamQuestionTransfer() == null ) {
+                examComplete = true;
+                examResult = getExamResult( student, exam );
             }
 
             return new ExaminprogressResponse(
                     examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                     timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                    examStartDate, examStartTime, examSectionTransfer );
+                    examStartDate, examStartTime, examSectionTransfer, examResult );
         }
     }
 
@@ -542,6 +566,41 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     }
 
 
+    private SectionResult createSectionResult( Result result ) {
+
+        String sectionName = result.getSection().getName();
+        Float percentScore = result.getPercentScore();
+        return new SectionResult( sectionName, percentScore );
+    }
+
+
+    private SectionResult[] createSectionResults( Student student, Exam exam ) {
+
+        Set<Result> results = resultRepository.findByStudentAndSectionExam( student, exam );
+        List<SectionResult> sectionResults = new ArrayList<>();
+
+        for ( Result result : results ) {
+
+            sectionResults.add( createSectionResult( result ) );
+        }
+
+        return sectionResults.toArray( new SectionResult[sectionResults.size()] );
+    }
+
+
+
+    private ExamResult getExamResult( Student student, Exam exam ) {
+
+        Result result = resultRepository.findByExamAndStudent( exam, student );
+        boolean completeResult = false;
+        Float percentScore = result.getPercentScore();
+        SectionResult[] sectionResults = createSectionResults( student, exam );
+        ExamResult examResult = new ExamResult( completeResult, percentScore, sectionResults );
+        return examResult;
+    }
+
+
+
     @Transactional
     @Override
     public ExaminprogressResponse getExamProgress( Long examTokenId ) {
@@ -560,11 +619,12 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         LocalDate examStartDate = null;
         LocalTime examStartTime = null;
         ExamSectionTransfer examSectionTransfer = null;
+        ExamResult examResult = null;
 
         ExaminprogressResponse response = new ExaminprogressResponse(
                 examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                 timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                examStartDate, examStartTime, examSectionTransfer );
+                examStartDate, examStartTime, examSectionTransfer, examResult );
 
         ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
 
@@ -595,7 +655,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             return new ExaminprogressResponse(
                     examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                     timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                    examStartDate, examStartTime, examSectionTransfer );
+                    examStartDate, examStartTime, examSectionTransfer, examResult );
         }
         else if ( examStartTime == null && examStartDate.isAfter( today ) ) {
 
@@ -604,7 +664,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             return new ExaminprogressResponse(
                     examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                     timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                    examStartDate, examStartTime, examSectionTransfer );
+                    examStartDate, examStartTime, examSectionTransfer, examResult );
         }
 
         ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
@@ -630,11 +690,12 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         if ( examStatus != null && examStatus.getComplete() ) {
 
             examComplete = true;
+            examResult = getExamResult( student, exam );
 
             return new ExaminprogressResponse(
                     examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                     timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                    examStartDate, examStartTime, examSectionTransfer );
+                    examStartDate, examStartTime, examSectionTransfer, examResult );
         }
         else {
 
@@ -666,12 +727,10 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                             examHasStarted, examComplete, examExpired,
                             timedPerExam, timedPerSection, timedPerQuestion, pausable, paused,
                             examTime,
-                            examStartDate, examStartTime, examSectionTransfer );
+                            examStartDate, examStartTime, examSectionTransfer, examResult );
                 }
                 else {
 
-                    examStatus.setResumedAt( Calendar.getInstance() );
-                    examStatusRepository.save( examStatus );
                     response = fetchNextSectionAndQuestion( examToken, examTimedPer );
                     return response;
                 }
@@ -690,7 +749,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                         return new ExaminprogressResponse( examTokenNotFound, examNotFound,
                                 examHasStarted, examComplete, examExpired,
                                 timedPerExam, timedPerSection, timedPerQuestion, pausable, paused,
-                                examTime, examStartDate, examStartTime, examSectionTransfer );
+                                examTime, examStartDate, examStartTime, examSectionTransfer,
+                                examResult );
                     }
                     else {
 
@@ -711,7 +771,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                         return new ExaminprogressResponse( examTokenNotFound, examNotFound,
                                 examHasStarted, examComplete, examExpired, timedPerExam,
                                 timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                                examStartDate, examStartTime, examSectionTransfer );
+                                examStartDate, examStartTime, examSectionTransfer, examResult );
                     }
                     else {
 
@@ -723,7 +783,6 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
             }
         }
     }
-
 
 
     @Transactional
@@ -744,6 +803,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         LocalDate examStartDate = null;
         LocalTime examStartTime = null;
         ExamSectionTransfer examSectionTransfer = null;
+        ExamResult examResult = null;
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         Question question = questionRepository.findById( request.getQuestionId() ).get();
         Section section = question.getSection();
@@ -794,13 +854,10 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 answerRepository.save( answer );
             }
             if ( request.getAnswerText() != null ) {
-                Answer answer = new Answer();
-                answer.setAnswerText( request.getAnswerText() );
-                answer.setAnswerType( question.getAnswerType() );
-                answer.setQuestion( question );
-                answer.setStudent( student );
-                answerRepository.save( answer );
+                questionStatus.setTextAnswer( request.getAnswerText() );
             }
+
+            resultHelper.updateResult( question, student );
         }
 
         questionStatus.setComplete( Boolean.TRUE );
@@ -831,7 +888,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 response = new ExaminprogressResponse(
                         examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                         timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                        examStartDate, examStartTime, examSectionTransfer );
+                        examStartDate, examStartTime, examSectionTransfer, examResult );
             }
             else {
                 response = getExamProgress( request.getExamTokenId() );
@@ -863,6 +920,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         LocalDate examStartDate = null;
         LocalTime examStartTime = null;
         ExamSectionTransfer examSectionTransfer = null;
+        ExamResult examResult = null;
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         Question question = questionRepository.findById( request.getQuestionId() ).get();
         Exam exam = question.getSection().getExam();
@@ -890,7 +948,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 response = new ExaminprogressResponse(
                         examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                         timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                        examStartDate, examStartTime, examSectionTransfer );
+                        examStartDate, examStartTime, examSectionTransfer, examResult );
             }
             else {
                 response = getExamProgress( request.getExamTokenId() );
@@ -922,6 +980,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         LocalDate examStartDate = null;
         LocalTime examStartTime = null;
         ExamSectionTransfer examSectionTransfer = null;
+        ExamResult examResult = null;
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         Section section = sectionRepository.findById( request.getSectionId() ).get();
         Exam exam = section.getExam();
@@ -949,7 +1008,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 response = new ExaminprogressResponse(
                         examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                         timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                        examStartDate, examStartTime, examSectionTransfer );
+                        examStartDate, examStartTime, examSectionTransfer, examResult );
             }
             else {
                 response = getExamProgress( request.getExamTokenId() );
@@ -984,6 +1043,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         Student student = loggedInCredentialsHelper.getLoggedInUser().getStudent();
         ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
         Exam exam = examToken.getInvite().getExam();
+        ExamResult examResult = getExamResult( student, exam );
         ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
         examStatus.setComplete( Boolean.TRUE );
         examStatusRepository.save( examStatus );
@@ -991,7 +1051,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         return new ExaminprogressResponse(
                 examTokenNotFound, examNotFound, examHasStarted, examComplete, examExpired,
                 timedPerExam, timedPerSection, timedPerQuestion, pausable, paused, examTime,
-                examStartDate, examStartTime, examSectionTransfer );
+                examStartDate, examStartTime, examSectionTransfer, examResult );
     }
 }
 

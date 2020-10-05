@@ -48,14 +48,13 @@ public class Question extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 4052146954471159233L;
 
-    @Column( name = "question_text", nullable = false, unique = false,
-            length = 1024 )
+    @Column( name = "question_text", nullable = false, columnDefinition = "TEXT" )
     private String questionText;
 
-    @Column( name = "score", nullable = true, unique = false )
+    @Column( name = "score", nullable = true )
     private Integer score;
 
-    @Column( name = "duration", nullable = true, unique = false )
+    @Column( name = "duration", nullable = true )
     private Duration duration;
 
     @ManyToOne( )

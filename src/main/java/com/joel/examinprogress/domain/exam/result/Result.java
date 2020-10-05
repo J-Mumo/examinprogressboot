@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.domain.exam.results;
+package com.joel.examinprogress.domain.exam.result;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +26,8 @@ import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
 import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.section.Section;
+import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.student.Student;
 
 /**
@@ -33,19 +35,22 @@ import com.joel.examinprogress.domain.student.Student;
  * @date   9th June, 2020
  */
 @Entity
-@Table( name = "results" )
-public class Results extends AbstractPersistentEntity {
+@Table( name = "result" )
+public class Result extends AbstractPersistentEntity {
 
     /**
      * 
      */
     private static final long serialVersionUID = 2308788963851258543L;
 
-    @Column( name = "point_score", nullable = false, unique = false )
+    @Column( name = "point_score", nullable = true, unique = false )
     private Integer pointScore;
 
-    @Column( name = "percent_score", nullable = false, unique = false )
-    private Integer percentScore;
+    @Column( name = "percent_score", nullable = true, unique = false )
+    private Float percentScore;
+
+    @Column( name = "total_score", nullable = false, unique = false )
+    private Integer totalScore;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_result_type",
@@ -54,16 +59,30 @@ public class Results extends AbstractPersistentEntity {
     private ResultType resultType;
 
     @ManyToOne( )
-    @JoinColumn( name = "fk_exam",
-            foreignKey = @ForeignKey( name = "results_fk_exam" ),
+    @JoinColumn( name = "fk_student",
+            foreignKey = @ForeignKey( name = "result_fk_student" ),
             nullable = false )
+    private Student student;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_exam",
+            foreignKey = @ForeignKey(
+                    name = "result_fk_exam" ),
+            nullable = true )
     private Exam exam;
 
     @ManyToOne( )
-    @JoinColumn( name = "fk_student",
-            foreignKey = @ForeignKey( name = "results_fk_student" ),
-            nullable = false )
-    private Student student;
+    @JoinColumn( name = "fk_section",
+            foreignKey = @ForeignKey( name = "result_fk_section" ),
+            nullable = true )
+    private Section section;
+
+    @ManyToOne( )
+    @JoinColumn( name = "fk_question",
+            foreignKey = @ForeignKey(
+                    name = "result_fk_question" ),
+            nullable = true )
+    private Question question;
 
     public Integer getPointScore() {
 
@@ -77,16 +96,29 @@ public class Results extends AbstractPersistentEntity {
     }
 
 
-    public Integer getPercentScore() {
+    public Float getPercentScore() {
 
         return percentScore;
     }
 
 
-    public void setPercentScore( Integer percentScore ) {
+    public void setPercentScore( Float percentScore ) {
 
         this.percentScore = percentScore;
     }
+
+
+    public Integer getTotalScore() {
+
+        return totalScore;
+    }
+
+
+    public void setTotalScore( Integer totalScore ) {
+
+        this.totalScore = totalScore;
+    }
+
 
 
     public ResultType getResultType() {
@@ -101,18 +133,6 @@ public class Results extends AbstractPersistentEntity {
     }
 
 
-    public Exam getExam() {
-
-        return exam;
-    }
-
-
-    public void setExam( Exam exam ) {
-
-        this.exam = exam;
-    }
-
-
     public Student getStudent() {
 
         return student;
@@ -122,5 +142,42 @@ public class Results extends AbstractPersistentEntity {
     public void setStudent( Student student ) {
 
         this.student = student;
+    }
+
+
+    public Exam getExam() {
+
+        return exam;
+    }
+
+
+
+    public void setExam( Exam exam ) {
+
+        this.exam = exam;
+    }
+
+
+    public Section getSection() {
+
+        return section;
+    }
+
+
+    public void setSection( Section section ) {
+
+        this.section = section;
+    }
+
+
+    public Question getQuestion() {
+
+        return question;
+    }
+
+
+    public void setQuestion( Question question ) {
+
+        this.question = question;
     }
 }

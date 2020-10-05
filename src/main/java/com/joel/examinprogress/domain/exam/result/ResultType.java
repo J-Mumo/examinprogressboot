@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.domain.exam.results;
+package com.joel.examinprogress.domain.exam.result;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

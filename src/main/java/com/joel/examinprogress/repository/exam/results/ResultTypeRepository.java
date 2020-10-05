@@ -20,7 +20,7 @@ package com.joel.examinprogress.repository.exam.results;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.joel.examinprogress.domain.exam.results.ResultType;
+import com.joel.examinprogress.domain.exam.result.ResultType;
 
 /**
  * @author Joel Mumo

@@ -40,6 +40,7 @@ public class ExaminprogressResponse {
     private LocalDate examStartDate;
     private LocalTime examStartTime;
     private ExamSectionTransfer examSectionTransfer;
+    private ExamResult examResult;
 
     public ExaminprogressResponse(
             boolean examTokenNotFound,
@@ -55,7 +56,8 @@ public class ExaminprogressResponse {
             Long examTime,
             LocalDate examStartDate,
             LocalTime examStartTime,
-            ExamSectionTransfer examSectionTransfer ) {
+            ExamSectionTransfer examSectionTransfer,
+            ExamResult examResult ) {
 
         super();
         this.examTokenNotFound = examTokenNotFound;
@@ -72,6 +74,7 @@ public class ExaminprogressResponse {
         this.examStartDate = examStartDate;
         this.examStartTime = examStartTime;
         this.examSectionTransfer = examSectionTransfer;
+        this.examResult = examResult;
     }
 
 
@@ -240,5 +243,17 @@ public class ExaminprogressResponse {
     public void setPaused( boolean paused ) {
 
         this.paused = paused;
+    }
+
+
+    public ExamResult getExamResult() {
+
+        return examResult;
+    }
+
+
+    public void setExamResult( ExamResult examResult ) {
+
+        this.examResult = examResult;
     }
 }

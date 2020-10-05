@@ -55,10 +55,6 @@ public class ExamStatus extends AbstractPersistentEntity {
             columnDefinition = "TIMESTAMP WITH TIME ZONE" )
     private Calendar pausedAt;
 
-    @Column( name = "resumed_at", updatable = true, nullable = true,
-            columnDefinition = "TIMESTAMP WITH TIME ZONE" )
-    private Calendar resumedAt;
-
     @Column( name = "time_spent", updatable = true, nullable = false )
     private Long timeSpent;
 
@@ -121,19 +117,6 @@ public class ExamStatus extends AbstractPersistentEntity {
 
         this.pausedAt = pausedAt;
     }
-
-
-    public Calendar getResumedAt() {
-
-        return resumedAt;
-    }
-
-
-    public void setResumedAt( Calendar resumedAt ) {
-
-        this.resumedAt = resumedAt;
-    }
-
 
     public Long getTimeSpent() {
 
