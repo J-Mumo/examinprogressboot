@@ -30,6 +30,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
+import com.joel.examinprogress.domain.exam.result.Result;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.teacher.Teacher;
 
@@ -77,6 +78,9 @@ public class Exam extends AbstractPersistentEntity {
 
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "exam" )
     private Set<Section> sections;
+
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "exam" )
+    private Set<Result> results;
 
     public String getName() {
 
@@ -171,5 +175,17 @@ public class Exam extends AbstractPersistentEntity {
     public void setSections( Set<Section> sections ) {
 
         this.sections = sections;
+    }
+
+
+    public Set<Result> getResults() {
+
+        return results;
+    }
+
+
+    public void setResults( Set<Result> results ) {
+
+        this.results = results;
     }
 }
