@@ -57,12 +57,9 @@ public class DeleteExamServiceImpl implements DeleteExamService {
     public DeleteResponse deleteExam( Long examId ) {
 
         Exam exam = examRepository.findById( examId ).get();
-        Set<Invite> invites = exam.getInvites();
+        Invite invite = exam.getInvite();
         Set<Section> sections = sectionRepository.findByExamId( examId );
-
-        for ( Invite invite : invites ) {
-            deleteInviteService.deleteInvite( invite.getId() );
-        }
+        deleteInviteService.deleteInvite( invite.getId() );
 
         for ( Section section : sections ) {
             deleteSectionService.deleteSection( section.getId() );

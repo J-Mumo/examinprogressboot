@@ -704,6 +704,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 examStatus.setComplete( Boolean.FALSE );
                 examStatus.setStarted( Boolean.TRUE );
                 examStatus.setPaused( Boolean.FALSE );
+                examStatus.setScoringComplete( Boolean.FALSE );
                 examStatus.setTimeSpent( 0l );
                 examStatus.setExam( exam );
                 examStatus.setStudent( student );

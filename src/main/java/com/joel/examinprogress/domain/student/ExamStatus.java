@@ -58,6 +58,9 @@ public class ExamStatus extends AbstractPersistentEntity {
     @Column( name = "time_spent", updatable = true, nullable = false )
     private Long timeSpent;
 
+    @Column( name = "scoring_complete", nullable = false, unique = false )
+    private Boolean scoringComplete;
+
     @ManyToOne( )
     @JoinColumn( name = "fk_exam",
             foreignKey = @ForeignKey(
@@ -127,6 +130,18 @@ public class ExamStatus extends AbstractPersistentEntity {
     public void setTimeSpent( Long timeSpent ) {
 
         this.timeSpent = timeSpent;
+    }
+
+
+    public Boolean getScoringComplete() {
+
+        return scoringComplete;
+    }
+
+
+    public void setScoringComplete( Boolean scoringComplete ) {
+
+        this.scoringComplete = scoringComplete;
     }
 
 

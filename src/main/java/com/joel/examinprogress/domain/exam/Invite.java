@@ -24,7 +24,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
@@ -62,7 +62,7 @@ public class Invite extends AbstractPersistentEntity {
             length = 128 )
     private String inviteCode;
 
-    @ManyToOne( )
+    @OneToOne( )
     @JoinColumn( name = "fk_exam",
             foreignKey = @ForeignKey( name = "invite_fk_exam" ),
             nullable = false )

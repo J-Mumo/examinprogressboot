@@ -27,6 +27,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.joel.examinprogress.domain.AbstractPersistentEntity;
@@ -73,8 +74,8 @@ public class Exam extends AbstractPersistentEntity {
             nullable = false )
     private ExamTimerType examTimerType;
 
-    @OneToMany( fetch = FetchType.LAZY, mappedBy = "exam" )
-    private Set<Invite> invites;
+    @OneToOne( fetch = FetchType.LAZY, mappedBy = "exam" )
+    private Invite invite;
 
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "exam" )
     private Set<Section> sections;
@@ -154,15 +155,16 @@ public class Exam extends AbstractPersistentEntity {
     }
 
 
-    public Set<Invite> getInvites() {
 
-        return invites;
+    public Invite getInvite() {
+
+        return invite;
     }
 
 
-    public void setInvites( Set<Invite> invites ) {
+    public void setInvite( Invite invite ) {
 
-        this.invites = invites;
+        this.invite = invite;
     }
 
 

@@ -81,7 +81,8 @@ public class ViewExamServiceImpl implements ViewExamService {
         SectionTransfer[] sectionTransfers = createSectionTransfers( sections );
         Duration examDuration = exam.getDuration();
         boolean hasInvites = false;
-        if ( !exam.getInvites().isEmpty() )
+
+        if ( exam.getInvite() != null )
             hasInvites = true;
 
         String duration = examDuration != null ? String.format( "%d:%02d:%02d", examDuration
