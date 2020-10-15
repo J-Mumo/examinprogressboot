@@ -70,6 +70,7 @@ public class ResultsServiceImpl implements ResultsService {
         Student student = result.getStudent();
         Exam exam = result.getExam();
         User studentUser = student.getUser();
+        Long studentId = student.getId();
         String name = studentUser.getFirstName() + " " + studentUser.getLastName();
         Float percentScore = result.getPercentScore();
         Boolean examInProgress = Boolean.TRUE;
@@ -112,7 +113,9 @@ public class ResultsServiceImpl implements ResultsService {
                     }
                     else {
 
-                        resultHelper.updateResult( question, student );
+                        /** Update results with zero score when question was not answered */
+                        Integer studentTextAnswerScore = null;
+                        resultHelper.updateResult( question, student, studentTextAnswerScore );
                     }
                 }
             }
@@ -125,8 +128,8 @@ public class ResultsServiceImpl implements ResultsService {
             }
         }
 
-        return new StudentExamResult( name, percentScore, examInProgress, viewPerformance,
-                finalizeScoring );
+        return new StudentExamResult( studentId, name, percentScore, examInProgress,
+                viewPerformance, finalizeScoring );
     }
 
     private StudentExamResult[] createStudentExamResults( Set<Result> results ) {

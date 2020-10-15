@@ -27,8 +27,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.joel.examinprogress.service.shared.SaveResponse;
 import com.joel.examinprogress.service.teacher.results.examresults.ResultsInitialData;
 import com.joel.examinprogress.service.teacher.results.examresults.ResultsService;
+import com.joel.examinprogress.service.teacher.results.finalizescoring.FinalizeScoringInitialData;
+import com.joel.examinprogress.service.teacher.results.finalizescoring.FinalizeScoringRequest;
+import com.joel.examinprogress.service.teacher.results.finalizescoring.FinalizeScoringRequestInitialData;
+import com.joel.examinprogress.service.teacher.results.finalizescoring.FinalizeScoringService;
 import com.joel.examinprogress.service.teacher.results.showexams.ShowExamsInitialData;
 import com.joel.examinprogress.service.teacher.results.showexams.ShowExamsService;
 
@@ -46,6 +51,9 @@ public class TeacherResultController {
     @Autowired
     private ResultsService resultsService;
 
+    @Autowired
+    private FinalizeScoringService finalizeScoringService;
+
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ShowExamsInitialData>
             getInitialData()
@@ -61,6 +69,24 @@ public class TeacherResultController {
             throws IOException {
 
         ResultsInitialData initialData = resultsService.getResultsInitialData( examId );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "examresults/finalizescoring", method = RequestMethod.POST )
+    public ResponseEntity<FinalizeScoringInitialData> getInitialData(
+            @RequestBody FinalizeScoringRequestInitialData request ) throws IOException {
+
+        FinalizeScoringInitialData initialData = finalizeScoringService.getInitialData( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "examresults/finalizescore", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> save(
+            @RequestBody FinalizeScoringRequest request ) throws IOException {
+
+        SaveResponse initialData = finalizeScoringService.save( request );
         return ResponseEntity.status( HttpStatus.OK ).body( initialData );
     }
 }

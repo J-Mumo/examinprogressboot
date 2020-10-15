@@ -15,17 +15,18 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.helper.result;
+package com.joel.examinprogress.service.teacher.results.finalizescoring;
 
-import com.joel.examinprogress.domain.exam.section.question.Question;
-import com.joel.examinprogress.domain.student.Student;
+import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
  * @author Joel Mumo
- * @date   Sep 18, 2020
+ * @date   Oct 15, 2020
  */
+public interface FinalizeScoringService {
 
-public interface ResultHelper {
+    FinalizeScoringInitialData getInitialData( FinalizeScoringRequestInitialData request );
 
-    void updateResult( Question question, Student student, Integer studentTextAnswerScore );
+
+    SaveResponse save( FinalizeScoringRequest request );
 }

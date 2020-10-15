@@ -858,7 +858,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 questionStatus.setTextAnswer( request.getAnswerText() );
             }
 
-            resultHelper.updateResult( question, student );
+            Integer studentTextAnswerScore = null;
+            resultHelper.updateResult( question, student, studentTextAnswerScore );
         }
 
         questionStatus.setComplete( Boolean.TRUE );

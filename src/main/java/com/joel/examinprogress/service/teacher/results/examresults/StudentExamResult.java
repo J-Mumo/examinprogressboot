@@ -25,6 +25,7 @@ package com.joel.examinprogress.service.teacher.results.examresults;
 
 public class StudentExamResult {
 
+    private Long studentId;
     private String studentName;
     private Float percentScore;
     private Boolean examInProgress;
@@ -32,6 +33,7 @@ public class StudentExamResult {
     private Boolean finalizeScoring;
 
     public StudentExamResult(
+            Long studentId,
             String studentName,
             Float percentScore,
             Boolean examInProgress,
@@ -39,11 +41,24 @@ public class StudentExamResult {
             Boolean finalizeScoring ) {
 
         super();
+        this.studentId = studentId;
         this.studentName = studentName;
         this.percentScore = percentScore;
         this.examInProgress = examInProgress;
         this.viewPerformance = viewPerformance;
         this.finalizeScoring = finalizeScoring;
+    }
+
+
+    public Long getStudentId() {
+
+        return studentId;
+    }
+
+
+    public void setStudentId( Long studentId ) {
+
+        this.studentId = studentId;
     }
 
 

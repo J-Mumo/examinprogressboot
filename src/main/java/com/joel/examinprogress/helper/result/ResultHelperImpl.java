@@ -114,13 +114,17 @@ public class ResultHelperImpl implements ResultHelper {
 
 
     @Override
-    public void updateResult( Question question, Student student ) {
+    public void updateResult( Question question, Student student, Integer studentTextAnswerScore ) {
         
         Long answerTypeId = question.getAnswerType().getId();
         Long textAnswerTypeId = AnswerTypeEnum.TEXT_ANSWER.getAnswerTypeId();
+        Result questionResult = updateQuestionResult( question, student );
+        Result sectionResult = updateSectionResult( question, student );
+        Result examResult = updateExamResult( question, student );
+        Integer questionMaxScore = question.getScore();
         
         if (answerTypeId != textAnswerTypeId) {
-            
+
             Boolean studentAnsweredQuestionCorrectly = true;
             Set<Answer> correctAnswers = question.getCorrectAnswers();
             List<Answer> studentAnswers = answerRepository
@@ -134,33 +138,37 @@ public class ResultHelperImpl implements ResultHelper {
                     }
                 }
             }
-            
-            Result questionResult = updateQuestionResult( question, student );
-            Result sectionResult = updateSectionResult( question, student );
-            Result examResult = updateExamResult( question, student );
 
             if ( studentAnsweredQuestionCorrectly ) {
 
-                Integer score = question.getScore();
-                questionResult.setPointScore( score );
+                questionResult.setPointScore( questionMaxScore );
                 questionResult.setPercentScore( 100f );
-                sectionResult.setPointScore( sectionResult.getPointScore() + score );
-                examResult.setPointScore( examResult.getPointScore() + score );
-
+                sectionResult.setPointScore( sectionResult.getPointScore() + questionMaxScore );
+                examResult.setPointScore( examResult.getPointScore() + questionMaxScore );
             }
-
-            Float sectionPercent = Float.valueOf( sectionResult.getPointScore() ) /
-                    Float.valueOf( sectionResult.getTotalScore() ) * 100;
-
-            Float examPercent = Float.valueOf( examResult.getPointScore() ) /
-                    Float.valueOf( examResult.getTotalScore() ) * 100;
-
-            sectionResult.setPercentScore( sectionPercent );
-            examResult.setPercentScore( examPercent );
-
-            resultRepository.save( questionResult );
-            resultRepository.save( sectionResult );
-            resultRepository.save( examResult );
         }
+        else {
+
+            questionResult.setPointScore( studentTextAnswerScore );
+
+            questionResult.setPercentScore( ( ( float )studentTextAnswerScore
+                    / ( float )questionMaxScore ) * 100 );
+
+            sectionResult.setPointScore( sectionResult.getPointScore() + studentTextAnswerScore );
+            examResult.setPointScore( examResult.getPointScore() + studentTextAnswerScore );
+        }
+
+        Float sectionPercent = Float.valueOf( sectionResult.getPointScore() ) /
+                Float.valueOf( sectionResult.getTotalScore() ) * 100;
+
+        Float examPercent = Float.valueOf( examResult.getPointScore() ) /
+                Float.valueOf( examResult.getTotalScore() ) * 100;
+
+        sectionResult.setPercentScore( sectionPercent );
+        examResult.setPercentScore( examPercent );
+
+        resultRepository.save( questionResult );
+        resultRepository.save( sectionResult );
+        resultRepository.save( examResult );
     }
 }
