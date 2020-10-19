@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -146,7 +148,7 @@ public class ResultsServiceImpl implements ResultsService {
     }
 
 
-
+    @Transactional
     @Override
     public ResultsInitialData getResultsInitialData( Long examId ) {
 

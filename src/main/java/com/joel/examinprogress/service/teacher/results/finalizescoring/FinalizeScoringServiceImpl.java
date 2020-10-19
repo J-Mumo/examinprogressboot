@@ -30,6 +30,8 @@ import com.joel.examinprogress.domain.exam.result.Result;
 import com.joel.examinprogress.domain.exam.section.Section;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.domain.exam.section.question.QuestionTypeEnum;
+import com.joel.examinprogress.domain.exam.section.question.answer.AnswerTypeEnum;
+import com.joel.examinprogress.domain.student.ExamStatus;
 import com.joel.examinprogress.domain.student.QuestionStatus;
 import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.user.User;
@@ -37,6 +39,7 @@ import com.joel.examinprogress.helper.result.ResultHelper;
 import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.results.ResultRepository;
 import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
+import com.joel.examinprogress.repository.student.ExamStatusRepository;
 import com.joel.examinprogress.repository.student.QuestionStatusRepository;
 import com.joel.examinprogress.repository.student.StudentRepository;
 import com.joel.examinprogress.service.shared.SaveResponse;
@@ -58,6 +61,9 @@ public class FinalizeScoringServiceImpl implements FinalizeScoringService {
     private ResultRepository resultRepository;
 
     @Autowired
+    private ExamStatusRepository examStatusRepository;
+
+    @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
     @Autowired
@@ -75,6 +81,16 @@ public class FinalizeScoringServiceImpl implements FinalizeScoringService {
         QuestionStatus questionStatus = questionStatusRepository.findByQuestionAndStudent(
                 question, student );
 
+        if ( questionStatus == null ) {
+
+            questionStatus = new QuestionStatus();
+            questionStatus.setComplete( Boolean.TRUE );
+            questionStatus.setFetched( Boolean.TRUE );
+            questionStatus.setQuestion( question );
+            questionStatus.setStudent( student );
+            questionStatusRepository.save( questionStatus );
+        }
+
         String studentAnswer = questionStatus.getTextAnswer();
         return new FinalizeScore(questionId, questionText, questionMaxPoints, studentAnswer);
     }
@@ -85,6 +101,7 @@ public class FinalizeScoringServiceImpl implements FinalizeScoringService {
         Set<Question> questions = new HashSet<>();
         Set<Section> sections = exam.getSections();
         FinalizeScore finalizeScore = null;
+        Long textAnswerTypeId = AnswerTypeEnum.TEXT_ANSWER.getAnswerTypeId();
 
         Long comprehensionQuestionTypeId = QuestionTypeEnum.COMPREHENSION_QUESTION
                 .getQuestionTypeId();
@@ -96,7 +113,8 @@ public class FinalizeScoringServiceImpl implements FinalizeScoringService {
 
         for ( Question question : questions ) {
 
-            if ( question.getQuestionType().getId() != comprehensionQuestionTypeId ) {
+            if ( question.getQuestionType().getId() != comprehensionQuestionTypeId &&
+                    question.getAnswerType().getId() == textAnswerTypeId ) {
 
                 Result questionResult = resultRepository.findByQuestionAndStudent( question,
                         student );
@@ -113,6 +131,7 @@ public class FinalizeScoringServiceImpl implements FinalizeScoringService {
     }
 
 
+    @Transactional
     @Override
     public FinalizeScoringInitialData getInitialData( FinalizeScoringRequestInitialData request ) {
 
@@ -124,6 +143,13 @@ public class FinalizeScoringServiceImpl implements FinalizeScoringService {
         String studentName = studentUser.getFirstName() + " " + studentUser.getLastName();
         FinalizeScore finalizeScore = createFinalizeScore( exam, student );
         Boolean scoringComplete = finalizeScore != null ? Boolean.FALSE : Boolean.TRUE;
+
+        if ( scoringComplete ) {
+
+            ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
+            examStatus.setScoringComplete( Boolean.TRUE );
+            examStatusRepository.save( examStatus );
+        }
 
         return new FinalizeScoringInitialData( studentName, scoringComplete, finalizeScore );
     }

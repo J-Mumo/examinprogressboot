@@ -17,10 +17,13 @@
 */
 package com.joel.examinprogress.domain.exam.section.question.answer;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -51,11 +54,11 @@ public class Answer extends AbstractPersistentEntity {
             nullable = false )
     private Question question;
 
-    @ManyToOne( )
+    @ManyToMany( )
     @JoinColumn( name = "fk_student",
             foreignKey = @ForeignKey( name = "answer_fk_student" ),
             nullable = true )
-    private Student student;
+    private Set<Student> students;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_answer_type",
@@ -87,15 +90,21 @@ public class Answer extends AbstractPersistentEntity {
     }
 
 
-    public Student getStudent() {
+    /**
+     * @return the students
+     */
+    public Set<Student> getStudents() {
 
-        return student;
+        return students;
     }
 
 
-    public void setStudent( Student student ) {
+    /**
+     * @param students the students to set
+     */
+    public void setStudents( Set<Student> students ) {
 
-        this.student = student;
+        this.students = students;
     }
 
 

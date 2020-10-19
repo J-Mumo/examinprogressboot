@@ -37,5 +37,5 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     Set<Answer> findByQuestion( Question question );
 
 
-    List<Answer> findByStudentAndQuestion( Student student, Question question );
+    List<Answer> findByStudentsAndQuestion( Student student, Question question );
 }

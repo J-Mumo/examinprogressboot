@@ -128,7 +128,7 @@ public class ResultHelperImpl implements ResultHelper {
             Boolean studentAnsweredQuestionCorrectly = true;
             Set<Answer> correctAnswers = question.getCorrectAnswers();
             List<Answer> studentAnswers = answerRepository
-                    .findByStudentAndQuestion( student, question );
+                    .findByStudentsAndQuestion( student, question );
     
             for(Answer correctAnswer : correctAnswers) {
                 for (Answer studentAnswer : studentAnswers) {
@@ -147,7 +147,7 @@ public class ResultHelperImpl implements ResultHelper {
                 examResult.setPointScore( examResult.getPointScore() + questionMaxScore );
             }
         }
-        else {
+        else if ( studentTextAnswerScore != null ) {
 
             questionResult.setPointScore( studentTextAnswerScore );
 

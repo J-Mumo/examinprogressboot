@@ -15,52 +15,69 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.student.exam.examinprogress;
+package com.joel.examinprogress.service.teacher.results.sectionperformance;
 
 
 /**
  * @author Joel Mumo
- * @date   Oct 5, 2020
+ * @date   Oct 17, 2020
  */
+public class SectionPerformanceInitialData {
 
-public class SectionResult {
-
-    private Long sectionId;
     private String sectionName;
     private Float percentScore;
     private Integer pointsEarned;
     private Integer sectionTotalPoints;
+    private QuestionResult[] questionResults;
 
-    public SectionResult( Long sectionId,
-            String sectionName,
+    public SectionPerformanceInitialData( String sectionName,
             Float percentScore,
             Integer pointsEarned,
-            Integer sectionTotalPoints ) {
+            Integer sectionTotalPoints,
+            QuestionResult[] questionResults ) {
 
         super();
-        this.sectionId = sectionId;
         this.sectionName = sectionName;
         this.percentScore = percentScore;
         this.pointsEarned = pointsEarned;
         this.sectionTotalPoints = sectionTotalPoints;
+        this.questionResults = questionResults;
     }
 
 
     /**
-     * @return the sectionId
+     * @return the sectionName
      */
-    public Long getSectionId() {
+    public String getSectionName() {
 
-        return sectionId;
+        return sectionName;
     }
 
 
     /**
-     * @param sectionId the sectionId to set
+     * @param sectionName the sectionName to set
      */
-    public void setSectionId( Long sectionId ) {
+    public void setSectionName( String sectionName ) {
 
-        this.sectionId = sectionId;
+        this.sectionName = sectionName;
+    }
+
+
+    /**
+     * @return the percentScore
+     */
+    public Float getPercentScore() {
+
+        return percentScore;
+    }
+
+
+    /**
+     * @param percentScore the percentScore to set
+     */
+    public void setPercentScore( Float percentScore ) {
+
+        this.percentScore = percentScore;
     }
 
 
@@ -100,26 +117,20 @@ public class SectionResult {
     }
 
 
-    public String getSectionName() {
+    /**
+     * @return the questionResults
+     */
+    public QuestionResult[] getQuestionResults() {
 
-        return sectionName;
+        return questionResults;
     }
 
 
-    public void setSectionName( String sectionName ) {
+    /**
+     * @param questionResults the questionResults to set
+     */
+    public void setQuestionResults( QuestionResult[] questionResults ) {
 
-        this.sectionName = sectionName;
-    }
-
-
-    public Float getPercentScore() {
-
-        return percentScore;
-    }
-
-
-    public void setPercentScore( Float percentScore ) {
-
-        this.percentScore = percentScore;
+        this.questionResults = questionResults;
     }
 }

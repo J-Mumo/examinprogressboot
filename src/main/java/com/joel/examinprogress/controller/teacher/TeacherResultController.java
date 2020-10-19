@@ -34,8 +34,14 @@ import com.joel.examinprogress.service.teacher.results.finalizescoring.FinalizeS
 import com.joel.examinprogress.service.teacher.results.finalizescoring.FinalizeScoringRequest;
 import com.joel.examinprogress.service.teacher.results.finalizescoring.FinalizeScoringRequestInitialData;
 import com.joel.examinprogress.service.teacher.results.finalizescoring.FinalizeScoringService;
+import com.joel.examinprogress.service.teacher.results.sectionperformance.SectionPerformanceInitialData;
+import com.joel.examinprogress.service.teacher.results.sectionperformance.SectionPerformanceRequestInitialData;
+import com.joel.examinprogress.service.teacher.results.sectionperformance.SectionPerformanceService;
 import com.joel.examinprogress.service.teacher.results.showexams.ShowExamsInitialData;
 import com.joel.examinprogress.service.teacher.results.showexams.ShowExamsService;
+import com.joel.examinprogress.service.teacher.results.viewperformance.ViewPerformanceInitialData;
+import com.joel.examinprogress.service.teacher.results.viewperformance.ViewPerformanceRequestInitialData;
+import com.joel.examinprogress.service.teacher.results.viewperformance.ViewPerformanceService;
 
 /**
  * @author Joel Mumo
@@ -53,6 +59,12 @@ public class TeacherResultController {
 
     @Autowired
     private FinalizeScoringService finalizeScoringService;
+
+    @Autowired
+    private ViewPerformanceService viewPerformanceService;
+
+    @Autowired
+    private SectionPerformanceService sectionPerformanceService;
 
     @RequestMapping( value = "exams/getinitialdata", method = RequestMethod.POST )
     public ResponseEntity<ShowExamsInitialData>
@@ -86,7 +98,26 @@ public class TeacherResultController {
     public ResponseEntity<SaveResponse> save(
             @RequestBody FinalizeScoringRequest request ) throws IOException {
 
-        SaveResponse initialData = finalizeScoringService.save( request );
+        SaveResponse response = finalizeScoringService.save( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "examresults/viewperformance", method = RequestMethod.POST )
+    public ResponseEntity<ViewPerformanceInitialData> getInitialData(
+            @RequestBody ViewPerformanceRequestInitialData request ) throws IOException {
+
+        ViewPerformanceInitialData initialData = viewPerformanceService.getInitialData( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "examresults/sectionperformance", method = RequestMethod.POST )
+    public ResponseEntity<SectionPerformanceInitialData> getInitialData(
+            @RequestBody SectionPerformanceRequestInitialData request ) throws IOException {
+
+        SectionPerformanceInitialData initialData = sectionPerformanceService.getInitialData(
+                request );
         return ResponseEntity.status( HttpStatus.OK ).body( initialData );
     }
 }

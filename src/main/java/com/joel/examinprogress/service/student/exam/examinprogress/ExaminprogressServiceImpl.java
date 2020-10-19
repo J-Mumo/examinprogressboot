@@ -568,9 +568,14 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
     private SectionResult createSectionResult( Result result ) {
 
+        Long sectionId = result.getSection().getId();
         String sectionName = result.getSection().getName();
         Float percentScore = result.getPercentScore();
-        return new SectionResult( sectionName, percentScore );
+        Integer pointsEarned = result.getPointScore();
+        Integer sectionTotalPoints = result.getTotalScore();
+
+        return new SectionResult( sectionId, sectionName, percentScore, pointsEarned,
+                sectionTotalPoints );
     }
 
 
@@ -588,14 +593,19 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
     }
 
 
-
     private ExamResult getExamResult( Student student, Exam exam ) {
 
         Result result = resultRepository.findByExamAndStudent( exam, student );
         boolean completeResult = false;
+        String examName = exam.getName();
         Float percentScore = result.getPercentScore();
+        Integer pointsEarned = result.getPointScore();
+        Integer examTotalPoints = result.getTotalScore();
         SectionResult[] sectionResults = createSectionResults( student, exam );
-        ExamResult examResult = new ExamResult( completeResult, percentScore, sectionResults );
+
+        ExamResult examResult = new ExamResult( completeResult, examName, percentScore,
+                pointsEarned, examTotalPoints, sectionResults );
+
         return examResult;
     }
 
@@ -851,7 +861,9 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         if ( !hasExpired ) {
             for ( Long answerId : request.getAnswerIds() ) {
                 Answer answer = answerRepository.findById( answerId ).get();
-                answer.setStudent( student );
+                Set<Student> students = new HashSet<>();
+                students.add( student );
+                answer.setStudents( students );
                 answerRepository.save( answer );
             }
             if ( request.getAnswerText() != null ) {
