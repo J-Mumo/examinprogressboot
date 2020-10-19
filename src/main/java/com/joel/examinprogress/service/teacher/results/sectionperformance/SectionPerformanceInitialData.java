@@ -24,24 +24,45 @@ package com.joel.examinprogress.service.teacher.results.sectionperformance;
  */
 public class SectionPerformanceInitialData {
 
+    private String studentName;
     private String sectionName;
     private Float percentScore;
     private Integer pointsEarned;
     private Integer sectionTotalPoints;
     private QuestionResult[] questionResults;
 
-    public SectionPerformanceInitialData( String sectionName,
+    public SectionPerformanceInitialData( String studentName,
+            String sectionName,
             Float percentScore,
             Integer pointsEarned,
             Integer sectionTotalPoints,
             QuestionResult[] questionResults ) {
 
         super();
+        this.studentName = studentName;
         this.sectionName = sectionName;
         this.percentScore = percentScore;
         this.pointsEarned = pointsEarned;
         this.sectionTotalPoints = sectionTotalPoints;
         this.questionResults = questionResults;
+    }
+
+
+    /**
+     * @return the studentName
+     */
+    public String getStudentName() {
+
+        return studentName;
+    }
+
+
+    /**
+     * @param studentName the studentName to set
+     */
+    public void setStudentName( String studentName ) {
+
+        this.studentName = studentName;
     }
 
 

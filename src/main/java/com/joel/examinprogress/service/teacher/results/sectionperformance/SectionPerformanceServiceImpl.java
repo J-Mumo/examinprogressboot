@@ -34,6 +34,8 @@ import com.joel.examinprogress.domain.exam.section.question.answer.Answer;
 import com.joel.examinprogress.domain.exam.section.question.answer.AnswerTypeEnum;
 import com.joel.examinprogress.domain.student.QuestionStatus;
 import com.joel.examinprogress.domain.student.Student;
+import com.joel.examinprogress.domain.user.User;
+import com.joel.examinprogress.helper.result.ResultHelper;
 import com.joel.examinprogress.repository.exam.results.ResultRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
 import com.joel.examinprogress.repository.exam.section.question.answer.AnswerRepository;
@@ -61,6 +63,9 @@ public class SectionPerformanceServiceImpl implements SectionPerformanceService 
 
     @Autowired
     private AnswerRepository answerRepository;
+
+    @Autowired
+    private ResultHelper resultHelper;
 
     @Autowired
     private QuestionResultComparator questionResultComparator;
@@ -119,6 +124,9 @@ public class SectionPerformanceServiceImpl implements SectionPerformanceService 
         Long singleAnswerId = AnswerTypeEnum.MULTIPLE_CHOICE_SINGLE_ANSWER.getAnswerTypeId();
         AnswerResult[] answerResults = null;
         QuestionResult[] questionResults = null;
+        Result result = resultRepository.findByQuestionAndStudent( question, student );
+        Integer pointsEarned = 0;
+        Integer questionTotalPoints = 0;
 
         if ( comprehensionQuestionId == question.getQuestionType().getId() ) {
 
@@ -141,12 +149,20 @@ public class SectionPerformanceServiceImpl implements SectionPerformanceService 
         }
         else {
 
+            if ( result == null ) {
+
+                resultHelper.updateResult( question, student, 0 );
+                result = resultRepository.findByQuestionAndStudent( question, student );
+            }
+
+            pointsEarned = result.getPointScore();
+            questionTotalPoints = result.getTotalScore();
             answerResults = createAnswerResults( student, question, textAnswer );
         }
 
         QuestionResult questionResult = new QuestionResult( questionId, questionText,
-                comprehensionQuestion, textAnswer, multipleAnswers, singleAnswer, answerResults,
-                questionResults );
+                comprehensionQuestion, textAnswer, multipleAnswers, singleAnswer, pointsEarned,
+                questionTotalPoints, answerResults, questionResults );
 
         return questionResult;
     }
@@ -188,6 +204,8 @@ public class SectionPerformanceServiceImpl implements SectionPerformanceService 
         Long studentId = request.getStudentId();
         Long sectionId = request.getSectionId();
         Student student = studentRepository.findById( studentId ).get();
+        User user = student.getUser();
+        String studentName = user.getFirstName() + " " + user.getLastName();
         Section section = sectionRepository.findById( sectionId ).get();
         String sectionName = section.getName();
         Set<Question> questions = section.getQuestions();
@@ -196,8 +214,8 @@ public class SectionPerformanceServiceImpl implements SectionPerformanceService 
         Float percentScore = result.getPercentScore();
         Integer pointsEarned = result.getPointScore();
         Integer sectionTotalPoints = result.getTotalScore();
-        
-        return new SectionPerformanceInitialData( sectionName, percentScore, pointsEarned,
-                sectionTotalPoints, questionResults );
+
+        return new SectionPerformanceInitialData( studentName, sectionName, percentScore,
+                pointsEarned, sectionTotalPoints, questionResults );
     }
 }

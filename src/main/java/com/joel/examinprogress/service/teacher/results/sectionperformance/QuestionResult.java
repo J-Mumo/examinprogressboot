@@ -30,6 +30,8 @@ public class QuestionResult {
     private boolean textAnswer;
     private boolean multipleAnswers;
     private boolean singleAnswer;
+    private Integer pointsEarned;
+    private Integer questionTotalPoints;
     private AnswerResult[] answerResults;
     private QuestionResult[] questionResults;
 
@@ -40,6 +42,8 @@ public class QuestionResult {
             boolean textAnswer,
             boolean multipleAnswers,
             boolean singleAnswer,
+            Integer pointsEarned,
+            Integer questionTotalPoints,
             AnswerResult[] answerResults,
             QuestionResult[] questionResults ) {
 
@@ -50,8 +54,46 @@ public class QuestionResult {
         this.textAnswer = textAnswer;
         this.multipleAnswers = multipleAnswers;
         this.singleAnswer = singleAnswer;
+        this.pointsEarned = pointsEarned;
+        this.questionTotalPoints = questionTotalPoints;
         this.answerResults = answerResults;
         this.questionResults = questionResults;
+    }
+
+
+    /**
+     * @return the pointsEarned
+     */
+    public Integer getPointsEarned() {
+
+        return pointsEarned;
+    }
+
+
+    /**
+     * @param pointsEarned the pointsEarned to set
+     */
+    public void setPointsEarned( Integer pointsEarned ) {
+
+        this.pointsEarned = pointsEarned;
+    }
+
+
+    /**
+     * @return the questionTotalPoints
+     */
+    public Integer getQuestionTotalPoints() {
+
+        return questionTotalPoints;
+    }
+
+
+    /**
+     * @param questionTotalPoints the questionTotalPoints to set
+     */
+    public void setQuestionTotalPoints( Integer questionTotalPoints ) {
+
+        this.questionTotalPoints = questionTotalPoints;
     }
 
 
