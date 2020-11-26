@@ -17,6 +17,7 @@
 */
 package com.joel.examinprogress.domain.teacher;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -39,10 +40,31 @@ public class Teacher extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = -6171289109060155067L;
 
+    @Column( name = "tokens", nullable = false )
+    private Integer tokens = 0;
+
     @OneToOne( )
     @JoinColumn( name = "fk_user", foreignKey = @ForeignKey(
             name = "teacher_fk_user" ), nullable = false )
     private User user;
+
+    /**
+     * @return the tokens
+     */
+    public Integer getTokens() {
+
+        return tokens;
+    }
+
+
+    /**
+     * @param tokens the tokens to set
+     */
+    public void setTokens( Integer tokens ) {
+
+        this.tokens = tokens;
+    }
+
 
     public User getUser() {
 

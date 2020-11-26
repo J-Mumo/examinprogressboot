@@ -15,23 +15,33 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.teacher;
+package com.joel.examinprogress.service.teacher.dashboard;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.teacher.Teacher;
 import com.joel.examinprogress.domain.user.User;
+import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
+import com.joel.examinprogress.repository.teacher.TeacherRepository;
 
 /**
  * @author Joel Mumo
- * @date   9th June, 2020
+ * @date   Nov 18, 2020
  */
-@Repository
-public interface TeacherRepository extends JpaRepository<Teacher, Long> {
+@Service
+public class DashboardService {
 
-    Teacher findByUser( User user );
+    @Autowired
+    private TeacherRepository teacherRepository;
 
+    @Autowired
+    private LoggedInCredentialsHelper loggedInCredentialsHelper;
 
-    Teacher findByUserId( Long userId );
+    public Integer getTokens() {
+
+        User user = loggedInCredentialsHelper.getLoggedInUser();
+        Teacher teacher = teacherRepository.findByUser( user );
+        return teacher.getTokens();
+    }
 }

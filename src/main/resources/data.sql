@@ -1034,8 +1034,8 @@ VALUES (3, 'Student', 'Student', 'student@gmail.com', true,
 current_timestamp, current_timestamp );
 
 -- teacher ---------------------------------------------------------------------------------------
-INSERT INTO teacher (id, fk_user, created_at, updated_at) 
-VALUES (1, 2, current_timestamp, current_timestamp );
+INSERT INTO teacher (id, tokens, fk_user, created_at, updated_at) 
+VALUES (1, 10, 2, current_timestamp, current_timestamp );
 
 -- user_role ---------------------------------------------------------------------------------------
 INSERT INTO user_role (user_id, role_id) 
