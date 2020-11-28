@@ -26,14 +26,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.domain.organisation.DomainOrganisation;
+import com.joel.examinprogress.domain.student.Student;
+import com.joel.examinprogress.domain.teacher.Teacher;
+import com.joel.examinprogress.domain.token.TokenConsumed;
+import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.email.EmailSentResponse;
 import com.joel.examinprogress.helper.link.LinkHelper;
+import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
 import com.joel.examinprogress.repository.exam.ExamTokenRepository;
 import com.joel.examinprogress.repository.exam.InviteRepository;
 import com.joel.examinprogress.repository.organisation.OrganisationRepository;
+import com.joel.examinprogress.repository.student.StudentRepository;
+import com.joel.examinprogress.repository.teacher.TeacherRepository;
+import com.joel.examinprogress.repository.token.TokenConsumedRepository;
+import com.joel.examinprogress.repository.user.UserRepository;
 import com.joel.examinprogress.service.email.EmailService;
 import com.joel.examinprogress.service.shared.SaveResponse;
 
@@ -62,6 +72,21 @@ public class SendInviteServiceImp implements SendInviteService {
     @Autowired
     private LinkHelper linkHelper;
 
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TokenConsumedRepository tokenConsumedRepository;
+
+    @Autowired
+    private LoggedInCredentialsHelper loggedInCredentialsHelper;
+
     private boolean emailExists( Set<ExamToken> examTokens, String email ) {
 
         boolean exists = false;
@@ -79,6 +104,23 @@ public class SendInviteServiceImp implements SendInviteService {
 
         String hashed = passwordEncoder.encode( id + email );
         return hashed;
+    }
+
+
+    private void updateTokenConsumption( String email, Exam exam ) {
+
+        User user = loggedInCredentialsHelper.getLoggedInUser();
+        Teacher teacher = teacherRepository.findByUser( user );
+        User studentUser = userRepository.findByEmail( email );
+        Student student = studentUser != null ? studentRepository.findByUser( studentUser ) : null;
+        TokenConsumed tokenConsumed = new TokenConsumed();
+        tokenConsumed.setEmail( email );
+        tokenConsumed.setStudent( student );
+        tokenConsumed.setTeacher( teacher );
+        tokenConsumed.setExam( exam );
+        tokenConsumedRepository.save( tokenConsumed );
+        teacher.setTokens( teacher.getTokens() - 1 );
+        teacherRepository.save( teacher );
     }
 
 
@@ -101,6 +143,7 @@ public class SendInviteServiceImp implements SendInviteService {
 
         DomainOrganisation organisation = organisationRepository.findByDomain( domain );
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
+        Exam exam = invite.getExam();
         Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         String email = request.getEmail();
         boolean emailExists = emailExists( examTokens, email );
@@ -121,7 +164,7 @@ public class SendInviteServiceImp implements SendInviteService {
             examToken.setToken( token );
             examToken.setInvite( invite );
             examTokenRepository.save( examToken );
-
+            updateTokenConsumption( email, exam );
             Locale locale = new Locale( "en" );
 
             EmailSentResponse emailSentResponse =
@@ -139,6 +182,7 @@ public class SendInviteServiceImp implements SendInviteService {
     }
 
 
+
     @Transactional
     @Override
     public SaveResponse sendInvite( SendInviteRequest request, String domain, Integer serverPort,
@@ -146,6 +190,7 @@ public class SendInviteServiceImp implements SendInviteService {
 
         DomainOrganisation organisation = organisationRepository.findByDomain( domain );
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
+        Exam exam = invite.getExam();
         Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         for ( String email : request.getEmails() ) {
             boolean emailExists = emailExists( examTokens, email );
@@ -161,7 +206,7 @@ public class SendInviteServiceImp implements SendInviteService {
                 examToken.setToken( token );
                 examToken.setInvite( invite );
                 examTokenRepository.save( examToken );
-
+                updateTokenConsumption( email, exam );
                 Locale locale = new Locale( "en" );
 
                 EmailSentResponse emailSentResponse =

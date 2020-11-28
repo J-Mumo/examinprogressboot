@@ -63,6 +63,7 @@ public class ExamDetailServiceImpl implements ExamDetailService {
         String email = null;
         Exam exam = null;
         ExamToken examToken = null;
+        Long examTokenId = null;
         Invite invite = null;
         boolean examHasStarted = false;
         boolean examHasEnded = false;
@@ -81,6 +82,7 @@ public class ExamDetailServiceImpl implements ExamDetailService {
         }
         else {
             examToken = examTokenRepository.findByToken( request.getCode() );
+            examTokenId = examToken.getId();
             Set<ExamToken> examTokens = new HashSet<>();
             examTokens.add( examToken );
 
@@ -133,7 +135,7 @@ public class ExamDetailServiceImpl implements ExamDetailService {
         }
 
         ExamDetailInitialData initialData = new ExamDetailInitialData( examExists,
-                studentRegistered, examHasStarted, examHasEnded, examToken.getId(), exam.getName(),
+                studentRegistered, examHasStarted, examHasEnded, examTokenId, exam.getName(),
                 exam.getDescription(), invite.getExamStartDate(), invite.getExamEndDate(),
                 invite.getExamStartTime(), exam.getTotalExamTime().toMinutes(),
                 invite.getPausable(), timedPerExam, timedPerSection, timedPerQuestion, email );

@@ -28,11 +28,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.domain.organisation.DomainOrganisation;
 import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.teacher.Teacher;
+import com.joel.examinprogress.domain.token.TokenConsumed;
 import com.joel.examinprogress.domain.user.Role;
 import com.joel.examinprogress.domain.user.RoleEnum;
 import com.joel.examinprogress.domain.user.User;
@@ -43,6 +45,7 @@ import com.joel.examinprogress.repository.exam.InviteRepository;
 import com.joel.examinprogress.repository.organisation.OrganisationRepository;
 import com.joel.examinprogress.repository.student.StudentRepository;
 import com.joel.examinprogress.repository.teacher.TeacherRepository;
+import com.joel.examinprogress.repository.token.TokenConsumedRepository;
 import com.joel.examinprogress.repository.user.RoleRepository;
 import com.joel.examinprogress.repository.user.UserRepository;
 import com.joel.examinprogress.service.email.EmailService;
@@ -72,6 +75,9 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Autowired
     private ExamTokenRepository examTokenRepository;
+
+    @Autowired
+    private TokenConsumedRepository tokenConsumedRepository;
 
     @Autowired
     private InviteRepository inviteRepository;
@@ -131,12 +137,29 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
 
+    private void updateTokenConsumption( Student student, Teacher teacher, Exam exam ) {
+
+        TokenConsumed tokenConsumed = new TokenConsumed();
+        tokenConsumed.setEmail( student.getUser().getEmail() );
+        tokenConsumed.setStudent( student );
+        tokenConsumed.setTeacher( teacher );
+        tokenConsumed.setExam( exam );
+        tokenConsumedRepository.save( tokenConsumed );
+        teacher.setTokens( teacher.getTokens() - 1 );
+        teacherRepository.save( teacher );
+    }
+
+
     private void registerStudent( User user, RegisterRequest request ) {
 
         ExamToken examToken = examTokenRepository.findByToken( request.getCode() );
+        Teacher teacher = null;
+        Exam exam = null;
         if ( examToken == null ) {
 
             Invite invite = inviteRepository.findByInviteCode( request.getCode() );
+            exam = invite.getExam();
+            teacher = invite.getExam().getTeacher();
             String token = getHashWithBcrypt( invite.getId(), user.getEmail() ).replaceAll( "/",
                     "sL4sh" );
 
@@ -159,6 +182,7 @@ public class RegisterServiceImpl implements RegisterService {
         roles.add( role );
         user.setRoles( roles );
         userRepository.save( user );
+        updateTokenConsumption( student, teacher, exam );
     }
 
 
@@ -209,9 +233,7 @@ public class RegisterServiceImpl implements RegisterService {
         }
         else {
 
-            user = register( request,
-                    organisation,
-                    email );
+            user = register( request, organisation, email );
 
             if ( request.getCode() != null )
                 registerStudent( user, request );

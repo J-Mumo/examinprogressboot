@@ -20,15 +20,46 @@ package com.joel.examinprogress.service.teacher.token.payment;
 
 /**
  * @author Joel Mumo
- * @date   Nov 26, 2020
+ * @date   Nov 27, 2020
  */
-public interface PaymentService {
+public class PaymentRequest {
 
-    PaymentInitialData getPaymentInitialData( Long userId );
+    private Integer tokens;
+    private PaymentSuccessResponse response;
+
+    /**
+     * @return the tokens
+     */
+    public Integer getTokens() {
+
+        return tokens;
+    }
 
 
-    Integer getTokens();
+    /**
+     * @param tokens the tokens to set
+     */
+    public void setTokens( Integer tokens ) {
+
+        this.tokens = tokens;
+    }
 
 
-    UpdateTokenResponse updateTokens( PaymentRequest request );
+    /**
+     * @return the response
+     */
+    public PaymentSuccessResponse getResponse() {
+
+        return response;
+    }
+
+
+    /**
+     * @param response the response to set
+     */
+    public void setResponse( PaymentSuccessResponse response ) {
+
+        this.response = response;
+    }
+
 }
