@@ -15,21 +15,14 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.token;
+package com.joel.examinprogress.service.teacher.token.tokenconsumption;
 
-import java.util.Set;
-
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.token.PaymentHistory;
 
 /**
  * @author Joel Mumo
- * @date   Nov 27, 2020
+ * @date   Dec 2, 2020
  */
-@Repository
-public interface PaymentHistoryRepository extends CrudRepository<PaymentHistory, Long> {
+public interface TokenConsumptionService {
 
-    Set<PaymentHistory> findByTeacherId( Long teacherId );
+    TokenConsumptionInitialData getInitialData();
 }

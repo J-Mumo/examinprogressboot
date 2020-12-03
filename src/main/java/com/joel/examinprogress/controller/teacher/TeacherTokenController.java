@@ -32,6 +32,10 @@ import com.joel.examinprogress.service.teacher.token.payment.PaymentInitialData;
 import com.joel.examinprogress.service.teacher.token.payment.PaymentRequest;
 import com.joel.examinprogress.service.teacher.token.payment.PaymentService;
 import com.joel.examinprogress.service.teacher.token.payment.UpdateTokenResponse;
+import com.joel.examinprogress.service.teacher.token.paymenthistory.PaymentHistoryInitialData;
+import com.joel.examinprogress.service.teacher.token.paymenthistory.PaymentHistoryService;
+import com.joel.examinprogress.service.teacher.token.tokenconsumption.TokenConsumptionInitialData;
+import com.joel.examinprogress.service.teacher.token.tokenconsumption.TokenConsumptionService;
 
 /**
  * @author Joel Mumo
@@ -43,6 +47,12 @@ public class TeacherTokenController {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private PaymentHistoryService paymentHistoryService;
+
+    @Autowired
+    private TokenConsumptionService tokenConsumptionService;
 
     @Autowired
     private LoggedInCredentialsHelper loggedInCredentialsHelper;
@@ -74,4 +84,19 @@ public class TeacherTokenController {
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
+
+    @RequestMapping( value = "paymenthistory/getinitialdata", method = RequestMethod.GET )
+    public ResponseEntity<PaymentHistoryInitialData> getPaymentHistoryInitialData() {
+
+        PaymentHistoryInitialData initialData = paymentHistoryService.getInitialData();
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
+
+    @RequestMapping( value = "tokenconsumption/getinitialdata", method = RequestMethod.GET )
+    public ResponseEntity<TokenConsumptionInitialData> getTokenonsumptionInitialData() {
+
+        TokenConsumptionInitialData initialData = tokenConsumptionService.getInitialData();
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
 }

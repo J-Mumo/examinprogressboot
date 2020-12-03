@@ -34,6 +34,22 @@ public class PaymentSuccessResponse {
     private String tx_ref;
     private String payment_plan;
 
+    public PaymentSuccessResponse( BigDecimal amount, String currency, Object customer,
+            String flw_ref, String status, Integer transaction_id, String tx_ref,
+            String payment_plan ) {
+
+        super();
+        this.amount = amount;
+        this.currency = currency;
+        this.customer = customer;
+        this.flw_ref = flw_ref;
+        this.status = status;
+        this.transaction_id = transaction_id;
+        this.tx_ref = tx_ref;
+        this.payment_plan = payment_plan;
+    }
+
+
     /**
      * @return the amount
      */

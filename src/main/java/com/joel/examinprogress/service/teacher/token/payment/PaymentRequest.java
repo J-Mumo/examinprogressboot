@@ -25,7 +25,14 @@ package com.joel.examinprogress.service.teacher.token.payment;
 public class PaymentRequest {
 
     private Integer tokens;
-    private PaymentSuccessResponse response;
+    private PaymentSuccessResponse paymentSuccessResponse;
+
+    //    public PaymentRequest( Integer tokens, PaymentSuccessResponse response ) {
+    //
+    //        super();
+    //        this.tokens = tokens;
+    //        this.response = response;
+    //    }
 
     /**
      * @return the tokens
@@ -45,21 +52,23 @@ public class PaymentRequest {
     }
 
 
-    /**
-     * @return the response
-     */
-    public PaymentSuccessResponse getResponse() {
 
-        return response;
+    /**
+     * @return the paymentSuccessResponse
+     */
+    public PaymentSuccessResponse getPaymentSuccessResponse() {
+
+        return paymentSuccessResponse;
     }
 
 
-    /**
-     * @param response the response to set
-     */
-    public void setResponse( PaymentSuccessResponse response ) {
 
-        this.response = response;
+    /**
+     * @param paymentSuccessResponse the paymentSuccessResponse to set
+     */
+    public void setPaymentSuccessResponse( PaymentSuccessResponse paymentSuccessResponse ) {
+
+        this.paymentSuccessResponse = paymentSuccessResponse;
     }
 
 }

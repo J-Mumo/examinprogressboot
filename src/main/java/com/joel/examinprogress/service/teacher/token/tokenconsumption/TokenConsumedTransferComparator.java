@@ -15,21 +15,22 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.token;
+package com.joel.examinprogress.service.teacher.token.tokenconsumption;
 
-import java.util.Set;
+import java.util.Comparator;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-import com.joel.examinprogress.domain.token.PaymentHistory;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Joel Mumo
- * @date   Nov 27, 2020
+ * @date   Dec 3, 2020
  */
-@Repository
-public interface PaymentHistoryRepository extends CrudRepository<PaymentHistory, Long> {
+@Component
+public class TokenConsumedTransferComparator implements Comparator<TokenConsumedTransfer> {
 
-    Set<PaymentHistory> findByTeacherId( Long teacherId );
+    @Override
+    public int compare( TokenConsumedTransfer o1, TokenConsumedTransfer o2 ) {
+
+        return -1 * o1.getId().compareTo( o2.getId() );
+    }
 }

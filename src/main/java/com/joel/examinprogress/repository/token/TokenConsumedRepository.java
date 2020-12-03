@@ -17,6 +17,8 @@
 */
 package com.joel.examinprogress.repository.token;
 
+import java.util.Set;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -29,4 +31,5 @@ import com.joel.examinprogress.domain.token.TokenConsumed;
 @Repository
 public interface TokenConsumedRepository extends CrudRepository<TokenConsumed, Long> {
 
+    Set<TokenConsumed> findByTeacherId( Long teacherId );
 }

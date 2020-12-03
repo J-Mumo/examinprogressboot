@@ -89,12 +89,12 @@ public class PaymentServiceImpl implements PaymentService {
         teacherRepository.save( teacher );
 
         PaymentHistory paymentHistory = new PaymentHistory();
-        paymentHistory.setAmountPaid( request.getResponse().getAmount() );
+        paymentHistory.setAmountPaid( request.getPaymentSuccessResponse().getAmount() );
         paymentHistory.setTokensBought( request.getTokens() );
-        paymentHistory.setCurreny( request.getResponse().getCurrency() );
-        paymentHistory.setFlw_ref( request.getResponse().getFlw_ref() );
-        paymentHistory.setTransactionId( request.getResponse().getTransaction_id() );
-        paymentHistory.setTx_ref( request.getResponse().getTx_ref() );
+        paymentHistory.setCurreny( request.getPaymentSuccessResponse().getCurrency() );
+        paymentHistory.setFlw_ref( request.getPaymentSuccessResponse().getFlw_ref() );
+        paymentHistory.setTransactionId( request.getPaymentSuccessResponse().getTransaction_id() );
+        paymentHistory.setTx_ref( request.getPaymentSuccessResponse().getTx_ref() );
         paymentHistory.setTeacher( teacher );
         paymentHistoryRepository.save( paymentHistory );
 
