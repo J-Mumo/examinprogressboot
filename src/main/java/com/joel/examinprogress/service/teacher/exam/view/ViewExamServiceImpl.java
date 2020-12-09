@@ -81,6 +81,7 @@ public class ViewExamServiceImpl implements ViewExamService {
         SectionTransfer[] sectionTransfers = createSectionTransfers( sections );
         Duration examDuration = exam.getDuration();
         boolean hasInvites = false;
+        Long inviteId = exam.getInvite() != null ? exam.getInvite().getId() : null;
 
         if ( exam.getInvite() != null )
             hasInvites = true;
@@ -90,7 +91,8 @@ public class ViewExamServiceImpl implements ViewExamService {
                         .getSeconds() % 60 ) ) : null;
 
         ViewExamInitialData initialData = new ViewExamInitialData(
-                exam.getName(), exam.getDescription(), duration, sectionTransfers, hasInvites );
+                exam.getName(), exam.getDescription(), duration, sectionTransfers, hasInvites,
+                inviteId );
 
         return initialData;
     }

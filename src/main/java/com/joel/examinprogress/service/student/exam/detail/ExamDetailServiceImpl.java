@@ -117,7 +117,7 @@ public class ExamDetailServiceImpl implements ExamDetailService {
                     examHasEnded = true;
                 }
             }
-            else if ( today.compareTo( startDate ) <= 0 ) {
+            else if ( today.compareTo( startDate ) >= 0 ) {
                 if ( examStartTime == null || now.isAfter( examStartTime ) ) {
                     examHasStarted = true;
                 }

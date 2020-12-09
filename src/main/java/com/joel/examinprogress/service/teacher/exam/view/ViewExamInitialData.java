@@ -30,13 +30,15 @@ public class ViewExamInitialData {
     private String duration;
     private SectionTransfer[] sectionTransfers;
     private boolean hasInvites;
+    private Long inviteId;
 
     public ViewExamInitialData(
             String name,
             String description,
             String duration,
             SectionTransfer[] sectionTransfers,
-            boolean hasInvites ) {
+            boolean hasInvites,
+            Long inviteId ) {
 
         super();
         this.name = name;
@@ -44,6 +46,25 @@ public class ViewExamInitialData {
         this.duration = duration;
         this.sectionTransfers = sectionTransfers;
         this.hasInvites = hasInvites;
+        this.inviteId = inviteId;
+    }
+
+
+    /**
+     * @return the inviteId
+     */
+    public Long getInviteId() {
+
+        return inviteId;
+    }
+
+
+    /**
+     * @param inviteId the inviteId to set
+     */
+    public void setInviteId( Long inviteId ) {
+
+        this.inviteId = inviteId;
     }
 
 
