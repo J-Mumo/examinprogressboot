@@ -28,11 +28,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
+import com.joel.examinprogress.domain.exam.ExamToken;
 import com.joel.examinprogress.domain.exam.Invite;
+import com.joel.examinprogress.domain.student.ExamStatus;
+import com.joel.examinprogress.domain.student.Student;
 import com.joel.examinprogress.domain.teacher.Teacher;
 import com.joel.examinprogress.domain.user.User;
 import com.joel.examinprogress.helper.loggingin.LoggedInCredentialsHelper;
 import com.joel.examinprogress.repository.exam.ExamRepository;
+import com.joel.examinprogress.repository.exam.ExamTokenRepository;
+import com.joel.examinprogress.repository.student.ExamStatusRepository;
 import com.joel.examinprogress.repository.teacher.TeacherRepository;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamTransfer;
 import com.joel.examinprogress.service.teacher.exam.exams.ExamTransferComparator;
@@ -49,7 +54,13 @@ public class RoomsServiceImpl implements RoomsService {
     private ExamRepository examRepository;
 
     @Autowired
+    private ExamStatusRepository examStatusRepository;
+
+    @Autowired
     private TeacherRepository teacherRepository;
+
+    @Autowired
+    private ExamTokenRepository examTokenRepository;
 
     @Autowired
     private ExamTransferComparator examTransferComparator;
@@ -134,5 +145,19 @@ public class RoomsServiceImpl implements RoomsService {
         ExamTransfer[] examTransfers = createExamTransfers( examsInProgress );
         ExamsInitialData initialData = new ExamsInitialData( examTransfers );
         return initialData;
+    }
+
+
+    @Override
+    public Boolean terminateStudentExam( Long examTokenId ) {
+
+        ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
+        Student student = examToken.getStudent();
+        Exam exam = examToken.getInvite().getExam();
+        ExamStatus examStatus = examStatusRepository.findByExamAndStudent( exam, student );
+        examStatus.setComplete( Boolean.TRUE );
+        examStatusRepository.save( examStatus );
+
+        return Boolean.TRUE;
     }
 }

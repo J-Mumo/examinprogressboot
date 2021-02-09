@@ -15,7 +15,7 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.controller.teacher;
+package com.joel.examinprogress.controller.shared;
 
 import java.io.IOException;
 
@@ -27,34 +27,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
-import com.joel.examinprogress.service.teacher.rooms.RoomsService;
+import com.joel.examinprogress.service.shared.agora.RtcTokenBuilderService;
+import com.joel.examinprogress.service.shared.agora.RtcTokenRequest;
+import com.joel.examinprogress.service.shared.agora.RtcTokenResponse;
 
 /**
  * @author Joel Mumo
- * @date   Dec 9, 2020
+ * @date   Dec 17, 2020
  */
 @RestController
-@RequestMapping( "/examinprogress/teacher/rooms" )
-public class ExamRoomsController {
+@RequestMapping( "/examinprogress/agora" )
+public class AgoraController {
 
     @Autowired
-    private RoomsService roomsService;
+    private RtcTokenBuilderService rtcTokenBuilderService;
 
-    @RequestMapping( value = "getinitialdata", method = RequestMethod.POST )
-    public ResponseEntity<ExamsInitialData> getInitialData()
+    @RequestMapping( value = "rtctoken", method = RequestMethod.POST )
+    public ResponseEntity<RtcTokenResponse> getRtcToken( @RequestBody RtcTokenRequest request )
             throws IOException {
 
-        ExamsInitialData initialData = roomsService.getInitialData();
-        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
-    }
-
-
-    @RequestMapping( value = "terminate/student/exam", method = RequestMethod.POST )
-    public ResponseEntity<Boolean> terminateStudentExam( @RequestBody Long examTokenId )
-            throws IOException {
-
-        Boolean response = roomsService.terminateStudentExam( examTokenId );
-        return ResponseEntity.status( HttpStatus.OK ).body( response );
+        RtcTokenResponse rtcToken = rtcTokenBuilderService.getRtcToken( request );
+        return ResponseEntity.status( HttpStatus.OK ).body( rtcToken );
     }
 }

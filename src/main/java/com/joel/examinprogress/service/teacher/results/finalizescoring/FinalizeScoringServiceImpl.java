@@ -119,7 +119,7 @@ public class FinalizeScoringServiceImpl implements FinalizeScoringService {
                 Result questionResult = resultRepository.findByQuestionAndStudent( question,
                         student );
 
-                if ( questionResult == null ) {
+                if ( questionResult.getPointScore() == null ) {
 
                     finalizeScore = createFinalizeScore( question, student );
                     break;

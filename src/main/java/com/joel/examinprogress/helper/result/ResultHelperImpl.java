@@ -56,7 +56,13 @@ public class ResultHelperImpl implements ResultHelper {
 
         Long questionResultTypeId = ResultTypeEnum.QUESTION_RESULT.getResultTypeId();
         ResultType questionResultType = resultTypeRepository.findById( questionResultTypeId ).get();
-        Result questionResult = new Result();
+
+        Result questionResult = resultRepository.findByQuestionAndStudent( question,
+                student );
+
+        if ( questionResult == null )
+            questionResult = new Result();
+
         questionResult.setTotalScore( question.getScore() );
         questionResult.setStudent( student );
         questionResult.setQuestion( question );

@@ -15,13 +15,19 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.service.token;
+package com.joel.examinprogress.service.student.exam.result;
 
+import com.joel.examinprogress.service.teacher.results.sectionperformance.SectionPerformanceInitialData;
+import com.joel.examinprogress.service.teacher.results.viewperformance.ViewPerformanceInitialData;
 
 /**
  * @author Joel Mumo
- * @date   Nov 18, 2020
+ * @date   Feb 9, 2021
  */
-public class TokenRequest {
+public interface StudentResultService {
 
+    ViewPerformanceInitialData getInitialData( Long examTokenId );
+
+
+    SectionPerformanceInitialData getSectionResult( Long sectionId );
 }

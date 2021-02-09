@@ -27,8 +27,10 @@ import org.springframework.stereotype.Service;
 
 import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.section.Section;
+import com.joel.examinprogress.domain.exam.section.question.Question;
 import com.joel.examinprogress.repository.exam.ExamRepository;
 import com.joel.examinprogress.repository.exam.section.SectionRepository;
+import com.joel.examinprogress.repository.exam.section.question.QuestionRepository;
 import com.joel.examinprogress.service.teacher.exam.shared.SectionTransfer;
 import com.joel.examinprogress.service.teacher.exam.shared.SectionTransferComparator;
 
@@ -44,6 +46,9 @@ public class ViewExamServiceImpl implements ViewExamService {
 
     @Autowired
     private SectionRepository sectionRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @Autowired
     private SectionTransferComparator sectionTransferComparator;
@@ -82,6 +87,11 @@ public class ViewExamServiceImpl implements ViewExamService {
         Duration examDuration = exam.getDuration();
         boolean hasInvites = false;
         Long inviteId = exam.getInvite() != null ? exam.getInvite().getId() : null;
+        boolean examHasNoQuestions = false;
+        Set<Question> questions = questionRepository.findBySectionExam( exam );
+
+        if ( sections.isEmpty() || questions.isEmpty() )
+            examHasNoQuestions = true;
 
         if ( exam.getInvite() != null )
             hasInvites = true;
@@ -92,7 +102,7 @@ public class ViewExamServiceImpl implements ViewExamService {
 
         ViewExamInitialData initialData = new ViewExamInitialData(
                 exam.getName(), exam.getDescription(), duration, sectionTransfers, hasInvites,
-                inviteId );
+                inviteId, examHasNoQuestions );
 
         return initialData;
     }

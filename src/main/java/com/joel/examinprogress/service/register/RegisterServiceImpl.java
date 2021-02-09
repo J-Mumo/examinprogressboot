@@ -159,7 +159,6 @@ public class RegisterServiceImpl implements RegisterService {
 
             Invite invite = inviteRepository.findByInviteCode( request.getCode() );
             exam = invite.getExam();
-            teacher = invite.getExam().getTeacher();
             String token = getHashWithBcrypt( invite.getId(), user.getEmail() ).replaceAll( "/",
                     "sL4sh" );
 
@@ -170,6 +169,12 @@ public class RegisterServiceImpl implements RegisterService {
             examTokenRepository.save( examToken );
 
         }
+        else {
+
+            exam = examToken.getInvite().getExam();
+        }
+
+        teacher = examToken.getInvite().getExam().getTeacher();
         Student student = new Student();
         student.setUser( user );
         studentRepository.save( student );

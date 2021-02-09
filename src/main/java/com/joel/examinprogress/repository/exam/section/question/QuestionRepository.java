@@ -22,6 +22,7 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.joel.examinprogress.domain.exam.Exam;
 import com.joel.examinprogress.domain.exam.section.question.Question;
 
 /**
@@ -36,4 +37,7 @@ public interface QuestionRepository extends JpaRepository<Question,
 
 
     Set<Question> findByQuestionId( Long comprehensionQuestionId );
+
+
+    Set<Question> findBySectionExam( Exam exam );
 }

@@ -105,7 +105,7 @@ public class ResultsServiceImpl implements ResultsService {
                 Result questionResult = resultRepository.findByQuestionAndStudent( question,
                         student );
 
-                if ( questionResult == null ) {
+                if ( questionResult.getPointScore() == null ) {
 
                     if ( question.getAnswerType().getId() == AnswerTypeEnum.TEXT_ANSWER
                             .getAnswerTypeId() ) {

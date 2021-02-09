@@ -90,18 +90,10 @@ public class UserController {
         Integer serverPort = ThreadLocals.portThreadLocal.get();
         String protocol = ThreadLocals.protocolThreadLocal.get();
 
-        try {
-            SaveResponse saveRegisterDevResponse = registerService.save(
-                    registerRequest, domain, serverPort, protocol );
+        SaveResponse response = registerService.save(
+                registerRequest, domain, serverPort, protocol );
 
-            return ResponseEntity.status( HttpStatus.OK ).body(
-                    saveRegisterDevResponse );
-        }
-        catch ( IOException e ) {
-
-            throw new RuntimeException( "Problem while registering",
-                    e );
-        }
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
 

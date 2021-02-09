@@ -36,6 +36,8 @@ public class ExaminprogressResponse {
     private boolean timedPerQuestion;
     private boolean pausable;
     private boolean paused;
+    private boolean examHasNoQuestions;
+    private Long examId;
     private Long examTime;
     private LocalDate examStartDate;
     private LocalTime examStartTime;
@@ -53,6 +55,8 @@ public class ExaminprogressResponse {
             boolean timedPerQuestion,
             boolean pausable,
             boolean paused,
+            boolean examHasNoQuestions,
+            Long examId,
             Long examTime,
             LocalDate examStartDate,
             LocalTime examStartTime,
@@ -71,10 +75,48 @@ public class ExaminprogressResponse {
         this.examTime = examTime;
         this.pausable = pausable;
         this.paused = paused;
+        this.examHasNoQuestions = examHasNoQuestions;
+        this.examId = examId;
         this.examStartDate = examStartDate;
         this.examStartTime = examStartTime;
         this.examSectionTransfer = examSectionTransfer;
         this.examResult = examResult;
+    }
+
+
+    /**
+     * @return the examId
+     */
+    public Long getExamId() {
+
+        return examId;
+    }
+
+
+    /**
+     * @param examId the examId to set
+     */
+    public void setExamId( Long examId ) {
+
+        this.examId = examId;
+    }
+
+
+    /**
+     * @return the examHasNoQuestions
+     */
+    public boolean isExamHasNoQuestions() {
+
+        return examHasNoQuestions;
+    }
+
+
+    /**
+     * @param examHasNoQuestions the examHasNoQuestions to set
+     */
+    public void setExamHasNoQuestions( boolean examHasNoQuestions ) {
+
+        this.examHasNoQuestions = examHasNoQuestions;
     }
 
 

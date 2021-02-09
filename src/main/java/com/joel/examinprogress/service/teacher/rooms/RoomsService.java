@@ -26,4 +26,7 @@ import com.joel.examinprogress.service.teacher.exam.exams.ExamsInitialData;
 public interface RoomsService {
 
     ExamsInitialData getInitialData();
+
+
+    Boolean terminateStudentExam( Long examTokenId );
 }

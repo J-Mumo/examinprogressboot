@@ -60,7 +60,7 @@ INSERT INTO domain_organisation (id, name, domain, created_at, updated_at)
 VALUES (1, 'Exam In Progress', 'examinprogressweb.com', current_timestamp, current_timestamp);
 
 INSERT INTO domain_organisation (id, name, domain, created_at, updated_at)
-VALUES (2, 'Spotadev', 'spotadevweb.com', current_timestamp, current_timestamp);
+VALUES (2, 'Exam In Progress', '127.0.0.1', current_timestamp, current_timestamp);
 
 -- role  -------------------------------------------------------------------------------------------
 INSERT INTO role (id, name, description, created_at, updated_at)

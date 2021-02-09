@@ -31,6 +31,7 @@ public class ViewExamInitialData {
     private SectionTransfer[] sectionTransfers;
     private boolean hasInvites;
     private Long inviteId;
+    private boolean examHasNoQuestions;
 
     public ViewExamInitialData(
             String name,
@@ -38,7 +39,8 @@ public class ViewExamInitialData {
             String duration,
             SectionTransfer[] sectionTransfers,
             boolean hasInvites,
-            Long inviteId ) {
+            Long inviteId,
+            boolean examHasNoQuestions ) {
 
         super();
         this.name = name;
@@ -47,6 +49,25 @@ public class ViewExamInitialData {
         this.sectionTransfers = sectionTransfers;
         this.hasInvites = hasInvites;
         this.inviteId = inviteId;
+        this.examHasNoQuestions = examHasNoQuestions;
+    }
+
+
+    /**
+     * @return the examHasNoQuestions
+     */
+    public boolean isExamHasNoQuestions() {
+
+        return examHasNoQuestions;
+    }
+
+
+    /**
+     * @param examHasNoQuestions the examHasNoQuestions to set
+     */
+    public void setExamHasNoQuestions( boolean examHasNoQuestions ) {
+
+        this.examHasNoQuestions = examHasNoQuestions;
     }
 
 

@@ -35,6 +35,8 @@ import com.joel.examinprogress.service.student.exam.examinprogress.Examinprogres
 import com.joel.examinprogress.service.student.exam.examinprogress.ExaminprogressService;
 import com.joel.examinprogress.service.student.exam.examinprogress.SkipQuestionRequest;
 import com.joel.examinprogress.service.student.exam.examinprogress.SkipSectionRequest;
+import com.joel.examinprogress.service.student.exam.exams.StudentExamsInitialData;
+import com.joel.examinprogress.service.student.exam.exams.StudentExamsService;
 
 /**
  * @author Joel Mumo
@@ -49,6 +51,19 @@ public class StudentExamController {
 
     @Autowired
     private ExaminprogressService examinprogressService;
+
+    @Autowired
+    private StudentExamsService studentExamsService;
+
+    @RequestMapping( value = "exams/initialdata", method = RequestMethod.POST )
+    public ResponseEntity<StudentExamsInitialData> getInitialData()
+            throws IOException {
+
+        StudentExamsInitialData initialData = studentExamsService.getInitialData();
+
+        return ResponseEntity.status( HttpStatus.OK ).body( initialData );
+    }
+
 
     @RequestMapping( value = "detail/initialdata", method = RequestMethod.POST )
     public ResponseEntity<ExamDetailInitialData> getInitialData(
