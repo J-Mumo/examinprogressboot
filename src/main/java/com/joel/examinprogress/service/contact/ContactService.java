@@ -15,25 +15,18 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.user;
+package com.joel.examinprogress.service.contact;
 
-import java.util.Set;
+import java.util.Locale;
 
-import org.springframework.data.repository.CrudRepository;
-
-import com.joel.examinprogress.domain.user.User;
+import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
  * @author Joel Mumo
- * @date   26 May, 2020
+ * @date   Apr 20, 2021
  */
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface ContactService {
 
-    User findByEmail( String email );
-
-
-    User findByEmailActivationCode( String emailActivationCode );
-
-
-    Set<User> findByRolesIdIn( Long[] roleId );
+    SaveResponse save( ContactRequest request, String domain,
+            Integer serverPort, String protocol, Locale locale );
 }

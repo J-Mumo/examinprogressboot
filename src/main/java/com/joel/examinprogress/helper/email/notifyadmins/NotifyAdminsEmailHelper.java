@@ -15,25 +15,20 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.user;
+package com.joel.examinprogress.helper.email.notifyadmins;
 
-import java.util.Set;
+import java.util.Locale;
 
-import org.springframework.data.repository.CrudRepository;
-
-import com.joel.examinprogress.domain.user.User;
+import com.joel.examinprogress.domain.contact.ContactQuery;
+import com.joel.examinprogress.domain.organisation.DomainOrganisation;
+import com.joel.examinprogress.helper.email.EmailSentResponse;
 
 /**
  * @author Joel Mumo
- * @date   26 May, 2020
+ * @date   Apr 21, 2021
  */
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface NotifyAdminsEmailHelper {
 
-    User findByEmail( String email );
-
-
-    User findByEmailActivationCode( String emailActivationCode );
-
-
-    Set<User> findByRolesIdIn( Long[] roleId );
+    EmailSentResponse notifyAdminsOnContactQuery( DomainOrganisation organisation,
+            ContactQuery contactQuery, Locale locale, int serverPort, String protocol );
 }

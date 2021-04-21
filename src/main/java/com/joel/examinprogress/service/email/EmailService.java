@@ -23,6 +23,7 @@ package com.joel.examinprogress.service.email;
  */
 import java.util.Locale;
 
+import com.joel.examinprogress.domain.contact.ContactQuery;
 import com.joel.examinprogress.domain.exam.Invite;
 import com.joel.examinprogress.domain.organisation.DomainOrganisation;
 import com.joel.examinprogress.domain.user.User;
@@ -46,4 +47,8 @@ public interface EmailService {
     EmailSentResponse sendInviteToExam( DomainOrganisation organisation, String email,
             String examToken, Invite invite, Locale locale, String domain, int serverPort,
             String protocol );
+
+
+    EmailSentResponse notifyAdminsOnContactQuery( DomainOrganisation organisation,
+            ContactQuery contactQuery, Locale locale, int serverPort, String protocol );
 }

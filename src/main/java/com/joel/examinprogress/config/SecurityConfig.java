@@ -88,7 +88,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(
                 "/examinprogress/user/register/save",
                 "/examinprogress/user/activate",
-                "/examinprogress/student/exam/detail/initialdata" );
+                "/examinprogress/student/exam/detail/initialdata",
+                "/examinprogress/contact/save" );
     }
 
 

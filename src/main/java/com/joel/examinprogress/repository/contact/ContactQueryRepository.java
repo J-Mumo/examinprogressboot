@@ -15,25 +15,16 @@
     Author : Joel Mumo
     ========================================================================================
 */
-package com.joel.examinprogress.repository.user;
-
-import java.util.Set;
+package com.joel.examinprogress.repository.contact;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.joel.examinprogress.domain.user.User;
+import com.joel.examinprogress.domain.contact.ContactQuery;
 
 /**
  * @author Joel Mumo
- * @date   26 May, 2020
+ * @date   Apr 20, 2021
  */
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface ContactQueryRepository extends CrudRepository<ContactQuery, Long> {
 
-    User findByEmail( String email );
-
-
-    User findByEmailActivationCode( String emailActivationCode );
-
-
-    Set<User> findByRolesIdIn( Long[] roleId );
 }
