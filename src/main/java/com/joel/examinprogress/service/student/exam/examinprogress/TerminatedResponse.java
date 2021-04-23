@@ -17,26 +17,36 @@
 */
 package com.joel.examinprogress.service.student.exam.examinprogress;
 
+
 /**
  * @author Joel Mumo
- * @date   12th Aug, 2020
+ * @date   Apr 23, 2021
  */
-public interface ExaminprogressService {
+public class TerminatedResponse {
 
-    ExaminprogressResponse getExamProgress( Long examTokenId );
+    private Boolean terminated;
 
+    public TerminatedResponse( Boolean terminated ) {
 
-    ExaminprogressResponse saveAnswer( AnswerRequest request );
-
-
-    ExaminprogressResponse skipQuestion( SkipQuestionRequest request );
-
-
-    ExaminprogressResponse skipSection( SkipSectionRequest request );
+        super();
+        this.terminated = terminated;
+    }
 
 
-    ExaminprogressResponse terminateExam( Long examTokenId );
+    /**
+     * @return the terminated
+     */
+    public Boolean getTerminated() {
+
+        return terminated;
+    }
 
 
-    TerminatedResponse updateCheatingAttempts( Long examTokenId );
+    /**
+     * @param terminated the terminated to set
+     */
+    public void setTerminated( Boolean terminated ) {
+
+        this.terminated = terminated;
+    }
 }

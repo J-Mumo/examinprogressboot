@@ -40,14 +40,14 @@ public class ExamToken extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 3910693378116108040L;
 
-    @Column( name = "email", nullable = false,
-            unique = false,
-            length = 256 )
+    @Column( name = "email", nullable = false, unique = false, length = 256 )
     private String email;
 
-    @Column( name = "token", nullable = false, unique = true,
-            length = 128 )
+    @Column( name = "token", nullable = false, unique = true, length = 128 )
     private String token;
+
+    @Column( name = "cheating_attempts", nullable = false )
+    private Integer cheatingAttempts = 0;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_invite",
@@ -106,5 +106,23 @@ public class ExamToken extends AbstractPersistentEntity {
     public void setStudent( Student student ) {
 
         this.student = student;
+    }
+
+
+    /**
+     * @return the cheatingAttempts
+     */
+    public Integer getCheatingAttempts() {
+
+        return cheatingAttempts;
+    }
+
+
+    /**
+     * @param cheatingAttempts the cheatingAttempts to set
+     */
+    public void setCheatingAttempts( Integer cheatingAttempts ) {
+
+        this.cheatingAttempts = cheatingAttempts;
     }
 }

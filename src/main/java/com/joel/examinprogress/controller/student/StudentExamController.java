@@ -35,6 +35,7 @@ import com.joel.examinprogress.service.student.exam.examinprogress.Examinprogres
 import com.joel.examinprogress.service.student.exam.examinprogress.ExaminprogressService;
 import com.joel.examinprogress.service.student.exam.examinprogress.SkipQuestionRequest;
 import com.joel.examinprogress.service.student.exam.examinprogress.SkipSectionRequest;
+import com.joel.examinprogress.service.student.exam.examinprogress.TerminatedResponse;
 import com.joel.examinprogress.service.student.exam.exams.StudentExamsInitialData;
 import com.joel.examinprogress.service.student.exam.exams.StudentExamsService;
 
@@ -126,7 +127,16 @@ public class StudentExamController {
             throws IOException {
 
         ExaminprogressResponse response = examinprogressService.terminateExam( examTokenId );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
 
+
+    @RequestMapping( value = "examinprogress/cheatingattempt", method = RequestMethod.POST )
+    public ResponseEntity<TerminatedResponse> updateCheatingAttempts(
+            @RequestBody Long examTokenId )
+            throws IOException {
+
+        TerminatedResponse response = examinprogressService.updateCheatingAttempts( examTokenId );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 }

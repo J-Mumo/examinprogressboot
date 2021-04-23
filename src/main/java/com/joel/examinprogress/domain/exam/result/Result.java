@@ -44,13 +44,13 @@ public class Result extends AbstractPersistentEntity {
     private static final long serialVersionUID = 2308788963851258543L;
 
     @Column( name = "point_score", nullable = true, unique = false )
-    private Integer pointScore;
+    private Integer pointScore = 0;
 
     @Column( name = "percent_score", nullable = true, unique = false )
-    private Float percentScore;
+    private Float percentScore = 0f;
 
     @Column( name = "total_score", nullable = false, unique = false )
-    private Integer totalScore;
+    private Integer totalScore = 0;
 
     @ManyToOne( )
     @JoinColumn( name = "fk_result_type",

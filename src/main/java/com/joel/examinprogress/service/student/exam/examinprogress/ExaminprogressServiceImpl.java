@@ -1121,6 +1121,23 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
                 examHasNoQuestions, examId, examTime,
                 examStartDate, examStartTime, examSectionTransfer, examResult );
     }
+
+
+    @Override
+    public TerminatedResponse updateCheatingAttempts( Long examTokenId ) {
+
+        ExamToken examToken = examTokenRepository.findById( examTokenId ).get();
+        examToken.setCheatingAttempts( examToken.getCheatingAttempts() + 1 );
+        examTokenRepository.save( examToken );
+
+        if ( examToken.getCheatingAttempts() > 5 ) {
+
+            terminateExam( examTokenId );
+            return new TerminatedResponse( true );
+        }
+
+        return new TerminatedResponse( false );
+    }
 }
 
 class ExamTimedPer {
