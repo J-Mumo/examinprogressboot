@@ -89,7 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/examinprogress/user/register/save",
                 "/examinprogress/user/activate",
                 "/examinprogress/student/exam/detail/initialdata",
-                "/examinprogress/contact/save" );
+                "/examinprogress/contact/save",
+                "/examinprogress/contact/mailinglist/subscribe" );
     }
 
 

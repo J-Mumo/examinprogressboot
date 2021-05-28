@@ -19,6 +19,8 @@ package com.joel.examinprogress.controller.shared;
 
 import java.util.Locale;
 
+import javax.validation.constraints.Email;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joel.examinprogress.context.threads.ThreadLocals;
 import com.joel.examinprogress.service.contact.ContactRequest;
 import com.joel.examinprogress.service.contact.ContactService;
+import com.joel.examinprogress.service.mailinglist.MailingListService;
 import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
@@ -43,6 +46,9 @@ public class ContactController {
     @Autowired
     private ContactService contactService;
 
+    @Autowired
+    private MailingListService mailingListService;
+
     @RequestMapping( value = "save", method = RequestMethod.POST )
     public ResponseEntity<SaveResponse> save( @RequestBody ContactRequest request ) {
 
@@ -53,6 +59,14 @@ public class ContactController {
         SaveResponse response = contactService.save( request, domain, serverPort,
                 protocol, Locale.ENGLISH );
 
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "mailinglist/subscribe", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> subscribeToMailingList( @RequestBody @Email String email ) {
+
+        SaveResponse response = mailingListService.subscribeToMailingList( email );
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 }
