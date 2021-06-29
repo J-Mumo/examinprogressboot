@@ -905,7 +905,7 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
         if ( !hasExpired ) {
             for ( Long answerId : request.getAnswerIds() ) {
                 Answer answer = answerRepository.findById( answerId ).get();
-                Set<Student> students = new HashSet<>();
+                Set<Student> students = answer.getStudents();
                 students.add( student );
                 answer.setStudents( students );
                 answerRepository.save( answer );
@@ -992,6 +992,8 @@ public class ExaminprogressServiceImpl implements ExaminprogressService {
 
         questionStatus.setComplete( Boolean.TRUE );
         questionStatusRepository.save( questionStatus );
+        Integer studentTextAnswerScore = null;
+        resultHelper.updateResult( question, student, studentTextAnswerScore );
         ExaminprogressResponse response;
 
         if ( request.getPause() ) {

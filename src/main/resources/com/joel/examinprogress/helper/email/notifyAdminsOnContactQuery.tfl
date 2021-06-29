@@ -13,7 +13,6 @@
             <${img} alt="${alt}" title="${title}" src="cid:logoemail01" height="120px" weight="120px"/>
         </div>
         <div style="background: white; border: solid 5px white; padding: 3px">
-            <h3>${subject}</h3>
             <table width="95%">
                 <tbody>
                     <tr>

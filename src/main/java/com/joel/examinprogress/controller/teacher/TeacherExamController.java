@@ -51,6 +51,7 @@ import com.joel.examinprogress.service.teacher.exam.invite.invites.InvitesInitia
 import com.joel.examinprogress.service.teacher.exam.invite.invites.InvitesService;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteInitialData;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteRequest;
+import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteResponse;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteService;
 import com.joel.examinprogress.service.teacher.exam.invite.send.SendInviteToEmailRequest;
 import com.joel.examinprogress.service.teacher.exam.invite.view.ViewInviteInitialData;
@@ -389,29 +390,29 @@ public class TeacherExamController {
 
 
     @RequestMapping( value = "invite/sendtoemail", method = RequestMethod.POST )
-    public ResponseEntity<SaveResponse> sendInviteToEmail(
+    public ResponseEntity<SendInviteResponse> sendInviteToEmail(
             @RequestBody SendInviteToEmailRequest request )
             throws IOException {
 
         String domain = ThreadLocals.domainThreadLocal.get();
         Integer serverPort = ThreadLocals.portThreadLocal.get();
         String protocol = ThreadLocals.protocolThreadLocal.get();
-        SaveResponse response = sendInviteService.sendInviteToEmail( request, domain, serverPort,
-                protocol );
+        SendInviteResponse response = sendInviteService.sendInviteToEmail( request, domain,
+                serverPort, protocol );
 
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 
 
     @RequestMapping( value = "invite/send", method = RequestMethod.POST )
-    public ResponseEntity<SaveResponse> sendInvite(
+    public ResponseEntity<SendInviteResponse> sendInvite(
             @RequestBody SendInviteRequest request )
             throws IOException {
 
         String domain = ThreadLocals.domainThreadLocal.get();
         Integer serverPort = ThreadLocals.portThreadLocal.get();
         String protocol = ThreadLocals.protocolThreadLocal.get();
-        SaveResponse response = sendInviteService.sendInvite( request, domain, serverPort,
+        SendInviteResponse response = sendInviteService.sendInvite( request, domain, serverPort,
                 protocol );
 
         return ResponseEntity.status( HttpStatus.OK ).body( response );
@@ -437,6 +438,21 @@ public class TeacherExamController {
             @RequestBody Long examTokenId ) throws IOException {
 
         DeleteResponse response = viewInviteService.unsendInvite( examTokenId );
+        return ResponseEntity.status( HttpStatus.OK ).body( response );
+    }
+
+
+    @RequestMapping( value = "invite/resend", method = RequestMethod.POST )
+    public ResponseEntity<SaveResponse> resendInvite(
+            @RequestBody Long examTokenId ) throws IOException {
+
+        String domain = ThreadLocals.domainThreadLocal.get();
+        Integer serverPort = ThreadLocals.portThreadLocal.get();
+        String protocol = ThreadLocals.protocolThreadLocal.get();
+
+        SaveResponse response = viewInviteService.resendInvite( examTokenId, domain, serverPort,
+                protocol );
+
         return ResponseEntity.status( HttpStatus.OK ).body( response );
     }
 

@@ -5,13 +5,13 @@ set -e
 ## File Details
 ################################################################################
 ## NAME:    Release
-## FILE:    spotadevboot/releases/version/1.0/db/release.sh
+## FILE:    examinprogressboot/releases/version/1.0/db/release.sh
 ## RELEASE: 1.0
 
 ################################################################################
 ## Author Details
 ################################################################################
-## AUTHOR:  John Dickerson
+## AUTHOR:  Joel Mumo
 ## CREATED: 21/02/2020
 
 ################################################################################
@@ -32,7 +32,7 @@ PSQL_DB=NOT_SET
 ################################################################################
 ## Functions
 ################################################################################
-function getProperty() {
+getProperty() {
    PROP_KEY=$1
    PROP_VALUE=`cat $PROPERTY_FILE | grep "$PROP_KEY" | cut -d'=' -f2`
    echo $PROP_VALUE

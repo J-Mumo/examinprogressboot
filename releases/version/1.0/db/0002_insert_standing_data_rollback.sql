@@ -4,32 +4,58 @@ BEGIN WORK;
 
 DELETE FROM address_type;
 
-DELETE FROM job_type;
-
 DELETE FROM domain_organisation;
 
 DELETE FROM role;
 
-DELETE FROM code_repository_type;
-
-DELETE FROM technology_group;
-
-DELETE FROM technology;
-
-DELETE FROM technology_tag;
-
-DELETE FROM experience_type;
-
 DELETE FROM country;
-
-DELETE FROM address;
-
-DELETE FROM app_user;
 
 DELETE FROM user_role;
 
-DELETE FROM dev;
+DELETE FROM answer_students;
 
-DELETE FROM role_group;
+DELETE FROM app_user;
+
+DELETE FROM teacher;
+
+DELETE FROM student;
+
+DELETE FROM address;
+
+DELETE FROM answer_type;
+
+DELETE FROM answer;
+
+DELETE FROM question_type;
+
+DELETE FROM question;
+
+DELETE FROM question_status;
+
+DELETE FROM section;
+
+DELETE FROM section_status;
+
+DELETE FROM exam_timer_type;
+
+DELETE FROM exam;
+
+DELETE FROM token_consumed;
+
+DELETE FROM exam_status;
+
+DELETE FROM invite;
+
+DELETE FROM exam_token;
+
+DELETE FROM payment_history;
+
+DELETE FROM contact_query;
+
+DELETE FROM mailing_list;
+
+DELETE FROM result_type;
+
+DELETE FROM result;
 
 COMMIT;

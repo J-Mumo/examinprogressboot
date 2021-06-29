@@ -7,30 +7,54 @@ INSERT INTO address_type (id, name, created_at, updated_at)
 VALUES (1, 'User', current_timestamp, current_timestamp);
 
 INSERT INTO address_type (id, name, created_at, updated_at) 
-VALUES (2, 'Dev', current_timestamp, current_timestamp);
-
-INSERT INTO address_type (id, name, created_at, updated_at) 
 VALUES (3, 'Domain Organisation', current_timestamp, current_timestamp);
 
--- job_type ----------------------------------------------------------------------------------------
-INSERT INTO job_type (id, name, created_at, updated_at) 
-VALUES (1, 'Full Time', current_timestamp, current_timestamp);
+-- exam_timer_type -----------------------------------------------------------------------------
+INSERT INTO exam_timer_type (id, name,created_at, updated_at)
+VALUES (1, 'Timed per Exam', current_timestamp, current_timestamp);
 
-INSERT INTO job_type (id, name, created_at, updated_at) 
-VALUES (2, 'Part Time', current_timestamp, current_timestamp);
+INSERT INTO exam_timer_type (id, name,created_at, updated_at)
+VALUES (2, 'Timed per Section', current_timestamp, current_timestamp);
 
-INSERT INTO job_type (id, name, created_at, updated_at) 
-VALUES (3, 'Contract', current_timestamp, current_timestamp);
+INSERT INTO exam_timer_type (id, name, created_at, updated_at)
+VALUES (3, 'Timed per Question', current_timestamp, current_timestamp);
 
-INSERT INTO job_type (id, name, created_at, updated_at) 
-VALUES (4, 'Feature by Feature', current_timestamp, current_timestamp);
+-- result_type -----------------------------------------------------------------------------
+INSERT INTO result_type (id, name,created_at, updated_at)
+VALUES (1, 'Exam result', current_timestamp, current_timestamp);
+
+INSERT INTO result_type (id, name,created_at, updated_at)
+VALUES (2, 'Section result', current_timestamp, current_timestamp);
+
+INSERT INTO result_type (id, name, created_at, updated_at)
+VALUES (3, 'Question result', current_timestamp, current_timestamp);
+
+-- question_type -----------------------------------------------------------------------------
+INSERT INTO question_type (id, name,created_at, updated_at)
+VALUES (1, 'Question', current_timestamp, current_timestamp);
+
+INSERT INTO question_type (id, name,created_at, updated_at)
+VALUES (2, 'Comprehension question', current_timestamp, current_timestamp);
+
+-- answer_type -----------------------------------------------------------------------------
+INSERT INTO answer_type (id, name,created_at, updated_at)
+VALUES (1, 'Multiple choice single answer', current_timestamp, current_timestamp);
+
+INSERT INTO answer_type (id, name,created_at, updated_at)
+VALUES (2, 'Multiple choice multiple answers', current_timestamp, current_timestamp);
+
+INSERT INTO answer_type (id, name,created_at, updated_at)
+VALUES (3, 'Text answer', current_timestamp, current_timestamp);
+
+INSERT INTO answer_type (id, name,created_at, updated_at)
+VALUES (4, 'Image answer', current_timestamp, current_timestamp);
 
 -- domain_organisation -----------------------------------------------------------------------------
 INSERT INTO domain_organisation (id, name, domain, created_at, updated_at)
-VALUES (1, 'Enigma', 'enigmascoredev.com', current_timestamp, current_timestamp);
+VALUES (1, 'Exam In Progress', 'examinprogressweb.com', current_timestamp, current_timestamp);
 
 INSERT INTO domain_organisation (id, name, domain, created_at, updated_at)
-VALUES (2, 'Spotadev', 'spotadevweb.com', current_timestamp, current_timestamp);
+VALUES (2, 'Exam In Progress', '127.0.0.1', current_timestamp, current_timestamp);
 
 -- role  -------------------------------------------------------------------------------------------
 INSERT INTO role (id, name, description, created_at, updated_at)
@@ -41,314 +65,10 @@ VALUES (2, 'EMAIL_VALIDATED', 'The user gets given this role after having their 
 current_timestamp, current_timestamp);
 
 INSERT INTO role (id, name, description, created_at, updated_at) 
-VALUES (3, 'ADMIN', 'Role for admin', current_timestamp, current_timestamp);
+VALUES (3, 'TEACHER', 'Role for teacher', current_timestamp, current_timestamp);
 
 INSERT INTO role (id, name, description, created_at, updated_at) 
-VALUES (4, 'DEV', 'Role for developer', current_timestamp, current_timestamp);
-
--- repository_type ---------------------------------------------------------------------------------
-INSERT INTO code_repository_type (id, name, created_at, updated_at) 
-VALUES (1, 'Git', current_timestamp, current_timestamp);
-
--- technology_group --------------------------------------------------------------------------------
-INSERT INTO technology_group (id, show_version, name, created_at, updated_at) 
-VALUES (1000, false, 'Algorithms', current_timestamp, current_timestamp);
-
-INSERT INTO technology_group (id, show_version, name, created_at, updated_at) 
-VALUES (2000, true, 'Databases', current_timestamp, current_timestamp);
-
-INSERT INTO technology_group (id, show_version, name, created_at, updated_at) 
-VALUES (3000, false, 'Design Patterns', current_timestamp, current_timestamp);
-
-INSERT INTO technology_group (id, show_version, name, created_at, updated_at) 
-VALUES (4000, true, 'Frameworks', current_timestamp, current_timestamp);
-
-INSERT INTO technology_group (id, show_version, name, created_at, updated_at) 
-VALUES (5000, false, 'Methodology', current_timestamp, current_timestamp);
-
-INSERT INTO technology_group (id, show_version, name, created_at, updated_at) 
-VALUES (6000, true, 'Programming Languages', current_timestamp, current_timestamp);
-
-INSERT INTO technology_group (id, show_version, name, created_at, updated_at) 
-VALUES (7000, false, 'UML', current_timestamp, current_timestamp);
-
--- Algorithms --------------------------------------------------------------------------------------
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1000, 'Insertion sort', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1010, 'Selection sort', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1020, 'Bubble sort', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1030, 'Merge Sort', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1040, 'Quicksort', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1050, 'Binary Search', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1060, 'Breadth First Search (BFS)', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1070, 'Depth First Search (DFS)', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1080, 'Lee algorithm', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1090, 'Shortest path in a Maze', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1100, 'Flood fill Algorithm', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1110, 'Floyd’s Cycle Detection Algorithm', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1120, 'Kadane’s algorithm',1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1130, 'Longest Increasing Subsequence', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1140, 'Inorder, Preorder, Postorder Tree Traversals', 1000, 
-current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1150, 'Heap Sort', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1160, 'Topological Sorting in a DAG', 1000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1170, 'Disjoint-Set Data Structure (Union-Find Algorithm)', 1000, 
-current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1180, 'Kruskal’s Algorithm for finding Minimum Spanning Tree', 1000, 
-current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1190, 'Single-Source Shortest Paths — Dijkstra’s Algorithm', 1000, 
-current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (1200, 'All-Pairs Shortest Paths — Floyd Warshall Algorithm', 1000, 
-current_timestamp, current_timestamp);
-
--- Databases  --------------------------------------------------------------------------------------
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (2000, 'MySql', 2000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (2010, 'Oracle', 2000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (2020, 'Postgress', 2000, current_timestamp, current_timestamp);
-
--- Design Patterns  --------------------------------------------------------------------------------
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3000, 'Behavioural: Chain of Responsibility', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3010, 'Behavioural: Command', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3020, 'Behavioural: Interpreter', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3030, 'Behavioural: Iterator', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3040, 'Behavioural: Mediator', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3050, 'Behavioural: Memento', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3060, 'Behavioural: Observer', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3070, 'Behavioural: State', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3080, 'Behavioural: Strategy', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3090, 'Behavioural: Template Method', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3100, 'Behavioural: Visitor', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3110, 'Creational: Abstract Factory', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3120, 'Creational: Builder', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3130, 'Creational: Factory Method', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3140, 'Creational: Prototype', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3150, 'Creational: Singleton', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3160, 'Structural: Adapter', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3170, 'Structural: Bridge', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3180, 'Structural: Composite', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3190, 'Structural: Decorator', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3200, 'Facade', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3210, 'Structural: Flyweight', 3000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (3220, 'Structural: Proxy', 3000, current_timestamp, current_timestamp);
-
--- Frameworks --------------------------------------------------------------------------------------
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (4000, 'Java - Spring Boot', 4000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (4010, 'Java - Spring Cloud', 4000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (4020, 'JavaScript - Angular', 4000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (4030, 'JavaScript - Vue JS', 4000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (4040, 'JavaScript - React JS', 4000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (4050, 'JavaScript - Node JS', 4000, current_timestamp, current_timestamp);
-
--- Methodology -------------------------------------------------------------------------------------
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (5000, 'Agile Methodology', 5000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (5010,'Pair Programming', 5000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (5020,'Scrum', 5000, current_timestamp, current_timestamp);
-
--- Programming Languages ---------------------------------------------------------------------------
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6000, 'C#', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6010, 'C', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6020, 'C++', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6030, 'Dart', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6040, 'Go', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6050, 'Haskell', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6060, 'JavaScript', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6070, 'Java', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6080, 'Kotlin', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6090, 'PHP', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6100, 'Python', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6110, 'Ruby', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6120, 'Rust', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6130, 'Swift', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6140, 'TypeScript', 6000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (6150, 'Unix Shell Scripting', 6000, current_timestamp, current_timestamp);
-
--- UML ---------------------------------------------------------------------------------------------
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (7000, 'Class Diagram', 7000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (7010, 'Sequence Diagram', 7000, current_timestamp, current_timestamp);
-
-INSERT INTO technology (id, name, fk_technology_group, created_at, updated_at) 
-VALUES (7020, 'Use Case Diagram', 7000, current_timestamp, current_timestamp);
-
--- technology_tag ----------------------------------------------------------------------------------
-INSERT INTO technology_tag (id, name, created_at, updated_at) 
-VALUES (1, 'Backend', current_timestamp, current_timestamp);
-
-INSERT INTO technology_tag (id, name, created_at, updated_at) 
-VALUES (2, 'Frontend', current_timestamp, current_timestamp);
-
-INSERT INTO technology_tag (id, name, created_at, updated_at) 
-VALUES (3, 'Java', current_timestamp, current_timestamp);
-
-INSERT INTO technology_tag (id, name, created_at, updated_at) 
-VALUES (4, 'JavaScript', current_timestamp, current_timestamp);
-
-INSERT INTO technology_tag (id, name, created_at, updated_at) 
-VALUES (5, 'Spring', current_timestamp, current_timestamp);
-
-INSERT INTO technology_tag (id, name, created_at, updated_at) 
-VALUES (6, 'Web', current_timestamp, current_timestamp);
-
--- experience_type ---------------------------------------------------------------------------------
-INSERT INTO experience_type (id, name, created_at, updated_at)
-VALUES (1, 'Employment', current_timestamp, current_timestamp);
-
-INSERT INTO experience_type (id, name, created_at, updated_at)
-VALUES (2, 'Voluntary Employment', current_timestamp, current_timestamp);
-
-INSERT INTO experience_type (id, name, created_at, updated_at)
-VALUES (3, 'School', current_timestamp, current_timestamp);
-
-INSERT INTO experience_type (id, name, created_at, updated_at)
-VALUES (4, 'University', current_timestamp, current_timestamp);
-
-INSERT INTO experience_type (id, name, created_at, updated_at)
-VALUES (5, 'Study', current_timestamp, current_timestamp);
-
-INSERT INTO experience_type (id, name, created_at, updated_at)
-VALUES (6, 'Travel', current_timestamp, current_timestamp);
-
-INSERT INTO experience_type (id, name, created_at, updated_at)
-VALUES (7, 'Other', current_timestamp, current_timestamp);
+VALUES (4, 'STUDENT', 'Role for student', current_timestamp, current_timestamp);
 
 -- country -----------------------------------------------------------------------------------------
 -- https://countrycode.org/
@@ -1269,30 +989,47 @@ INSERT INTO country (id, name, rb_key, country_code, enabled, created_at, update
 VALUES (240, 'Zimbabwe', 'data_sql/country/zimbabwe', '263', true, 
 current_timestamp, current_timestamp);
 
+-- End Fixed Standing data
+-- =================================================================================================
+
+-- =================================================================================================
+-- Start Dynamic Standing Data =====================================================================
+
 -- address -----------------------------------------------------------------------------------------
-INSERT INTO address (id, first_line, second_line, third_line, fourth_line, town_or_city, post_code, 
+INSERT INTO address (id, first_line, second_line, town_or_city, post_code, 
 fk_country, fk_address_type, created_at, updated_at)
-VALUES (1, 'first line', 'second line', 'third line', 'fourth line', 'Kisumu', '40100', 1, 1,
+VALUES (1, 'first line', 'second line', 'Kisumu', '40100', 1, 1,
 current_timestamp, current_timestamp);
 
-INSERT INTO address (id, first_line, second_line, third_line, fourth_line, town_or_city, post_code, 
+INSERT INTO address (id, first_line, second_line, town_or_city, post_code, 
 fk_country, fk_address_type, created_at, updated_at)
-VALUES (2, 'first line', 'second line', 'third line', 'fourth line', 'New-York', 'Some Postal Code',
-2, 2, current_timestamp, current_timestamp);
+VALUES (2, 'first line', 'second line', 'New-York', 'Some Postal Code',
+2, 1, current_timestamp, current_timestamp);
 
--- admin app_user - password enigma ----------------------------------------------------------------
-INSERT INTO app_user (id, first_name, last_name, username, email, enabled, password_hash, 
+-- superadmin app_user - password enigma ----------------------------------------------------------------
+INSERT INTO app_user (id, first_name, last_name, email, enabled, password_hash, 
 email_activation_code, fk_domain_organisation, created_at, updated_at)
-VALUES (1, 'Admin', 'Admin', 'admin', 'admin@gmail.com', true, 
+VALUES (1, 'SuperAdmin', 'SuperAdmin', 'superadmin@gmail.com', true, 
 '$2a$10$Z65pHQUCOGWXBDjDNu/Xf.Db06XuACBO1S5FjeXfqDAHw2oDU5D/C', 'active', 1, 
 current_timestamp, current_timestamp );
 
--- dev app_user - password enigma ------------------------------------------------------------------
-INSERT INTO app_user (id, first_name, last_name, username, email, enabled, password_hash, 
+-- teacher app_user - password enigma ------------------------------------------------------------------
+INSERT INTO app_user (id, first_name, last_name, email, enabled, password_hash, 
 email_activation_code, fk_domain_organisation, created_at, updated_at)
-VALUES (2, 'Dev', 'Dev', 'dev', 'dev@gmail.com', true,
+VALUES (2, 'Teacher', 'Teacher', 'teacher@gmail.com', true,
 '$2a$10$Z65pHQUCOGWXBDjDNu/Xf.Db06XuACBO1S5FjeXfqDAHw2oDU5D/C', 'active', 1, 
 current_timestamp, current_timestamp );
+
+-- student app_user - password enigma ------------------------------------------------------------------
+INSERT INTO app_user (id, first_name, last_name, email, enabled, password_hash, 
+email_activation_code, fk_domain_organisation, created_at, updated_at)
+VALUES (3, 'Student', 'Student', 'student@gmail.com', true,
+'$2a$10$Z65pHQUCOGWXBDjDNu/Xf.Db06XuACBO1S5FjeXfqDAHw2oDU5D/C', 'active', 1, 
+current_timestamp, current_timestamp );
+
+-- teacher ---------------------------------------------------------------------------------------
+INSERT INTO teacher (id, tokens, fk_user, created_at, updated_at) 
+VALUES (1, 10, 2, current_timestamp, current_timestamp );
 
 -- user_role ---------------------------------------------------------------------------------------
 INSERT INTO user_role (user_id, role_id) 
@@ -1304,26 +1041,15 @@ VALUES (1, 2);
 INSERT INTO user_role (user_id, role_id) 
 VALUES (2, 2);
 
+INSERT INTO user_role (user_id, role_id) 
+VALUES (2, 3);
+
 INSERT INTO user_role (user_id, role_id ) 
-VALUES (2, 4);
+VALUES (3, 2);
 
--- dev ---------------------------------------------------------------------------------------------
-INSERT INTO dev (id, created, enabled, icon_path, fk_user, fk_address, created_at, updated_at)
-VALUES (1, current_timestamp, true, 'Path to Icon location', 2, 1, 
-current_timestamp, current_timestamp);
+INSERT INTO user_role (user_id, role_id ) 
+VALUES (3, 4);
 
--- role_group --------------------------------------------------------------------------------------
-INSERT INTO role_group (id, description, name, created_at, updated_at)
-VALUES (1,'Profile for grouping Admin Roles','ADMIN', current_timestamp, current_timestamp);
+-- End Dynamic Standing Data =======================================================================
+-- =================================================================================================
 
-INSERT INTO role_group (id, description, name, created_at, updated_at)
-VALUES (2, 'Profile for grouping Dev Roles','DEV', current_timestamp, current_timestamp);
-
--- role_group --------------------------------------------------------------------------------------
-INSERT INTO rolegroup_role (rolegroup_id, role_id )
-VALUES (1,3);
-
-INSERT INTO rolegroup_role (rolegroup_id, role_id)
-VALUES (2,4);
-
-COMMIT;

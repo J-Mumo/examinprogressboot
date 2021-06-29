@@ -45,7 +45,6 @@ import com.joel.examinprogress.repository.teacher.TeacherRepository;
 import com.joel.examinprogress.repository.token.TokenConsumedRepository;
 import com.joel.examinprogress.repository.user.UserRepository;
 import com.joel.examinprogress.service.email.EmailService;
-import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
  * @author Joel Mumo
@@ -89,14 +88,12 @@ public class SendInviteServiceImp implements SendInviteService {
 
     private boolean emailExists( Set<ExamToken> examTokens, String email ) {
 
-        boolean exists = false;
         for ( ExamToken examToken : examTokens ) {
             if ( email.equals( examToken.getEmail() ) )
-                exists = true;
-            break;
+                return true;
         }
 
-        return exists;
+        return false;
     }
 
 
@@ -124,6 +121,46 @@ public class SendInviteServiceImp implements SendInviteService {
     }
 
 
+    private SendInviteResponse createExamTokenAndEmailInvite( Invite invite, String email,
+            String domain, Integer serverPort, String protocol ) {
+
+        DomainOrganisation organisation = organisationRepository.findByDomain( domain );
+        Exam exam = invite.getExam();
+        String hash = getHashWithBcrypt( invite.getId(), email );
+        String linkHash = hash.replaceAll( "/", "sL4sh" );
+        String token = linkHash;
+
+        ExamToken examToken = new ExamToken();
+        examToken.setEmail( email );
+        examToken.setToken( token );
+        examToken.setInvite( invite );
+        examTokenRepository.save( examToken );
+        updateTokenConsumption( email, exam );
+        Locale locale = new Locale( "en" );
+
+        EmailSentResponse emailSentResponse =
+                emailService.sendInviteToExam( organisation, email, token, invite, locale,
+                        domain, serverPort, protocol );
+
+        if ( !emailSentResponse.isEmailSent() ) {
+
+            return new SendInviteResponse( true, true, false, "Problem sending email" );
+        }
+
+        return new SendInviteResponse( true, false, false, null );
+    }
+
+
+    private boolean teacherHasTokens( Invite invite ) {
+
+        Teacher teacher = invite.getExam().getTeacher();
+
+        if ( teacher.getTokens() > 0 )
+            return true;
+        return false;
+    }
+
+
     @Override
     public SendInviteInitialData getInitialData( Long inviteId, String domain,
             Integer serverPort, String protocol ) {
@@ -138,89 +175,69 @@ public class SendInviteServiceImp implements SendInviteService {
 
     @Transactional
     @Override
-    public SaveResponse sendInviteToEmail( SendInviteToEmailRequest request, String domain,
+    public SendInviteResponse sendInviteToEmail( SendInviteToEmailRequest request, String domain,
             Integer serverPort, String protocol ) {
 
-        DomainOrganisation organisation = organisationRepository.findByDomain( domain );
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
-        Exam exam = invite.getExam();
         Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
         String email = request.getEmail();
         boolean emailExists = emailExists( examTokens, email );
-        SaveResponse saveResponse;
+        SendInviteResponse saveResponse;
 
         if ( emailExists ) {
 
-            saveResponse = new SaveResponse( false, EMAIL_ERROR_RBKEY );
+            saveResponse = new SendInviteResponse( false, true, false, EMAIL_ERROR_RBKEY );
+
+            saveResponse.getUnsentEmails().add( email );
         }
-        else {
+        else if (teacherHasTokens(invite)) {
 
-            String hash = getHashWithBcrypt( invite.getId(), email );
-            String linkHash = hash.replaceAll( "/", "sL4sh" );
-            String token = linkHash;
+            saveResponse = createExamTokenAndEmailInvite( invite, email, domain, serverPort, protocol );
+        } else {
+            
+            saveResponse = new SendInviteResponse( false, false, true,
+                    "Error! Cannot send invite. You do not have "
+                            + "enough tokens. Please add more tokens to proceed" );
 
-            ExamToken examToken = new ExamToken();
-            examToken.setEmail( request.getEmail() );
-            examToken.setToken( token );
-            examToken.setInvite( invite );
-            examTokenRepository.save( examToken );
-            updateTokenConsumption( email, exam );
-            Locale locale = new Locale( "en" );
-
-            EmailSentResponse emailSentResponse =
-                    emailService.sendInviteToExam( organisation, email, token, invite, locale,
-                            domain, serverPort, protocol );
-
-            if ( !emailSentResponse.isEmailSent() ) {
-
-                return new SaveResponse( false, "Problem sending email" );
-            }
-
-            saveResponse = new SaveResponse( true, null );
+            saveResponse.getUnsentEmails().add( email );
         }
         return saveResponse;
     }
 
 
-
     @Transactional
     @Override
-    public SaveResponse sendInvite( SendInviteRequest request, String domain, Integer serverPort,
-            String protocol ) {
+    public SendInviteResponse sendInvite( SendInviteRequest request, String domain,
+            Integer serverPort, String protocol ) {
 
-        DomainOrganisation organisation = organisationRepository.findByDomain( domain );
+        SendInviteResponse response = new SendInviteResponse();
         Invite invite = inviteRepository.findById( request.getInviteId() ).get();
-        Exam exam = invite.getExam();
         Set<ExamToken> examTokens = examTokenRepository.findByInvite( invite );
+
         for ( String email : request.getEmails() ) {
-            boolean emailExists = emailExists( examTokens, email );
+            boolean emailExist = emailExists( examTokens, email );
+            boolean teacherHasTokens = teacherHasTokens( invite );
 
-            if ( !emailExists ) {
+            if ( teacherHasTokens && !emailExist ) {
 
-                String hash = getHashWithBcrypt( invite.getId(), email );
-                String linkHash = hash.replaceAll( "/", "sL4sh" );
-                String token = domain + ":4200/student/exam/" + linkHash;
+                SendInviteResponse inviteResponse = createExamTokenAndEmailInvite( invite, email,
+                        domain, serverPort, protocol );
 
-                ExamToken examToken = new ExamToken();
-                examToken.setEmail( email );
-                examToken.setToken( token );
-                examToken.setInvite( invite );
-                examTokenRepository.save( examToken );
-                updateTokenConsumption( email, exam );
-                Locale locale = new Locale( "en" );
+                if ( inviteResponse.isEmailError() ) {
 
-                EmailSentResponse emailSentResponse =
-                        emailService.sendInviteToExam( organisation, email, token, invite, locale,
-                                domain, serverPort, protocol );
-
-                if ( !emailSentResponse.isEmailSent() ) {
-
-                    return new SaveResponse( false, "Problem sending email" );
+                    response.setEmailError( true );
+                    response.getUnsentEmails().add( email );
                 }
 
             }
+            else if ( !teacherHasTokens ) {
+                response.setTokensError( true );
+                response.getUnsentEmails().add( email );
+            }
         }
-        return new SaveResponse( true, null );
+
+        response.setSent( true );
+        return response;
     }
 
 }

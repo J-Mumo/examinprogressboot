@@ -20,6 +20,8 @@ package com.joel.examinprogress.helper.result;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -119,7 +121,30 @@ public class ResultHelperImpl implements ResultHelper {
     }
 
 
+    private Boolean checkIfStudentAnsweredQuestionCorrectly( Question question, Student student ) {
+
+        Set<Answer> correctAnswers = question.getCorrectAnswers();
+        List<Answer> studentAnswers = answerRepository
+                .findByStudentsAndQuestion( student, question );
+
+        if ( studentAnswers.size() == 0 )
+            return false;
+
+        for ( Answer correctAnswer : correctAnswers ) {
+            for ( Answer studentAnswer : studentAnswers ) {
+
+                if ( studentAnswer != correctAnswer ) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
     @Override
+    @Transactional
     public void updateResult( Question question, Student student, Integer studentTextAnswerScore ) {
         
         Long answerTypeId = question.getAnswerType().getId();
@@ -131,19 +156,8 @@ public class ResultHelperImpl implements ResultHelper {
         
         if (answerTypeId != textAnswerTypeId) {
 
-            Boolean studentAnsweredQuestionCorrectly = true;
-            Set<Answer> correctAnswers = question.getCorrectAnswers();
-            List<Answer> studentAnswers = answerRepository
-                    .findByStudentsAndQuestion( student, question );
-    
-            for(Answer correctAnswer : correctAnswers) {
-                for (Answer studentAnswer : studentAnswers) {
-                    
-                    if ( studentAnswer != correctAnswer ) {
-                        studentAnsweredQuestionCorrectly = false;
-                    }
-                }
-            }
+            Boolean studentAnsweredQuestionCorrectly = checkIfStudentAnsweredQuestionCorrectly(
+                    question, student );
 
             if ( studentAnsweredQuestionCorrectly ) {
 
@@ -162,6 +176,10 @@ public class ResultHelperImpl implements ResultHelper {
 
             sectionResult.setPointScore( sectionResult.getPointScore() + studentTextAnswerScore );
             examResult.setPointScore( examResult.getPointScore() + studentTextAnswerScore );
+        }
+        else if ( studentTextAnswerScore == null ) {
+
+            questionResult.setPointScore( studentTextAnswerScore );
         }
 
         Float sectionPercent = Float.valueOf( sectionResult.getPointScore() ) /

@@ -44,7 +44,7 @@ public class Answer extends AbstractPersistentEntity {
      */
     private static final long serialVersionUID = 6939196251681546886L;
 
-    @Column( name = "answerText", nullable = false, unique = false,
+    @Column( name = "answer_text", nullable = false, unique = false,
             length = 1024 )
     private String answerText;
 

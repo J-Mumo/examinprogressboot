@@ -1,6 +1,6 @@
 -- Start Sequence ==================================================================================
-DROP Sequence spotadev_sequence;
-CREATE Sequence spotadev_sequence START 10001;
+DROP Sequence examinprogress_sequence;
+CREATE Sequence examinprogress_sequence START 10001;
 
 -- End Sequence ====================================================================================
 -- =================================================================================================

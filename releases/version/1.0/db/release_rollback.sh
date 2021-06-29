@@ -3,13 +3,13 @@
 ## File Details
 ################################################################################
 ## NAME:    Release Rollback
-## FILE:    spotadevboot/releases/version/1.0/db/release_rollback.sh
+## FILE:    examinprogressboot/releases/version/1.0/db/release_rollback.sh
 ## RELEASE: 1.0
 
 ################################################################################
 ## Author Details
 ################################################################################
-## AUTHOR:  John Dickerson
+## AUTHOR:  Joel Mumo
 ## CREATED: 21/02/2020
 
 ################################################################################

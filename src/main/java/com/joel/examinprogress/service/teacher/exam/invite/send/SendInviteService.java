@@ -17,8 +17,6 @@
 */
 package com.joel.examinprogress.service.teacher.exam.invite.send;
 
-import com.joel.examinprogress.service.shared.SaveResponse;
-
 /**
  * @author Joel Mumo
  * @date   25th July, 2020
@@ -31,10 +29,10 @@ public interface SendInviteService {
             Integer serverPort, String protocol );
 
 
-    SaveResponse sendInviteToEmail( SendInviteToEmailRequest request, String domain,
+    SendInviteResponse sendInviteToEmail( SendInviteToEmailRequest request, String domain,
             Integer serverPort, String protocol );
 
 
-    SaveResponse sendInvite( SendInviteRequest request, String domain, Integer serverPort,
+    SendInviteResponse sendInvite( SendInviteRequest request, String domain, Integer serverPort,
             String protocol );
 }

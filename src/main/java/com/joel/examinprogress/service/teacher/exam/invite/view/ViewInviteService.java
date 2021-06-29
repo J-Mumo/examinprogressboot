@@ -18,6 +18,7 @@
 package com.joel.examinprogress.service.teacher.exam.invite.view;
 
 import com.joel.examinprogress.service.shared.DeleteResponse;
+import com.joel.examinprogress.service.shared.SaveResponse;
 
 /**
  * @author Joel Mumo
@@ -30,4 +31,8 @@ public interface ViewInviteService {
 
 
     DeleteResponse unsendInvite( Long examTokenId );
+
+
+    SaveResponse resendInvite( Long examTokenId, String domain, Integer serverPort,
+            String protocol );
 }

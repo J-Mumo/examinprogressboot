@@ -1,59 +1,40 @@
--- spotadevboot/releases/version/1.0/db/0001_create_tables_rollback.sql
+-- examinprigressboot/releases/version/1.0/db/0001_create_tables_rollback.sql
 
 BEGIN WORK;
 
-DROP Sequence spotadev_sequence;
+DROP Sequence examinprigress_sequence;
 
 -- =====================
 
-DROP TABLE IF EXISTS  address CASCADE;
-DROP TABLE IF EXISTS  address_type CASCADE;
-DROP TABLE IF EXISTS  algorithms CASCADE;
-DROP TABLE IF EXISTS annotation CASCADE;
+DROP TABLE IF EXISTS address CASCADE;
+DROP TABLE IF EXISTS address_type CASCADE;
+DROP TABLE IF EXISTS contact_query CASCADE;
+DROP TABLE IF EXISTS mailing_list CASCADE;
+DROP TABLE IF EXISTS forgotten_password CASCADE;
 DROP TABLE IF EXISTS app_user CASCADE;
-DROP TABLE IF EXISTS availability CASCADE;
-DROP TABLE IF EXISTS availability_job_type CASCADE;
-DROP TABLE IF EXISTS code_repository_type CASCADE;
+DROP TABLE IF EXISTS result CASCADE;
+DROP TABLE IF EXISTS result_type CASCADE;
+DROP TABLE IF EXISTS answer CASCADE;
+DROP TABLE IF EXISTS answer_type CASCADE;
+DROP TABLE IF EXISTS question_status CASCADE;
+DROP TABLE IF EXISTS question CASCADE;
+DROP TABLE IF EXISTS question_type CASCADE;
+DROP TABLE IF EXISTS section_status CASCADE;
+DROP TABLE IF EXISTS section CASCADE;
+DROP TABLE IF EXISTS exam_token CASCADE;
+DROP TABLE IF EXISTS invite CASCADE;
+DROP TABLE IF EXISTS exam_status CASCADE;
+DROP TABLE IF EXISTS token_consumed CASCADE;
+DROP TABLE IF EXISTS exam CASCADE;
+DROP TABLE IF EXISTS exam_timer_type CASCADE;
+DROP TABLE IF EXISTS payment_history CASCADE;
+DROP TABLE IF EXISTS student CASCADE;
+DROP TABLE IF EXISTS teacher CASCADE;
 DROP TABLE IF EXISTS country CASCADE;
-DROP TABLE IF EXISTS design_patterns CASCADE;
-DROP TABLE IF EXISTS dev CASCADE;
-DROP TABLE IF EXISTS dev_project CASCADE;
-DROP TABLE IF EXISTS dev_repository_module CASCADE;
-DROP TABLE IF EXISTS dev_review CASCADE;
 DROP TABLE IF EXISTS domain_organisation CASCADE;
-DROP TABLE IF EXISTS experience CASCADE;
-DROP TABLE IF EXISTS experience_type CASCADE;
-DROP TABLE IF EXISTS git_https_settings CASCADE;
-DROP TABLE IF EXISTS git_ssh_settings CASCADE;
-DROP TABLE IF EXISTS interest CASCADE;
-DROP TABLE IF EXISTS job_type CASCADE;
-DROP TABLE IF EXISTS missing_technology CASCADE;
-DROP TABLE IF EXISTS notification_type CASCADE;
-DROP TABLE IF EXISTS "path" CASCADE;
-DROP TABLE IF EXISTS path_mapping CASCADE;
-DROP TABLE IF EXISTS profile CASCADE;
-DROP TABLE IF EXISTS profile_project CASCADE;
-DROP TABLE IF EXISTS profile_repository_module CASCADE;
-DROP TABLE IF EXISTS profile_repositorymodule CASCADE;
-DROP TABLE IF EXISTS profile_review CASCADE;
-DROP TABLE IF EXISTS project CASCADE;
-DROP TABLE IF EXISTS project_advert CASCADE;
-DROP TABLE IF EXISTS project_advert_comment CASCADE;
-DROP TABLE IF EXISTS projectadvert_technology CASCADE;
-DROP TABLE IF EXISTS repo_admin CASCADE;
-DROP TABLE IF EXISTS repo_admin_repository_module CASCADE;
-DROP TABLE IF EXISTS repository_metrics CASCADE;
-DROP TABLE IF EXISTS repository_module CASCADE;
 DROP TABLE IF EXISTS "role" CASCADE;
-DROP TABLE IF EXISTS role_group CASCADE;
-DROP TABLE IF EXISTS rolegroup_role CASCADE;
-DROP TABLE IF EXISTS task_responsibility CASCADE;
-DROP TABLE IF EXISTS technology CASCADE;
-DROP TABLE IF EXISTS technology_group CASCADE;
-DROP TABLE IF EXISTS technology_note CASCADE;
-DROP TABLE IF EXISTS technology_tag CASCADE;
-DROP TABLE IF EXISTS technology_technologytag CASCADE;
 DROP TABLE IF EXISTS user_role CASCADE;
+DROP TABLE IF EXISTS answer_students CASCADE;
 
 -- =====================
 

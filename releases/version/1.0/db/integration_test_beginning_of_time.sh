@@ -3,13 +3,13 @@
 ## File Details
 ################################################################################
 ## NAME:    1.0 Beginning of Time
-## FILE:    spotadevboot/releases/version/1.0/db/integration_test_beginning_of_time.sh
+## FILE:    examinprogressboot/releases/version/1.0/db/integration_test_beginning_of_time.sh
 ## RELEASE: 1.0
 
 ################################################################################
 ## Author Details
 ################################################################################
-## AUTHOR:  John Dickerson
+## AUTHOR:  Joel Mumo
 ## CREATED: 21/02/2020
 
 ################################################################################
