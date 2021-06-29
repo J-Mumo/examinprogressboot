@@ -49,14 +49,14 @@ public class AbstractPersistentEntity implements Serializable {
     /**
      * You need to create a sequence in postgresql:
      *
-     * CREATE SEQUENCE spotadev_sequence START 10001;
+     * CREATE SEQUENCE examinprogress_sequence START 10001;
      *
      * Starts at 10001 to allow for standing data. All standing data must have a
      * id of less than 10001 else duplicate key exceptions will occur
      */
     @Id
     @Column( name = "ID" )
-    @SequenceGenerator( name = "identifier", sequenceName = "spotadev_sequence",
+    @SequenceGenerator( name = "identifier", sequenceName = "examinprogress_sequence",
             allocationSize = 1, initialValue = 10001 )
     @GeneratedValue( strategy = GenerationType.SEQUENCE,
             generator = "identifier" )

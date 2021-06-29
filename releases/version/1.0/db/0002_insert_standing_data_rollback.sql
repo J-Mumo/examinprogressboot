@@ -1,5 +1,3 @@
--- spotadevboot/releases/version/1.0/db/0002-insert_standing_data_rollback.sql
-
 BEGIN WORK;
 
 DELETE FROM address_type;

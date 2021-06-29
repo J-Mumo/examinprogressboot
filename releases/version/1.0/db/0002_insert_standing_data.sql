@@ -1,5 +1,3 @@
--- production data is in the following git module:   spotadevboot_data
-
 BEGIN WORK;
 
 -- address_type ------------------------------------------------------------------------------------
