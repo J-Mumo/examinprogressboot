@@ -1015,7 +1015,7 @@ VALUES (2, 'first line', 'second line', 'New-York', 'Some Postal Code',
 -- superadmin app_user - password enigma ----------------------------------------------------------------
 INSERT INTO app_user (id, first_name, last_name, email, enabled, password_hash, 
 email_activation_code, fk_domain_organisation, created_at, updated_at)
-VALUES (1, 'SuperAdmin', 'SuperAdmin', 'superadmin@gmail.com', true, 
+VALUES (1, 'SuperAdmin', 'SuperAdmin', 'jaymumo6@gmail.com', true, 
 '$2a$10$Z65pHQUCOGWXBDjDNu/Xf.Db06XuACBO1S5FjeXfqDAHw2oDU5D/C', 'active', 1, 
 current_timestamp, current_timestamp );
 
